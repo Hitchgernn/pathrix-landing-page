@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  @font-face {
+    font-family: "Quarkiz";
+    src: url("./fonts/Quarkiz.otf") format("opentype"), url("./fonts/Quarkiz.ttf") format("truetype");
+    font-weight: 400;
+    font-display: swap;
+  }
+  body {
+    margin: 0;
+    background: #cfc6b6;
+    font-family: "Archivo", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: #a8462a; text-decoration: none; }
+  a:hover { color: #241b12; }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script type="module" src="./hero/pathrix-diorama.js"></script>
+</helmet>
+
+<section style="padding:64px 64px 40px;display:flex;flex-direction:column;gap:40px">
+  <div style="display:flex;flex-direction:column;gap:10px;max-width:1200px">
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:rgba(23,41,58,.55)">Turn 2 &middot; Hero &mdash; palet biru muda</span>
+    <h2 style="margin:0;font-size:30px;font-weight:600;letter-spacing:-.02em;color:#17293a">Poster, disetel ke biru</h2>
+    <p style="margin:0;max-width:62ch;font-size:15px;line-height:1.6;color:rgba(23,41,58,.7);text-wrap:pretty">Latar pindah ke biru pucat dengan tingkat terang yang sama seperti krem sebelumnya, jadi diorama tetap mengapung tanpa garis sambungan &mdash; kabut scene ikut disetel ke warna kertas baru. Tombol dan label memakai biru air dari scene; satu titik terakota tetap ada sebagai percikan hangat dari atap rumah.</p>
+  </div>
+
+  <div id="2a" style="display:flex;flex-direction:column;gap:16px;width:max-content">
+    <sc-if value="{{ showBadges }}" hint-placeholder-val="{{ true }}">
+      <div style="display:flex;align-items:center;gap:14px">
+        <span style="display:inline-flex;align-items:center;justify-content:center;min-width:34px;height:24px;padding:0 9px;border-radius:999px;background:#17293a;color:#e7f0f7;font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.08em">2a</span>
+        <span style="font-size:14px;font-weight:600;color:#17293a">Poster biru muda</span>
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:rgba(23,41,58,.45)">1440 &times; 900</span>
+      </div>
+    </sc-if>
+
+    <div data-frame="2a" style="position:relative;width:1440px;height:900px;overflow:hidden;background:radial-gradient(120% 90% at 50% 12%,#eff5fa 0%,#dfeaf3 46%,#c6d9e8 100%);box-shadow:0 40px 90px -30px rgba(23,41,58,.45);outline:1px solid rgba(23,41,58,.12);display:flex;flex-direction:column">
+
+      <div style="position:absolute;inset:0;z-index:6;pointer-events:none;mix-blend-mode:multiply;opacity:.06;background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E&quot;)"></div>
+
+      <nav style="position:relative;z-index:4;display:flex;align-items:center;justify-content:space-between;gap:40px;padding:36px 64px">
+        <span style="font-family:'Quarkiz','Archivo',sans-serif;font-size:21px;letter-spacing:.16em;color:#17293a">PATHRIX</span>
+        <div style="display:flex;align-items:center;gap:40px;font-family:'Archivo',sans-serif;font-size:12px;font-weight:600;letter-spacing:.16em;text-transform:uppercase">
+          <span style="display:flex;flex-direction:column;align-items:center;gap:7px;color:#17293a">Beranda<span style="width:4px;height:4px;border-radius:999px;background:#c2603a"></span></span>
+          <a href="#2a" style="color:rgba(23,41,58,.55)">Cara Kerja</a>
+          <a href="#2a" style="color:rgba(23,41,58,.55)">Fitur</a>
+          <a href="#2a" style="color:rgba(23,41,58,.55)">Kontak</a>
+        </div>
+        <a href="#2a" style="display:inline-flex;align-items:center;gap:10px;height:44px;padding:0 24px;border-radius:999px;background:#17293a;color:#e7f0f7;font-size:13px;font-weight:600;letter-spacing:.04em;white-space:nowrap" style-hover="background:#1f6592">Jelajahi Peta
+          <span style="font-size:15px;line-height:1">&#8594;</span>
+        </a>
+      </nav>
+
+      <main style="position:relative;z-index:3;display:flex;flex-direction:column;align-items:center;padding:22px 64px 0">
+        <div data-reveal="c" style="display:flex;align-items:center;gap:16px;max-width:1080px">
+          <span style="flex:1;height:1px;background:rgba(31,101,146,.35)"></span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:500;letter-spacing:.15em;text-transform:uppercase;color:#1f6592;white-space:nowrap">WebGIS-Based AI Agent for Intelligent Multimodal Mobility in Yogyakarta</span>
+          <span style="flex:1;height:1px;background:rgba(31,101,146,.35)"></span>
+        </div>
+        <h1 data-reveal="c" style="margin:22px 0 0;font-family:'Quarkiz','Archivo',sans-serif;font-weight:400;font-size:232px;line-height:.82;letter-spacing:.005em;color:#17293a;white-space:nowrap">PATHRIX</h1>
+        <span data-reveal="c" style="margin-top:14px;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:rgba(23,41,58,.5)">Kota Yogyakarta &middot; Simpul Transit &middot; Indeks TOD</span>
+      </main>
+
+      <div style="position:absolute;left:50%;bottom:-118px;width:1240px;height:800px;margin-left:-620px;z-index:4;pointer-events:none">
+        <x-import component-from-global-scope="pathrix-diorama" view="stage" transparent="true" tint="#dfeaf3" hint-size="100%,100%"></x-import>
+      </div>
+
+      <footer style="position:absolute;left:0;right:0;bottom:0;z-index:5;display:flex;flex-direction:column;align-items:center;gap:16px;padding:0 64px 46px">
+        <a data-reveal="c" href="#2a" style="display:inline-flex;align-items:center;gap:12px;height:58px;padding:0 36px;border-radius:999px;background:#1f6592;color:#f0f6fb;font-size:15px;font-weight:600;letter-spacing:.02em;box-shadow:0 14px 34px -12px rgba(23,41,58,.7)" style-hover="background:#17293a">Jelajahi Peta
+          <span style="font-size:17px;line-height:1">&#8594;</span>
+        </a>
+      </footer>
+    </div>
+  </div>
+</section>
+
+<section style="padding:24px 64px 96px;display:flex;flex-direction:column;gap:40px">
+  <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:32px;flex-wrap:wrap;max-width:1200px">
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:rgba(36,27,18,.55)">Turn 1 &middot; Hero</span>
+      <h2 style="margin:0;font-size:30px;font-weight:600;letter-spacing:-.02em;color:#241b12">Dua arah komposisi hero</h2>
+      <p style="margin:0;max-width:62ch;font-size:15px;line-height:1.6;color:rgba(36,27,18,.7);text-wrap:pretty">Versi krem awal. <a href="#2a">2a</a> di atas adalah <a href="#1b">1b</a> yang sudah disetel ke biru muda.</p>
+    </div>
+  </div>
+
+  <div style="display:flex;gap:56px;flex-wrap:nowrap;align-items:flex-start;width:max-content">
+
+    <!-- ─────────────────────────────  1a  ───────────────────────────── -->
+    <div id="1a" style="display:flex;flex-direction:column;gap:16px">
+      <sc-if value="{{ showBadges }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;align-items:center;gap:14px">
+          <span style="display:inline-flex;align-items:center;justify-content:center;min-width:34px;height:24px;padding:0 9px;border-radius:999px;background:#241b12;color:#f2e4cf;font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.08em">1a</span>
+          <span style="font-size:14px;font-weight:600;color:#241b12">Split &mdash; teks kiri, diorama membanjiri kanan</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:rgba(36,27,18,.45)">1440 &times; 900</span>
+        </div>
+      </sc-if>
+
+      <div data-frame="1a" style="position:relative;width:1440px;height:900px;overflow:hidden;background:#f2e4cf;box-shadow:0 40px 90px -30px rgba(36,27,18,.45);outline:1px solid rgba(36,27,18,.12);display:flex;flex-direction:column">
+
+        <div style="position:absolute;top:0;right:-70px;width:920px;height:100%;z-index:1">
+          <x-import component-from-global-scope="pathrix-diorama" view="split" transparent="true" hint-size="100%,100%"></x-import>
+        </div>
+        <div style="position:absolute;inset:0;z-index:5;pointer-events:none;mix-blend-mode:multiply;opacity:.07;background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E&quot;)"></div>
+
+        <nav style="position:relative;z-index:4;display:flex;align-items:center;justify-content:space-between;gap:40px;padding:36px 64px">
+          <span style="font-family:'Quarkiz','Archivo',sans-serif;font-size:21px;letter-spacing:.16em;color:#241b12">PATHRIX</span>
+          <div style="display:flex;align-items:center;gap:40px;font-family:'Archivo',sans-serif;font-size:12px;font-weight:600;letter-spacing:.16em;text-transform:uppercase">
+            <span style="display:flex;flex-direction:column;align-items:center;gap:7px;color:#241b12">Beranda<span style="width:4px;height:4px;border-radius:999px;background:#a8462a"></span></span>
+            <a href="#1a" style="color:rgba(36,27,18,.55)">Cara Kerja</a>
+            <a href="#1a" style="color:rgba(36,27,18,.55)">Fitur</a>
+            <a href="#1a" style="color:rgba(36,27,18,.55)">Kontak</a>
+          </div>
+          <a href="#1a" style="display:inline-flex;align-items:center;gap:10px;height:44px;padding:0 24px;border-radius:999px;background:#241b12;color:#f6ebd9;font-size:13px;font-weight:600;letter-spacing:.04em;white-space:nowrap" style-hover="background:#a8462a">Jelajahi Peta
+            <span style="font-size:15px;line-height:1">&#8594;</span>
+          </a>
+        </nav>
+
+        <main style="position:relative;z-index:3;flex:1;display:flex;align-items:center;padding:0 64px">
+          <div style="display:flex;flex-direction:column;align-items:flex-start;gap:0;width:610px">
+            <div data-reveal="a" style="display:flex;align-items:center;gap:12px;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:#a8462a">
+              <span style="width:26px;height:1px;background:#a8462a"></span>Kota Yogyakarta &middot; Simpul Transit
+            </div>
+            <h1 data-reveal="a" style="margin:20px 0 0;font-family:'Quarkiz','Archivo',sans-serif;font-weight:400;font-size:128px;line-height:.9;letter-spacing:.02em;color:#241b12">PATHRIX</h1>
+            <p data-reveal="a" style="margin:26px 0 0;max-width:520px;font-size:21px;font-weight:500;line-height:1.42;letter-spacing:-.015em;color:#3b2b1d;text-wrap:pretty">WebGIS-Based AI Agent for Intelligent Multimodal Mobility in Yogyakarta</p>
+            <div data-reveal="a" style="display:flex;align-items:center;gap:22px;margin-top:40px">
+              <a href="#1a" style="display:inline-flex;align-items:center;gap:12px;height:56px;padding:0 32px;border-radius:999px;background:#a8462a;color:#fbf3e6;font-size:15px;font-weight:600;letter-spacing:.02em" style-hover="background:#241b12">Jelajahi Peta
+                <span style="font-size:17px;line-height:1">&#8594;</span>
+              </a>
+              <a href="#1a" style="display:inline-flex;align-items:center;gap:11px;font-size:15px;font-weight:600;color:#241b12">
+                <span style="display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:999px;border:1px solid rgba(36,27,18,.3);font-size:13px">&#8595;</span>
+                Cara Kerja
+              </a>
+            </div>
+          </div>
+        </main>
+
+        <footer style="position:relative;z-index:3;display:flex;align-items:flex-end;justify-content:space-between;gap:40px;padding:0 64px 44px">
+          <sc-if value="{{ showLegend }}" hint-placeholder-val="{{ true }}">
+            <div style="display:flex;flex-direction:column;gap:12px">
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:rgba(36,27,18,.45)">Moda terpantau</span>
+              <div style="display:flex;flex-wrap:wrap;gap:8px 18px;max-width:420px;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.06em;color:#3b2b1d">
+                <span style="display:flex;align-items:center;gap:7px"><span style="width:9px;height:9px;border-radius:2px;background:#1f4f8f"></span>Kereta Api</span>
+                <span style="display:flex;align-items:center;gap:7px"><span style="width:9px;height:9px;border-radius:2px;background:#1d7ec4"></span>Trans Jogja</span>
+                <span style="display:flex;align-items:center;gap:7px"><span style="width:9px;height:9px;border-radius:2px;background:#c9911b"></span>Taksi</span>
+                <span style="display:flex;align-items:center;gap:7px"><span style="width:9px;height:9px;border-radius:2px;background:#c0392b"></span>Becak</span>
+                <span style="display:flex;align-items:center;gap:7px"><span style="width:9px;height:9px;border-radius:2px;background:#7a4b25"></span>Andong</span>
+                <span style="display:flex;align-items:center;gap:7px"><span style="width:9px;height:9px;border-radius:2px;background:#6e7b85"></span>Pesawat</span>
+              </div>
+            </div>
+          </sc-if>
+        </footer>
+      </div>
+    </div>
+
+    <!-- ─────────────────────────────  1b  ───────────────────────────── -->
+    <div id="1b" style="display:flex;flex-direction:column;gap:16px">
+      <sc-if value="{{ showBadges }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;align-items:center;gap:14px">
+          <span style="display:inline-flex;align-items:center;justify-content:center;min-width:34px;height:24px;padding:0 9px;border-radius:999px;background:#241b12;color:#f2e4cf;font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.08em">1b</span>
+          <span style="font-size:14px;font-weight:600;color:#241b12">Poster &mdash; wordmark raksasa, pulau berdiri di depannya</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:rgba(36,27,18,.45)">1440 &times; 900</span>
+        </div>
+      </sc-if>
+
+      <div data-frame="1b" style="position:relative;width:1440px;height:900px;overflow:hidden;background:radial-gradient(120% 90% at 50% 12%,#f7ecd9 0%,#f2e4cf 46%,#e7d5b9 100%);box-shadow:0 40px 90px -30px rgba(36,27,18,.45);outline:1px solid rgba(36,27,18,.12);display:flex;flex-direction:column">
+
+        <div style="position:absolute;inset:0;z-index:6;pointer-events:none;mix-blend-mode:multiply;opacity:.07;background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E&quot;)"></div>
+
+        <nav style="position:relative;z-index:4;display:flex;align-items:center;justify-content:space-between;gap:40px;padding:36px 64px">
+          <span style="font-family:'Quarkiz','Archivo',sans-serif;font-size:21px;letter-spacing:.16em;color:#241b12">PATHRIX</span>
+          <div style="display:flex;align-items:center;gap:40px;font-family:'Archivo',sans-serif;font-size:12px;font-weight:600;letter-spacing:.16em;text-transform:uppercase">
+            <span style="display:flex;flex-direction:column;align-items:center;gap:7px;color:#241b12">Beranda<span style="width:4px;height:4px;border-radius:999px;background:#a8462a"></span></span>
+            <a href="#1b" style="color:rgba(36,27,18,.55)">Cara Kerja</a>
+            <a href="#1b" style="color:rgba(36,27,18,.55)">Fitur</a>
+            <a href="#1b" style="color:rgba(36,27,18,.55)">Kontak</a>
+          </div>
+          <a href="#1b" style="display:inline-flex;align-items:center;gap:10px;height:44px;padding:0 24px;border-radius:999px;background:#241b12;color:#f6ebd9;font-size:13px;font-weight:600;letter-spacing:.04em;white-space:nowrap" style-hover="background:#a8462a">Jelajahi Peta
+            <span style="font-size:15px;line-height:1">&#8594;</span>
+          </a>
+        </nav>
+
+        <main style="position:relative;z-index:3;display:flex;flex-direction:column;align-items:center;padding:22px 64px 0">
+          <div data-reveal="b" style="display:flex;align-items:center;gap:16px;max-width:1080px">
+            <span style="flex:1;height:1px;background:rgba(168,70,42,.35)"></span>
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:500;letter-spacing:.15em;text-transform:uppercase;color:#a8462a;white-space:nowrap">WebGIS-Based AI Agent for Intelligent Multimodal Mobility in Yogyakarta</span>
+            <span style="flex:1;height:1px;background:rgba(168,70,42,.35)"></span>
+          </div>
+          <h1 data-reveal="b" style="margin:22px 0 0;font-family:'Quarkiz','Archivo',sans-serif;font-weight:400;font-size:232px;line-height:.82;letter-spacing:.005em;color:#241b12;white-space:nowrap">PATHRIX</h1>
+          <span data-reveal="b" style="margin-top:14px;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:rgba(36,27,18,.5)">Kota Yogyakarta &middot; Simpul Transit &middot; Indeks TOD</span>
+        </main>
+
+        <div style="position:absolute;left:50%;bottom:-118px;width:1240px;height:800px;margin-left:-620px;z-index:4;pointer-events:none">
+          <x-import component-from-global-scope="pathrix-diorama" view="stage" transparent="true" hint-size="100%,100%"></x-import>
+        </div>
+
+        <footer style="position:absolute;left:0;right:0;bottom:0;z-index:5;display:flex;flex-direction:column;align-items:center;gap:16px;padding:0 64px 46px">
+          <a data-reveal="b" href="#1b" style="display:inline-flex;align-items:center;gap:12px;height:58px;padding:0 36px;border-radius:999px;background:#a8462a;color:#fbf3e6;font-size:15px;font-weight:600;letter-spacing:.02em;box-shadow:0 14px 34px -12px rgba(36,27,18,.7)" style-hover="background:#241b12">Jelajahi Peta
+            <span style="font-size:17px;line-height:1">&#8594;</span>
+          </a>
+        </footer>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;showBadges&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Presentasi&quot;},&quot;showLegend&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Presentasi&quot;}}">
+class Component extends DCLogic {
+  componentDidMount() {
+    // gsap.from (never .to) so the design is fully visible even if GSAP never loads.
+    const run = () => {
+      const g = window.gsap;
+      if (!g) return;
+      for (const key of ["a", "b", "c"]) {
+        const targets = this.root?.querySelectorAll?.(`[data-reveal="${key}"]`);
+        if (!targets || !targets.length) continue;
+        g.from(targets, {
+          y: 26,
+          opacity: 0,
+          duration: 1,
+          ease: "power3.out",
+          stagger: 0.09,
+          delay: 0.15,
+        });
+      }
+    };
+    this._t = setTimeout(run, 90);
+  }
+
+  componentWillUnmount() {
+    clearTimeout(this._t);
+  }
+
+  renderVals() {
+    return {
+      showBadges: this.props.showBadges ?? true,
+      showLegend: this.props.showLegend ?? true,
+    };
+  }
+}
+
+</script>
+</body>
+</html>

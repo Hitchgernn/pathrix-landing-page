@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  @font-face {
+    font-family: "Quarkiz";
+    src: url("./fonts/Quarkiz.otf") format("opentype"), url("./fonts/Quarkiz.ttf") format("truetype");
+    font-weight: 400;
+    font-display: swap;
+  }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: #dfeaf3;
+    color: #17293a;
+    font-family: "Archivo", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  a { color: #1f6592; text-decoration: none; }
+  a:hover { color: #17293a; }
+  ::selection { background: #c2603a; color: #f4efe9; }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script src="./image-slot.js"></script>
+<script type="module" src="./hero/pathrix-diorama.js"></script>
+</helmet>
+
+<nav ref="{{ navRef }}" style="position:fixed;top:0;left:0;right:0;z-index:60;display:flex;align-items:center;justify-content:space-between;gap:24px;padding:clamp(18px,2.4vw,32px) clamp(20px,4.4vw,64px);transition:background .45s ease,border-color .45s ease,padding .45s ease;border-bottom:1px solid transparent">
+  <a href="#beranda" ref="{{ markRef }}" style="font-family:'Quarkiz','Archivo',sans-serif;font-size:clamp(16px,2vw,21px);letter-spacing:.16em;color:#17293a">PATHRIX</a>
+
+  <sc-if value="{{ wideNav }}" hint-placeholder-val="{{ true }}">
+    <div ref="{{ linksRef }}" style="display:flex;align-items:center;gap:clamp(20px,3vw,40px);font-size:12px;font-weight:600;letter-spacing:.16em;text-transform:uppercase">
+      <a href="#beranda" data-navlink="beranda" style="color:#17293a">Beranda</a>
+      <a href="#cara-kerja" data-navlink="cara-kerja" style="color:rgba(23,41,58,.55)">Cara Kerja</a>
+      <a href="#fitur" data-navlink="fitur" style="color:rgba(23,41,58,.55)">Fitur</a>
+      <a href="#kontak" data-navlink="kontak" style="color:rgba(23,41,58,.55)">Kontak</a>
+    </div>
+  </sc-if>
+
+  <div style="display:flex;align-items:center;gap:12px">
+    <a href="{{ ctaUrl }}" ref="{{ navCtaRef }}" style="display:inline-flex;align-items:center;gap:10px;height:44px;padding:0 clamp(16px,2vw,24px);border-radius:999px;background:#17293a;color:#e7f0f7;font-size:13px;font-weight:600;letter-spacing:.04em;white-space:nowrap;transition:background .3s ease,color .3s ease" style-hover="background:#1f6592">Jelajahi Peta
+      <span style="font-size:15px;line-height:1">&#8594;</span>
+    </a>
+    <sc-if value="{{ narrowNav }}" hint-placeholder-val="{{ false }}">
+      <button type="button" onClick="{{ toggleMenu }}" aria-label="Menu" style="display:inline-flex;flex-direction:column;justify-content:center;gap:5px;width:44px;height:44px;padding:0 12px;border:1px solid rgba(23,41,58,.25);border-radius:999px;background:transparent;cursor:pointer">
+        <span style="display:block;height:1.5px;background:#17293a;border-radius:2px"></span>
+        <span style="display:block;height:1.5px;background:#17293a;border-radius:2px"></span>
+      </button>
+    </sc-if>
+  </div>
+</nav>
+
+<sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
+  <div onClick="{{ closeMenu }}" style="position:fixed;inset:0;z-index:55;display:flex;flex-direction:column;justify-content:center;gap:8px;padding:0 clamp(20px,6vw,64px);background:rgba(16,30,42,.97);backdrop-filter:blur(6px)">
+    <a href="#beranda" style="font-family:'Archivo',sans-serif;font-size:clamp(30px,9vw,52px);font-weight:600;letter-spacing:-.03em;color:#e7f0f7;padding:10px 0">Beranda</a>
+    <a href="#cara-kerja" style="font-family:'Archivo',sans-serif;font-size:clamp(30px,9vw,52px);font-weight:600;letter-spacing:-.03em;color:#e7f0f7;padding:10px 0">Cara Kerja</a>
+    <a href="#fitur" style="font-family:'Archivo',sans-serif;font-size:clamp(30px,9vw,52px);font-weight:600;letter-spacing:-.03em;color:#e7f0f7;padding:10px 0">Fitur</a>
+    <a href="#kontak" style="font-family:'Archivo',sans-serif;font-size:clamp(30px,9vw,52px);font-weight:600;letter-spacing:-.03em;color:#e7f0f7;padding:10px 0">Kontak</a>
+    <span style="margin-top:22px;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:rgba(231,240,247,.45)">Tutup &times;</span>
+  </div>
+</sc-if>
+
+<section id="beranda" data-screen-label="01 Beranda" style="position:relative;min-height:100svh;display:flex;flex-direction:column;overflow:hidden;background:radial-gradient(120% 90% at 50% 12%,#eff5fa 0%,#dfeaf3 46%,#c6d9e8 100%)">
+  <div style="position:absolute;inset:0;z-index:6;pointer-events:none;mix-blend-mode:multiply;opacity:.06;background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E&quot;)"></div>
+
+  <div style="position:relative;z-index:3;display:flex;flex-direction:column;align-items:center;text-align:center;padding:calc(clamp(18px,2.4vw,32px) * 2 + 44px + clamp(8px,2vw,26px)) clamp(20px,4.4vw,64px) 0">
+    <sc-if value="{{ wideNav }}" hint-placeholder-val="{{ true }}">
+      <div data-reveal style="display:flex;align-items:center;gap:16px;width:100%;max-width:1080px">
+        <span style="flex:1;height:1px;background:rgba(31,101,146,.35)"></span>
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:clamp(10px,1.05vw,12px);font-weight:500;letter-spacing:.15em;text-transform:uppercase;color:#1f6592;white-space:nowrap">WebGIS-Based AI Agent for Intelligent Multimodal Mobility in Yogyakarta</span>
+        <span style="flex:1;height:1px;background:rgba(31,101,146,.35)"></span>
+      </div>
+    </sc-if>
+    <sc-if value="{{ narrowNav }}" hint-placeholder-val="{{ false }}">
+      <p data-reveal style="margin:0;max-width:30ch;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:500;line-height:1.7;letter-spacing:.13em;text-transform:uppercase;color:#1f6592;text-wrap:pretty">WebGIS-Based AI Agent for Intelligent Multimodal Mobility in Yogyakarta</p>
+    </sc-if>
+
+    <h1 data-reveal style="margin:clamp(16px,2.4vw,24px) 0 0;font-family:'Quarkiz','Archivo',sans-serif;font-weight:400;font-size:clamp(52px,15.6vw,232px);line-height:.82;letter-spacing:.005em;color:#17293a;white-space:nowrap">PATHRIX</h1>
+    <span data-reveal style="margin-top:clamp(10px,1.4vw,14px);font-family:'IBM Plex Mono',monospace;font-size:clamp(9px,1vw,11px);letter-spacing:.28em;text-transform:uppercase;color:rgba(23,41,58,.5);text-wrap:balance">Kota Yogyakarta &middot; Simpul Transit &middot; Indeks TOD</span>
+  </div>
+
+  <div style="position:absolute;left:50%;bottom:clamp(-70px,-8vw,-118px);width:min(1240px,168vw);aspect-ratio:31/20;transform:translateX(-50%);z-index:4;pointer-events:none">
+    <x-import component-from-global-scope="pathrix-diorama" view="{{ dioramaView }}" transparent="true" tint="#dfeaf3" hint-size="100%,100%"></x-import>
+  </div>
+
+  <div style="position:absolute;left:0;right:0;bottom:0;z-index:5;display:flex;flex-direction:column;align-items:center;gap:14px;padding:0 clamp(20px,4.4vw,64px) clamp(28px,4vw,46px)">
+    <a data-reveal href="{{ ctaUrl }}" style="display:inline-flex;align-items:center;gap:12px;height:58px;padding:0 clamp(26px,3vw,36px);border-radius:999px;background:#1f6592;color:#f0f6fb;font-size:15px;font-weight:600;letter-spacing:.02em;box-shadow:0 14px 34px -12px rgba(23,41,58,.7)" style-hover="background:#17293a">Jelajahi Peta
+      <span style="font-size:17px;line-height:1">&#8594;</span>
+    </a>
+  </div>
+</section>
+
+<section data-screen-label="02 Masalah" style="position:relative;background:#101e2a;color:#e7f0f7;padding:clamp(88px,12vw,180px) clamp(20px,4.4vw,64px) clamp(80px,10vw,150px);overflow:hidden">
+  <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,rgba(90,169,221,0) 0%,rgba(90,169,221,.7) 50%,rgba(90,169,221,0) 100%)"></div>
+  <div style="max-width:1180px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:clamp(36px,5vw,80px);align-items:start">
+    <div style="display:flex;flex-direction:column;gap:20px">
+      <span data-reveal style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.26em;text-transform:uppercase;color:#5aa9dd">Masalahnya</span>
+      <h2 data-reveal style="margin:0;font-size:clamp(30px,4.6vw,58px);font-weight:600;line-height:1.06;letter-spacing:-.035em;color:#f2f7fb;text-wrap:pretty">Pindah moda di Yogyakarta jaraknya dekat. Rasanya jauh.</h2>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:26px;padding-top:clamp(0px,1.5vw,18px)">
+      <p data-reveal style="margin:0;font-size:clamp(16px,1.5vw,19px);line-height:1.62;color:rgba(231,240,247,.72);text-wrap:pretty">Turun dari kereta, lanjut naik bus, sisanya jalan kaki. Di atas peta jaraknya cuma beberapa ratus meter &mdash; tapi tanpa trotoar yang utuh, penyeberangan yang aman, dan peneduh, potongan terakhir itulah yang membuat orang memilih kembali ke sepeda motor.</p>
+      <p data-reveal style="margin:0;font-size:clamp(16px,1.5vw,19px);line-height:1.62;color:rgba(231,240,247,.72);text-wrap:pretty">Perencana kota tahu masalah ini ada. Yang sulit adalah menunjukkan <em style="font-style:normal;color:#f2f7fb;border-bottom:1px solid rgba(90,169,221,.6)">di mana persisnya</em>, dan simpul mana yang harus dibenahi lebih dulu. Pathrix menjawab dua pertanyaan itu.</p>
+    </div>
+  </div>
+</section>
+
+<section id="cara-kerja" data-screen-label="03 Cara Kerja" style="position:relative;background:#101e2a;color:#e7f0f7;padding:0 clamp(20px,4.4vw,64px) clamp(88px,11vw,168px)">
+  <div style="max-width:1180px;margin:0 auto;display:flex;flex-direction:column;gap:clamp(40px,5vw,72px)">
+    <div style="display:flex;flex-direction:column;gap:18px;max-width:720px">
+      <span data-reveal style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.26em;text-transform:uppercase;color:#5aa9dd">Cara Kerja</span>
+      <h2 data-reveal style="margin:0;font-size:clamp(30px,4.4vw,54px);font-weight:600;line-height:1.08;letter-spacing:-.035em;color:#f2f7fb;text-wrap:pretty">Dari lapangan ke keputusan, dalam tiga langkah.</h2>
+    </div>
+
+    <div style="position:relative">
+      <sc-if value="{{ wideNav }}" hint-placeholder-val="{{ true }}">
+        <div style="position:absolute;top:19px;left:0;right:0;height:1px;background:rgba(231,240,247,.14)">
+          <div data-draw style="height:1px;background:linear-gradient(90deg,#5aa9dd 0%,#5aa9dd 62%,#c2603a 100%);transform-origin:left center"></div>
+        </div>
+      </sc-if>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:clamp(32px,4vw,56px)">
+        <div data-reveal style="display:flex;flex-direction:column;gap:18px">
+          <div style="display:flex;align-items:center;gap:14px">
+            <span style="display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:999px;background:#5aa9dd;color:#101e2a;font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:500">01</span>
+          </div>
+          <h3 style="margin:0;font-size:clamp(20px,2.1vw,26px);font-weight:600;letter-spacing:-.02em;color:#f2f7fb">Kumpulkan data</h3>
+          <p style="margin:0;font-size:16px;line-height:1.62;color:rgba(231,240,247,.68);text-wrap:pretty">Foto survei trotoar, jalur transit, titik halte dan stasiun, sampai ulasan warga &mdash; semuanya ditarik jadi satu basis data spasial yang bisa ditelusuri.</p>
+        </div>
+
+        <div data-reveal style="display:flex;flex-direction:column;gap:18px">
+          <div style="display:flex;align-items:center;gap:14px">
+            <span style="display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:999px;background:#5aa9dd;color:#101e2a;font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:500">02</span>
+          </div>
+          <h3 style="margin:0;font-size:clamp(20px,2.1vw,26px);font-weight:600;letter-spacing:-.02em;color:#f2f7fb">AI menilai</h3>
+          <p style="margin:0;font-size:16px;line-height:1.62;color:rgba(231,240,247,.68);text-wrap:pretty">Computer vision membaca kualitas pedestrian dari foto, NLP membaca keluhan warga, lalu tiap simpul dinilai lintas dimensi TOD dan dibandingkan satu sama lain.</p>
+        </div>
+
+        <div data-reveal style="display:flex;flex-direction:column;gap:18px">
+          <div style="display:flex;align-items:center;gap:14px">
+            <span style="display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:999px;background:#c2603a;color:#fbf3e6;font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:500">03</span>
+          </div>
+          <h3 style="margin:0;font-size:clamp(20px,2.1vw,26px);font-weight:600;letter-spacing:-.02em;color:#f2f7fb">Keputusan siap pakai</h3>
+          <p style="margin:0;font-size:16px;line-height:1.62;color:rgba(231,240,247,.68);text-wrap:pretty">Hasilnya bukan tumpukan tabel. Peta prioritas menunjukkan simpul mana yang paling butuh perbaikan, dan intervensi apa yang paling berdampak di sana.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="fitur" data-screen-label="04 Fitur" style="position:relative;background:#0c1822;color:#e7f0f7;padding:clamp(80px,10vw,150px) clamp(20px,4.4vw,64px) clamp(88px,11vw,168px)">
+  <div style="max-width:1180px;margin:0 auto;display:flex;flex-direction:column;gap:clamp(40px,5vw,72px)">
+    <div style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:28px">
+      <div style="display:flex;flex-direction:column;gap:18px;max-width:640px">
+        <span data-reveal style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.26em;text-transform:uppercase;color:#5aa9dd">Fitur</span>
+        <h2 data-reveal style="margin:0;font-size:clamp(30px,4.4vw,54px);font-weight:600;line-height:1.08;letter-spacing:-.035em;color:#f2f7fb;text-wrap:pretty">Satu layar untuk melihat, bertanya, dan memutuskan.</h2>
+      </div>
+      <a data-reveal href="{{ ctaUrl }}" style="display:inline-flex;align-items:center;gap:11px;height:52px;padding:0 28px;border-radius:999px;border:1px solid rgba(231,240,247,.28);color:#e7f0f7;font-size:14px;font-weight:600;white-space:nowrap" style-hover="background:#e7f0f7;color:#101e2a">Buka peta
+      <span style="font-size:16px;line-height:1">&#8594;</span>
+    </a>
+    </div>
+
+    <div data-reveal style="position:relative;width:100%;aspect-ratio:16/9;border-radius:clamp(12px,1.4vw,20px);overflow:hidden;border:1px solid rgba(231,240,247,.16);background:#17293a">
+      <image-slot id="pathrix-webgis" shape="rect" placeholder="Tarik screenshot WebGIS Pathrix ke sini"></image-slot>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(272px,1fr));gap:1px;background:rgba(231,240,247,.14);border:1px solid rgba(231,240,247,.14)">
+      <div data-reveal style="display:flex;flex-direction:column;gap:14px;padding:clamp(26px,3vw,40px);background:#0c1822">
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.2em;color:#5aa9dd">01</span>
+        <h3 style="margin:0;font-size:19px;font-weight:600;letter-spacing:-.015em;color:#f2f7fb">Peta multimoda</h3>
+        <p style="margin:0;font-size:15px;line-height:1.6;color:rgba(231,240,247,.66);text-wrap:pretty">Trans Jogja, jalur kereta, terminal, dan titik antarmoda dalam satu peta yang bisa dinyalakan per lapisan.</p>
+      </div>
+      <div data-reveal style="display:flex;flex-direction:column;gap:14px;padding:clamp(26px,3vw,40px);background:#0c1822">
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.2em;color:#5aa9dd">02</span>
+        <h3 style="margin:0;font-size:19px;font-weight:600;letter-spacing:-.015em;color:#f2f7fb">Panel AI per simpul</h3>
+        <p style="margin:0;font-size:15px;line-height:1.6;color:rgba(231,240,247,.66);text-wrap:pretty">Klik satu halte atau stasiun, dapat ringkasan kondisinya dan daftar hal yang paling perlu dibenahi di sana.</p>
+      </div>
+      <div data-reveal style="display:flex;flex-direction:column;gap:14px;padding:clamp(26px,3vw,40px);background:#0c1822">
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.2em;color:#5aa9dd">03</span>
+        <h3 style="margin:0;font-size:19px;font-weight:600;letter-spacing:-.015em;color:#f2f7fb">Tanya bahasa sehari-hari</h3>
+        <p style="margin:0;font-size:15px;line-height:1.6;color:rgba(231,240,247,.66);text-wrap:pretty">&ldquo;Halte mana yang paling sulit dijangkau pejalan kaki?&rdquo; &mdash; dijawab langsung sebagai sorotan di peta.</p>
+      </div>
+      <div data-reveal style="display:flex;flex-direction:column;gap:14px;padding:clamp(26px,3vw,40px);background:#0c1822">
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.2em;color:#5aa9dd">04</span>
+        <h3 style="margin:0;font-size:19px;font-weight:600;letter-spacing:-.015em;color:#f2f7fb">Jangkauan jalan kaki</h3>
+        <p style="margin:0;font-size:15px;line-height:1.6;color:rgba(231,240,247,.66);text-wrap:pretty">Lihat area yang benar-benar terlayani dalam waktu jalan kaki yang nyaman &mdash; bukan lingkaran ideal di atas kertas.</p>
+      </div>
+      <div data-reveal style="display:flex;flex-direction:column;gap:14px;padding:clamp(26px,3vw,40px);background:#0c1822">
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.2em;color:#5aa9dd">05</span>
+        <h3 style="margin:0;font-size:19px;font-weight:600;letter-spacing:-.015em;color:#f2f7fb">Walkability dari foto</h3>
+        <p style="margin:0;font-size:15px;line-height:1.6;color:rgba(231,240,247,.66);text-wrap:pretty">Model computer vision membaca trotoar, penyeberangan, dan peneduh langsung dari foto survei lapangan.</p>
+      </div>
+      <div data-reveal style="display:flex;flex-direction:column;gap:14px;padding:clamp(26px,3vw,40px);background:#0c1822">
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.2em;color:#c2603a">06</span>
+        <h3 style="margin:0;font-size:19px;font-weight:600;letter-spacing:-.015em;color:#f2f7fb">Suara pengguna</h3>
+        <p style="margin:0;font-size:15px;line-height:1.6;color:rgba(231,240,247,.66);text-wrap:pretty">Ulasan dan keluhan warga dibaca sebagai sentimen per lokasi, jadi data lapangan punya konteks manusia.</p>
+      </div>
+    </div>
+
+    <sc-if value="{{ showFieldPhotos }}" hint-placeholder-val="{{ true }}">
+      <div style="display:flex;flex-direction:column;gap:20px">
+        <span data-reveal style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:rgba(231,240,247,.45)">Foto survei lapangan</span>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:clamp(12px,1.6vw,20px)">
+          <div data-reveal style="position:relative;aspect-ratio:4/5;border-radius:clamp(10px,1.2vw,16px);overflow:hidden;border:1px solid rgba(231,240,247,.16);background:#17293a">
+            <image-slot id="pathrix-field-1" shape="rect" placeholder="Foto trotoar"></image-slot>
+          </div>
+          <div data-reveal style="position:relative;aspect-ratio:4/5;border-radius:clamp(10px,1.2vw,16px);overflow:hidden;border:1px solid rgba(231,240,247,.16);background:#17293a">
+            <image-slot id="pathrix-field-2" shape="rect" placeholder="Foto halte"></image-slot>
+          </div>
+          <div data-reveal style="position:relative;aspect-ratio:4/5;border-radius:clamp(10px,1.2vw,16px);overflow:hidden;border:1px solid rgba(231,240,247,.16);background:#17293a">
+            <image-slot id="pathrix-field-3" shape="rect" placeholder="Foto penyeberangan"></image-slot>
+          </div>
+          <div data-reveal style="position:relative;aspect-ratio:4/5;border-radius:clamp(10px,1.2vw,16px);overflow:hidden;border:1px solid rgba(231,240,247,.16);background:#17293a">
+            <image-slot id="pathrix-field-4" shape="rect" placeholder="Foto stasiun"></image-slot>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+  </div>
+</section>
+
+<section id="kontak" data-screen-label="05 Kontak" style="position:relative;background:#dfeaf3;color:#17293a;padding:clamp(80px,10vw,150px) clamp(20px,4.4vw,64px) clamp(72px,9vw,130px)">
+  <div style="max-width:1180px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:clamp(40px,5vw,88px);align-items:start">
+    <div style="display:flex;flex-direction:column;gap:22px">
+      <span data-reveal style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.26em;text-transform:uppercase;color:#1f6592">Kontak</span>
+      <h2 data-reveal style="margin:0;font-size:clamp(30px,4.4vw,54px);font-weight:600;line-height:1.06;letter-spacing:-.035em;color:#17293a;text-wrap:pretty">Mari benahi simpul transit Yogyakarta bersama.</h2>
+      <p data-reveal style="margin:0;max-width:44ch;font-size:clamp(16px,1.5vw,18px);line-height:1.62;color:rgba(23,41,58,.7);text-wrap:pretty">Pathrix dibangun untuk dipakai orang yang benar-benar mengambil keputusan &mdash; dinas perhubungan, badan perencanaan, kampus, dan komunitas pejalan kaki. Kalau kamu salah satunya, kami ingin dengar.</p>
+      <div data-reveal style="display:flex;flex-direction:column;gap:10px;padding-top:6px">
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:rgba(23,41,58,.5)">Surel</span>
+        <a href="{{ mailtoHref }}" style="font-size:clamp(18px,2.2vw,24px);font-weight:600;letter-spacing:-.02em;color:#1f6592;border-bottom:1px solid rgba(31,101,146,.35);align-self:flex-start">{{ contactEmail }}</a>
+      </div>
+    </div>
+
+    <form onSubmit="{{ onSubmit }}" data-reveal style="display:flex;flex-direction:column;gap:18px;padding:clamp(26px,3vw,40px);background:rgba(255,255,255,.55);border:1px solid rgba(23,41,58,.14);border-radius:clamp(12px,1.4vw,18px)">
+      <label style="display:flex;flex-direction:column;gap:9px;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:rgba(23,41,58,.6)">Nama
+        <input type="text" name="nama" required="required" placeholder="Nama kamu" style="height:52px;padding:0 16px;border:1px solid rgba(23,41,58,.2);border-radius:10px;background:#fbfdfe;font-family:'Archivo',sans-serif;font-size:16px;color:#17293a;outline:none" style-focus="border-color:#1f6592" />
+      </label>
+      <label style="display:flex;flex-direction:column;gap:9px;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:rgba(23,41,58,.6)">Surel atau instansi
+        <input type="text" name="kontak" required="required" placeholder="nama@instansi.go.id" style="height:52px;padding:0 16px;border:1px solid rgba(23,41,58,.2);border-radius:10px;background:#fbfdfe;font-family:'Archivo',sans-serif;font-size:16px;color:#17293a;outline:none" style-focus="border-color:#1f6592" />
+      </label>
+      <label style="display:flex;flex-direction:column;gap:9px;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:rgba(23,41,58,.6)">Pesan
+        <textarea name="pesan" rows="4" placeholder="Kawasan atau simpul mana yang ingin kamu bahas?" style="padding:14px 16px;border:1px solid rgba(23,41,58,.2);border-radius:10px;background:#fbfdfe;font-family:'Archivo',sans-serif;font-size:16px;line-height:1.55;color:#17293a;outline:none;resize:vertical" style-focus="border-color:#1f6592"></textarea>
+      </label>
+      <button type="submit" style="display:inline-flex;align-items:center;justify-content:center;gap:11px;height:56px;border:none;border-radius:999px;background:#1f6592;color:#f0f6fb;font-family:'Archivo',sans-serif;font-size:15px;font-weight:600;letter-spacing:.02em;cursor:pointer" style-hover="background:#17293a">{{ submitLabel }}
+        <span style="font-size:16px;line-height:1">&#8594;</span>
+      </button>
+      <sc-if value="{{ sent }}" hint-placeholder-val="{{ false }}">
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#1f6592">Terima kasih &mdash; pesanmu tercatat.</span>
+      </sc-if>
+    </form>
+  </div>
+</section>
+
+<footer style="background:#101e2a;color:rgba(231,240,247,.6);padding:clamp(44px,5vw,64px) clamp(20px,4.4vw,64px)">
+  <div style="max-width:1180px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:28px">
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <span style="font-family:'Quarkiz','Archivo',sans-serif;font-size:19px;letter-spacing:.16em;color:#e7f0f7">PATHRIX</span>
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase">MAPID WebGIS Competition 2026</span>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:14px 28px;font-size:13px;font-weight:600;letter-spacing:.04em">
+      <a href="#beranda" style="color:rgba(231,240,247,.6)">Beranda</a>
+      <a href="#cara-kerja" style="color:rgba(231,240,247,.6)">Cara Kerja</a>
+      <a href="#fitur" style="color:rgba(231,240,247,.6)">Fitur</a>
+      <a href="#kontak" style="color:rgba(231,240,247,.6)">Kontak</a>
+    </div>
+  </div>
+</footer>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;ctaUrl&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;#fitur&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Tautan&quot;},&quot;contactEmail&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;halo@pathrix.id&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Tautan&quot;},&quot;dioramaView&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;stage&quot;,&quot;split&quot;,&quot;wide&quot;],&quot;default&quot;:&quot;stage&quot;,&quot;tsType&quot;:&quot;\&quot;stage\&quot; | \&quot;split\&quot; | \&quot;wide\&quot;&quot;,&quot;section&quot;:&quot;Hero&quot;},&quot;showFieldPhotos&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Fitur&quot;}}">
+class Component extends DCLogic {
+  state = { wide: true, menuOpen: false, sent: false };
+  navRef = React.createRef();
+  markRef = React.createRef();
+  linksRef = React.createRef();
+  navCtaRef = React.createRef();
+
+  componentDidMount() {
+    this._onResize = () => {
+      const wide = window.innerWidth >= 900;
+      if (wide !== this.state.wide) this.setState({ wide, menuOpen: false });
+    };
+    this._onResize();
+    window.addEventListener("resize", this._onResize);
+
+    // Nav chrome is driven by direct DOM writes rather than template holes so
+    // the bar paints its final light state instantly on first render.
+    this._onScroll = () => {
+      const past = window.scrollY > window.innerHeight * 0.72;
+      if (past === this._past) return;
+      this._past = past;
+      const nav = this.navRef.current;
+      if (!nav) return;
+      nav.style.background = past ? "rgba(16,30,42,.9)" : "transparent";
+      nav.style.backdropFilter = past ? "blur(10px)" : "none";
+      nav.style.borderBottomColor = past ? "rgba(231,240,247,.14)" : "transparent";
+      const ink = past ? "#e7f0f7" : "#17293a";
+      if (this.markRef.current) this.markRef.current.style.color = ink;
+      const links = this.linksRef.current;
+      if (links) {
+        for (const a of links.children) {
+          const active = a.dataset.navlink === this._active;
+          a.style.color = active ? ink : past ? "rgba(231,240,247,.55)" : "rgba(23,41,58,.55)";
+        }
+      }
+      const cta = this.navCtaRef.current;
+      if (cta) {
+        cta.style.background = past ? "#e7f0f7" : "#17293a";
+        cta.style.color = past ? "#101e2a" : "#e7f0f7";
+      }
+    };
+    this._active = "beranda";
+    window.addEventListener("scroll", this._onScroll, { passive: true });
+
+    this._sections = ["beranda", "cara-kerja", "fitur", "kontak"];
+    this._spy = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) this._active = e.target.id;
+        }
+        this._past = undefined;
+        this._onScroll();
+      },
+      { rootMargin: "-45% 0px -50% 0px" },
+    );
+    for (const id of this._sections) {
+      const el = document.getElementById(id);
+      if (el) this._spy.observe(el);
+    }
+
+    this._t = setTimeout(() => this.initScroll(), 140);
+  }
+
+  initScroll() {
+    const g = window.gsap;
+    const ST = window.ScrollTrigger;
+    if (!g || !ST) return;
+    g.registerPlugin(ST);
+    const root = this.root || document;
+
+    // gsap.from throughout: if anything here fails to run the design is still
+    // fully visible, just unanimated.
+    const hero = root.querySelectorAll("#beranda [data-reveal]");
+    if (hero.length) {
+      g.from(hero, { y: 30, opacity: 0, duration: 1.05, ease: "power3.out", stagger: 0.1, delay: 0.15 });
+    }
+
+    ST.batch(root.querySelectorAll("section:not(#beranda) [data-reveal], footer [data-reveal]"), {
+      start: "top 88%",
+      onEnter: (batch) =>
+        g.from(batch, { y: 34, opacity: 0, duration: 0.9, ease: "power3.out", stagger: 0.09 }),
+    });
+
+    for (const line of root.querySelectorAll("[data-draw]")) {
+      g.from(line, {
+        scaleX: 0,
+        ease: "none",
+        scrollTrigger: { trigger: line.closest("section"), start: "top 72%", end: "center 55%", scrub: 0.6 },
+      });
+    }
+  }
+
+  componentWillUnmount() {
+    clearTimeout(this._t);
+    window.removeEventListener("resize", this._onResize);
+    window.removeEventListener("scroll", this._onScroll);
+    this._spy?.disconnect();
+    window.ScrollTrigger?.getAll?.().forEach((t) => t.kill());
+  }
+
+  renderVals() {
+    const email = this.props.contactEmail ?? "halo@pathrix.id";
+    return {
+      navRef: this.navRef,
+      markRef: this.markRef,
+      linksRef: this.linksRef,
+      navCtaRef: this.navCtaRef,
+      wideNav: this.state.wide,
+      narrowNav: !this.state.wide,
+      menuOpen: this.state.menuOpen && !this.state.wide,
+      toggleMenu: () => this.setState((s) => ({ menuOpen: !s.menuOpen })),
+      closeMenu: () => this.setState({ menuOpen: false }),
+      ctaUrl: this.props.ctaUrl ?? "#fitur",
+      dioramaView: this.props.dioramaView ?? "stage",
+      showFieldPhotos: this.props.showFieldPhotos ?? true,
+      contactEmail: email,
+      mailtoHref: "mailto:" + email,
+      sent: this.state.sent,
+      submitLabel: this.state.sent ? "Terkirim" : "Kirim pesan",
+      onSubmit: (e) => {
+        e.preventDefault();
+        this.setState({ sent: true });
+      },
+    };
+  }
+}
+
+</script>
+</body>
+</html>
