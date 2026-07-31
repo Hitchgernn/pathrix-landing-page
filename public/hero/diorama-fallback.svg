@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1240 800" role="img" aria-label="Ilustrasi diorama pulau simpul transit Yogyakarta">
+  <!--
+    Static stand-in for the three.js diorama, shown only when WebGL is
+    unavailable. Colours are the scene palette (config.js) so it sits on the
+    page gradient without a seam. Replace with a real render of the scene when
+    one can be captured.
+  -->
+  <defs>
+    <clipPath id="disc">
+      <ellipse cx="620" cy="470" rx="470" ry="176" />
+    </clipPath>
+  </defs>
+
+  <!-- water disc -->
+  <ellipse cx="620" cy="486" rx="486" ry="188" fill="#2f6f96" fill-opacity=".88" />
+  <!-- plinth -->
+  <g clip-path="url(#disc)">
+    <ellipse cx="620" cy="470" rx="470" ry="176" fill="#6b4b32" />
+    <ellipse cx="620" cy="452" rx="470" ry="176" fill="#4a3324" />
+  </g>
+  <ellipse cx="620" cy="440" rx="470" ry="176" fill="#6b4b32" />
+  <!-- terrain -->
+  <ellipse cx="620" cy="430" rx="452" ry="168" fill="#8fa85a" />
+  <ellipse cx="620" cy="424" rx="360" ry="132" fill="#5b7a3c" fill-opacity=".55" />
+  <!-- rail ring -->
+  <ellipse cx="620" cy="424" rx="300" ry="110" fill="none" stroke="#7a6a55" stroke-width="26" />
+  <!-- road ring -->
+  <ellipse cx="620" cy="420" rx="190" ry="70" fill="none" stroke="#4a4a4c" stroke-width="34" />
+  <!-- plaza -->
+  <ellipse cx="620" cy="416" rx="92" ry="34" fill="#bdb2a0" />
+
+  <!-- Tugu landmark at the centre -->
+  <g>
+    <ellipse cx="620" cy="404" rx="30" ry="11" fill="#8d8577" />
+    <rect x="606" y="300" width="28" height="104" fill="#e6e2d6" />
+    <rect x="606" y="300" width="10" height="104" fill="#ffffff" fill-opacity=".45" />
+    <path d="M600 300h40l-20-46z" fill="#e6e2d6" />
+    <circle cx="620" cy="246" r="9" fill="#c2a35a" />
+  </g>
+
+  <!-- a few trees on the outer band -->
+  <g fill="#3f6b39">
+    <path d="M300 372l14 26h-28zM306 398h4v10h-4z" />
+    <path d="M940 386l15 27h-30zM946 413h4v10h-4z" />
+    <path d="M400 330l12 22h-24zM405 352h3v9h-3z" />
+    <path d="M846 336l12 22h-24zM851 358h3v9h-3z" />
+  </g>
+</svg>
