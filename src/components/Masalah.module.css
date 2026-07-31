@@ -1,0 +1,74 @@
+.section {
+  position: relative;
+  background: var(--ink);
+  color: var(--paper);
+  padding: clamp(88px, 12vw, 180px) var(--gutter) clamp(80px, 10vw, 150px);
+  overflow: hidden;
+}
+
+/* Hairline seam where the light hero meets the ink section. */
+.seam {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    rgba(90, 169, 221, 0) 0%,
+    rgba(90, 169, 221, 0.7) 50%,
+    rgba(90, 169, 221, 0) 100%
+  );
+}
+
+.shell {
+  max-width: var(--shell);
+  margin: 0 auto;
+  display: grid;
+  /* min() so the floor can never exceed the available width — see Kontak. */
+  grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
+  gap: clamp(36px, 5vw, 80px);
+  align-items: start;
+}
+
+.headingCol {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--blue-lift);
+}
+
+.heading {
+  font-size: clamp(30px, 4.6vw, 58px);
+  line-height: 1.06;
+  letter-spacing: -0.035em;
+  color: var(--on-dark-head);
+  text-wrap: pretty;
+}
+
+.bodyCol {
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+  padding-top: clamp(0px, 1.5vw, 18px);
+}
+
+.body {
+  font-size: clamp(16px, 1.5vw, 19px);
+  line-height: 1.62;
+  color: var(--on-dark-body);
+  text-wrap: pretty;
+}
+
+.emphasis {
+  font-style: normal;
+  color: var(--on-dark-head);
+  border-bottom: 1px solid rgba(90, 169, 221, 0.6);
+}
