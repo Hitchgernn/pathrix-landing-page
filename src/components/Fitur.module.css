@@ -1,0 +1,159 @@
+/* One step darker than the other ink sections. */
+.section {
+  position: relative;
+  background: var(--ink-deep);
+  color: var(--paper);
+  padding: clamp(80px, 10vw, 150px) var(--gutter) clamp(88px, 11vw, 168px);
+}
+
+.shell {
+  max-width: var(--shell);
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(40px, 5vw, 72px);
+}
+
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 28px;
+}
+
+.headingCol {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  max-width: 640px;
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--blue-lift);
+}
+
+.heading {
+  font-size: clamp(30px, 4.4vw, 54px);
+  line-height: 1.08;
+  letter-spacing: -0.035em;
+  color: var(--on-dark-head);
+  text-wrap: pretty;
+}
+
+.outlineCta {
+  display: inline-flex;
+  align-items: center;
+  gap: 11px;
+  height: 52px;
+  padding: 0 28px;
+  border-radius: 999px;
+  border: 1px solid rgba(231, 240, 247, 0.28);
+  color: var(--paper);
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  transition:
+    background 0.3s ease,
+    color 0.3s ease;
+}
+
+.outlineCta:hover {
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.arrow {
+  font-size: 16px;
+  line-height: 1;
+}
+
+.shot {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: clamp(12px, 1.4vw, 20px);
+  overflow: hidden;
+  border: 1px solid rgba(231, 240, 247, 0.16);
+  background: var(--ink-soft);
+}
+
+/*
+ * Hairline grid, not bordered cards: 1px gaps over a translucent background,
+ * with each cell painting the section colour back over it.
+ */
+.grid {
+  display: grid;
+  /* min() so the floor can never exceed the available width — see Kontak. */
+  grid-template-columns: repeat(auto-fit, minmax(min(272px, 100%), 1fr));
+  gap: 1px;
+  background: var(--on-dark-line);
+  border: 1px solid var(--on-dark-line);
+}
+
+.cell {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: clamp(26px, 3vw, 40px);
+  background: var(--ink-deep);
+}
+
+.cellIndex {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  color: var(--blue-lift);
+}
+
+/* The single warm index in the grid. */
+.cellIndex[data-accent="warm"] {
+  color: var(--warm-text);
+}
+
+.cellTitle {
+  font-size: 19px;
+  letter-spacing: -0.015em;
+  color: var(--on-dark-head);
+}
+
+.cellBody {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--on-dark-body-quiet);
+  text-wrap: pretty;
+}
+
+.fieldBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.fieldLabel {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--on-dark-meta);
+}
+
+.fieldGrid {
+  display: grid;
+  /* min() so the floor can never exceed the available width — see Kontak. */
+  grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr));
+  gap: clamp(12px, 1.6vw, 20px);
+}
+
+.fieldItem {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  border-radius: clamp(10px, 1.2vw, 16px);
+  overflow: hidden;
+  border: 1px solid rgba(231, 240, 247, 0.16);
+  background: var(--ink-soft);
+}

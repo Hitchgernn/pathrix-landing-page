@@ -1,0 +1,76 @@
+import styles from "./Fitur.module.css";
+import { ImageSlot } from "./ImageSlot";
+import {
+  ctaUrl,
+  FIELD_PHOTO_SIZE,
+  fieldPhotos,
+  fitur,
+  productShot,
+} from "../content/site";
+
+/** Heading + outline link, the product shot, the hairline feature grid, field photos. */
+export function Fitur() {
+  return (
+    <section id="fitur" className={styles.section} aria-labelledby="fitur-heading">
+      <div className={styles.shell}>
+        <div className={styles.head}>
+          <div className={styles.headingCol}>
+            <span className={styles.eyebrow} data-reveal>
+              {fitur.eyebrow}
+            </span>
+            <h2 id="fitur-heading" className={styles.heading} data-reveal>
+              {fitur.heading}
+            </h2>
+          </div>
+          <a className={styles.outlineCta} href={ctaUrl} data-reveal>
+            {fitur.ctaLabel}
+            <span className={styles.arrow} aria-hidden="true">
+              &#8594;
+            </span>
+          </a>
+        </div>
+
+        <div className={styles.shot} data-reveal>
+          <ImageSlot
+            src={productShot.src}
+            alt={productShot.alt}
+            caption={productShot.caption}
+            width={productShot.width}
+            height={productShot.height}
+          />
+        </div>
+
+        <div className={styles.grid}>
+          {fitur.items.map((item) => (
+            <div key={item.index} className={styles.cell} data-reveal>
+              <span className={styles.cellIndex} data-accent={item.accent}>
+                {item.index}
+              </span>
+              <h3 className={styles.cellTitle}>{item.title}</h3>
+              <p className={styles.cellBody}>{item.body}</p>
+            </div>
+          ))}
+        </div>
+
+        <div className={styles.fieldBlock}>
+          <span className={styles.fieldLabel} data-reveal>
+            {fitur.fieldLabel}
+          </span>
+          <div className={styles.fieldGrid}>
+            {fieldPhotos.map((photo) => (
+              <div key={photo.id} className={styles.fieldItem} data-reveal>
+                <ImageSlot
+                  src={photo.src}
+                  alt={photo.alt}
+                  caption={photo.caption}
+                  width={FIELD_PHOTO_SIZE.width}
+                  height={FIELD_PHOTO_SIZE.height}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
