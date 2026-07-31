@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Pathrix — AI Agent WebGIS untuk Mobilitas Multimoda Yogyakarta</title>
+    <meta
+      name="description"
+      content="Pathrix adalah AI agent berbasis WebGIS yang memetakan dan menilai simpul transit Yogyakarta, supaya perbaikan trotoar, halte, dan penyeberangan bisa diprioritaskan dengan bukti spasial."
+    />
+    <meta name="theme-color" content="#dfeaf3" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/favicon.svg" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+    <!--
+      Load the webfont stylesheet without blocking first paint: fetch it as a
+      preload, then promote it to a stylesheet once it arrives. font-display:swap
+      means text is readable in the fallback face until it lands. The <noscript>
+      copy keeps it working with JavaScript disabled.
+    -->
+    <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap"
+      onload="this.rel='stylesheet'"
+    />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap"
+      />
+    </noscript>
+    <link
+      rel="preload"
+      href="/fonts/Quarkiz.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin="anonymous"
+    />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Pathrix — Mobilitas Multimoda Yogyakarta" />
+    <meta
+      property="og:description"
+      content="WebGIS-Based AI Agent for Intelligent Multimodal Mobility in Yogyakarta. MAPID WebGIS Competition 2026."
+    />
+  </head>
+  <body>
+    <div id="root"><!--app-html--></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
