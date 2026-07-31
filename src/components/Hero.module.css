@@ -1,0 +1,180 @@
+.hero {
+  position: relative;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: radial-gradient(120% 90% at 50% 12%, var(--sky-0) 0%, var(--sky-1) 46%, var(--sky-2) 100%);
+}
+
+/* Fine grain over the gradient. */
+.grain {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+  opacity: 0.06;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.poster {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  /* Clear the fixed nav: two pad units + the 44px control + a breath. */
+  padding: calc(var(--nav-pad-y) * 2 + 44px + clamp(8px, 2vw, 26px)) var(--gutter) 0;
+}
+
+/*
+ * Breakpoint 1 (900px): above it the tagline is one nowrap line flanked by
+ * hairlines; below it the line would not fit, so it wraps into a block. Both
+ * variants live in the markup and CSS chooses — no JS, no first-paint flash.
+ */
+.taglineRow {
+  display: none;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  max-width: 1080px;
+}
+
+@media (min-width: 900px) {
+  .taglineRow {
+    display: flex;
+  }
+
+  .taglineBlock {
+    display: none;
+  }
+}
+
+.rule {
+  flex: 1;
+  height: 1px;
+  background: rgba(31, 101, 146, 0.35);
+}
+
+.tagline {
+  font-family: var(--font-mono);
+  font-size: clamp(10px, 1.05vw, 12px);
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--blue);
+  white-space: nowrap;
+}
+
+/* Below 900px the tagline wraps into a block instead of a single hairline row. */
+.taglineBlock {
+  margin: 0;
+  max-width: 30ch;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.7;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--blue);
+  text-wrap: pretty;
+}
+
+.wordmark {
+  margin: clamp(16px, 2.4vw, 24px) 0 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: var(--wordmark);
+  line-height: 0.82;
+  letter-spacing: 0.005em;
+  color: var(--ink-soft);
+  white-space: nowrap;
+}
+
+.subline {
+  margin-top: clamp(10px, 1.4vw, 14px);
+  font-family: var(--font-mono);
+  font-size: clamp(9px, 1vw, 11px);
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--on-light-meta);
+  text-wrap: balance;
+}
+
+/*
+ * Fix 4: the diorama is sized from the hero's *remaining* height (flex:1), not
+ * a fixed aspect box, and its overlap with the wordmark is derived from the
+ * wordmark's own clamp() — so the "island standing in front of the letters"
+ * proportion holds from 390px to 1440px+ and the letters stay legible.
+ */
+.stage {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  z-index: 4;
+  pointer-events: none;
+  margin-top: calc(var(--wordmark) * -0.36);
+  /* Most-negative value first: clamp(min, preferred, max). */
+  margin-bottom: clamp(-118px, -8vw, -70px);
+}
+
+.stageInner {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: min(1240px, 168vw);
+  height: 100%;
+  transform: translateX(-50%);
+}
+
+.ctaRow {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 0 var(--gutter) clamp(28px, 4vw, 46px);
+}
+
+.cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  height: 58px;
+  padding: 0 clamp(26px, 3vw, 36px);
+  border-radius: 999px;
+  background: var(--blue);
+  color: #f0f6fb;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  box-shadow: 0 14px 34px -12px rgba(23, 41, 58, 0.7);
+  transition: background 0.3s ease;
+}
+
+.cta:hover {
+  background: var(--ink-soft);
+  color: #f0f6fb;
+}
+
+.ctaArrow {
+  font-size: 17px;
+  line-height: 1;
+}
+
+/*
+ * Squat windows: the vertical budget is too small for the full overlap, so the
+ * island pulls back rather than climbing over the letters. Fluid either side of
+ * the change, so nothing snaps.
+ */
+@media (max-height: 620px) {
+  .stage {
+    margin-top: calc(var(--wordmark) * -0.2);
+  }
+}

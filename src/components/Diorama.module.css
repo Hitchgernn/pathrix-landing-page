@@ -1,0 +1,45 @@
+.root {
+  position: absolute;
+  inset: 0;
+  display: block;
+  overflow: hidden;
+}
+
+/*
+ * The canvas is transparent, not sky-coloured: the page gradient shows through,
+ * which is what removes the seam where the diorama meets the page. The scene's
+ * fog is set to the page colour behind it via the `tint` prop.
+ */
+.surface {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.surface[data-ready="true"] {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .surface {
+    transition: none;
+  }
+}
+
+/* Static fallback when WebGL is unavailable or context creation fails. */
+.fallback {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 12%;
+}
+
+.fallbackImage {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center bottom;
+}
