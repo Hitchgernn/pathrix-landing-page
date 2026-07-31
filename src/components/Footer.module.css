@@ -1,0 +1,53 @@
+.footer {
+  background: var(--ink);
+  /* .6 clears AA (6.04:1) at this size. */
+  color: rgba(231, 240, 247, 0.6);
+  padding: clamp(44px, 5vw, 64px) var(--gutter);
+}
+
+.shell {
+  max-width: var(--shell);
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 28px;
+}
+
+.brand {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mark {
+  font-family: var(--font-display);
+  font-size: 19px;
+  letter-spacing: 0.16em;
+  color: var(--paper);
+}
+
+.competition {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px 28px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.link {
+  color: rgba(231, 240, 247, 0.6);
+}
+
+.link:hover {
+  color: var(--paper);
+}
