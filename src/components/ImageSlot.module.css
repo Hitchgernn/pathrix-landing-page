@@ -1,0 +1,35 @@
+.slot {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/*
+ * Placeholder until real assets are supplied: a flat --ink-soft block with the
+ * caption. Deliberately no gradient shimmer and no skeleton animation.
+ */
+.placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: var(--ink-soft);
+}
+
+.caption {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  /* Slot backing is --ink-soft, lighter than the sections, so this needs .62. */
+  color: rgba(231, 240, 247, 0.62);
+  text-align: center;
+  text-wrap: balance;
+}
