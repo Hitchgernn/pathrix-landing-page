@@ -1,0 +1,168 @@
+.section {
+  position: relative;
+  background: var(--sky-1);
+  color: var(--ink-soft);
+  padding: clamp(80px, 10vw, 150px) var(--gutter) clamp(72px, 9vw, 130px);
+}
+
+.shell {
+  max-width: var(--shell);
+  margin: 0 auto;
+  display: grid;
+  /*
+   * min() so the track floor cannot exceed the space actually available. A bare
+   * minmax(320px, 1fr) overflows below ~360px, because the 320px floor plus the
+   * page gutter is wider than the viewport.
+   */
+  grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr));
+  gap: clamp(40px, 5vw, 88px);
+  align-items: start;
+}
+
+.pitch {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--blue);
+}
+
+.heading {
+  font-size: clamp(30px, 4.4vw, 54px);
+  line-height: 1.06;
+  letter-spacing: -0.035em;
+  color: var(--ink-soft);
+  text-wrap: pretty;
+}
+
+.body {
+  max-width: 44ch;
+  font-size: clamp(16px, 1.5vw, 18px);
+  line-height: 1.62;
+  color: var(--on-light-body);
+  text-wrap: pretty;
+}
+
+.emailBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 6px;
+}
+
+.emailLabel {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--on-light-meta);
+}
+
+.email {
+  align-self: flex-start;
+  font-size: clamp(18px, 2.2vw, 24px);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--blue);
+  border-bottom: 1px solid rgba(31, 101, 146, 0.35);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: clamp(26px, 3vw, 40px);
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px solid rgba(23, 41, 58, 0.14);
+  border-radius: clamp(12px, 1.4vw, 18px);
+}
+
+.label {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--on-light-label);
+}
+
+.input,
+.textarea {
+  border: 1px solid rgba(23, 41, 58, 0.2);
+  border-radius: 10px;
+  background: #fbfdfe;
+  font-family: var(--font-sans);
+  font-size: 16px;
+  color: var(--ink-soft);
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.input {
+  height: 52px;
+  padding: 0 16px;
+}
+
+.textarea {
+  padding: 14px 16px;
+  line-height: 1.55;
+  resize: vertical;
+}
+
+.input:focus,
+.textarea:focus {
+  border-color: var(--blue);
+}
+
+.submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 11px;
+  height: 56px;
+  border: none;
+  border-radius: 999px;
+  background: var(--blue);
+  color: #f0f6fb;
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.submit:hover:not(:disabled) {
+  background: var(--ink-soft);
+}
+
+.submit:disabled {
+  opacity: 0.7;
+  cursor: default;
+}
+
+.arrow {
+  font-size: 16px;
+  line-height: 1;
+}
+
+.note {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1.6;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--blue);
+}
+
+.note[data-tone="error"] {
+  color: var(--warm);
+}
