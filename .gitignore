@@ -1,0 +1,28 @@
+.codegraph
+.claude
+.agents
+.kiro
+CLAUDE.md
+
+# Generated knowledge graph — rebuild with `graphify update .`
+graphify-out
+
+node_modules
+dist
+.ssr-tmp
+.env
+.env.local
+.env.*.local
+._*
+*.log
+
+# Editor and OS noise
+.vscode
+.idea
+.DS_Store
+.thumbnail
+
+# Intermediate rasters from scripts/art — the encoded output in public/img is
+# what ships, and it is committed.
+scripts/art/raster
+scripts/shots
