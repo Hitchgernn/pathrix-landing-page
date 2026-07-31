@@ -1,0 +1,56 @@
+/* Sampled from the 3D scene so the diorama and the page agree. Two background
+   colours for the whole page — light blue and ink. No third. */
+:root {
+  --sky-0: #eff5fa;
+  --sky-1: #dfeaf3;
+  --sky-2: #c6d9e8;
+
+  --ink: #101e2a;
+  --ink-deep: #0c1822;
+  --ink-soft: #17293a;
+
+  --blue: #1f6592;
+  --blue-lift: #5aa9dd;
+  --warm: #c2603a;
+  /*
+   * --warm at 11px does not clear WCAG AA on the dark backgrounds (4.30:1 on
+   * --ink-deep, 4.05:1 on --ink). This lifted tone keeps the same hue and reads
+   * as the same spark, at 5.27:1 / 4.96:1. --warm itself is unchanged and still
+   * used wherever it is a *background* (step 03 marker) or ::selection.
+   */
+  --warm-text: #d2704a;
+  --paper: #e7f0f7;
+
+  /* Text on dark */
+  --on-dark-head: #f2f7fb;
+  --on-dark-body: rgba(231, 240, 247, 0.72);
+  --on-dark-body-soft: rgba(231, 240, 247, 0.68);
+  --on-dark-body-quiet: rgba(231, 240, 247, 0.66);
+  /*
+   * Meta text is the quietest step in the hierarchy. The prototype used .45,
+   * which lands at ~3.8–4.05:1 for 11px type — below AA. .56 is the smallest
+   * value that clears 4.5:1 on all three dark backgrounds while staying clearly
+   * quieter than body text.
+   */
+  --on-dark-meta: rgba(231, 240, 247, 0.56);
+  --on-dark-line: rgba(231, 240, 247, 0.14);
+
+  /* Text on light */
+  --on-light-body: rgba(23, 41, 58, 0.7);
+  /* .5 gave 2.92:1; .7 clears AA and still reads as meta against body text. */
+  --on-light-meta: rgba(23, 41, 58, 0.7);
+  --on-light-label: rgba(23, 41, 58, 0.72);
+
+  --font-display: "Quarkiz", "Archivo", sans-serif;
+  --font-sans: "Archivo", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+
+  /* Shared rhythm from the prototype's clamp() values. */
+  --gutter: clamp(20px, 4.4vw, 64px);
+  --nav-pad-y: clamp(18px, 2.4vw, 32px);
+  --wordmark: clamp(52px, 15.6vw, 232px);
+  --shell: 1180px;
+
+  /* Anchors must clear the real nav height. */
+  --anchor-offset: clamp(100px, 10vw, 124px);
+}
