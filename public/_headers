@@ -1,0 +1,34 @@
+# Cache policy for static hosts that read _headers (Netlify, Cloudflare Pages).
+#
+# The split matters: Vite fingerprints everything in /assets/, so those files can
+# be cached forever. index.html must never be, or a deploy leaves clients pinned
+# to an old build that references deleted chunk names.
+
+/index.html
+  Cache-Control: public, max-age=0, must-revalidate
+
+/
+  Cache-Control: public, max-age=0, must-revalidate
+
+# Content-hashed JS and CSS — safe to cache indefinitely.
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Fonts and generated imagery are not hashed, so use a long TTL with revalidation
+# rather than immutable. A week keeps repeat visits free while still letting a
+# replaced asset propagate.
+/fonts/*
+  Cache-Control: public, max-age=604800, stale-while-revalidate=86400
+
+/img/*
+  Cache-Control: public, max-age=604800, stale-while-revalidate=86400
+
+/hero/*
+  Cache-Control: public, max-age=604800, stale-while-revalidate=86400
+
+/favicon.svg
+  Cache-Control: public, max-age=604800
+
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
