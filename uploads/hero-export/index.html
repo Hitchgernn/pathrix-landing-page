@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Transportasi Jogjakarta — 3D Island</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='26'>🚂</text></svg>"
+    />
+    <style>
+      :root {
+        --cream: #f2e4cf;
+        --ink: #3b2b1d;
+        --accent: #8c3f2b;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: var(--cream);
+        font-family: "Trebuchet MS", "Segoe UI", system-ui, sans-serif;
+        color: var(--ink);
+      }
+
+      #app {
+        position: fixed;
+        inset: 0;
+      }
+
+      #app canvas {
+        display: block;
+      }
+
+      #labels {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        overflow: hidden;
+      }
+
+      .overlay {
+        position: fixed;
+        pointer-events: none;
+        user-select: none;
+      }
+
+      #title {
+        top: 26px;
+        left: 32px;
+      }
+
+      #title h1 {
+        font-size: clamp(22px, 4vw, 42px);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        line-height: 1;
+        color: var(--accent);
+      }
+
+      #title p {
+        margin-top: 6px;
+        font-size: 13px;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        opacity: 0.7;
+      }
+
+      #legend {
+        bottom: 26px;
+        left: 32px;
+        font-size: 13px;
+        line-height: 1.9;
+      }
+
+      #legend .row {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+      }
+
+      #legend .dot {
+        width: 11px;
+        height: 11px;
+        border-radius: 3px;
+        flex: 0 0 auto;
+      }
+
+      #hint {
+        bottom: 26px;
+        right: 32px;
+        font-size: 12px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        opacity: 0.6;
+        text-align: right;
+      }
+
+      .pin {
+        background: rgba(59, 43, 29, 0.9);
+        color: #f7ecdb;
+        padding: 5px 11px;
+        border-radius: 999px;
+        font-size: 12px;
+        letter-spacing: 0.08em;
+        white-space: nowrap;
+        transform: translateY(-8px);
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+      }
+
+      @media (max-width: 640px) {
+        #title {
+          top: 18px;
+          left: 18px;
+        }
+        #legend {
+          bottom: 18px;
+          left: 18px;
+          font-size: 11px;
+          line-height: 1.7;
+        }
+        #hint {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app"></div>
+    <div id="labels"></div>
+
+    <div class="overlay" id="title">
+      <h1>Transportasi Jogjakarta</h1>
+      <p>Tugu Pal Putih &middot; Diorama 3D</p>
+    </div>
+
+    <div class="overlay" id="legend">
+      <div class="row">
+        <span class="dot" style="background: #1f4f8f"></span>Kereta Api
+      </div>
+      <div class="row">
+        <span class="dot" style="background: #1d7ec4"></span>Bus TransJogja
+      </div>
+      <div class="row">
+        <span class="dot" style="background: #e6b422"></span>Taksi
+      </div>
+      <div class="row">
+        <span class="dot" style="background: #c0392b"></span>Becak
+      </div>
+      <div class="row">
+        <span class="dot" style="background: #7a4b25"></span>Andong
+      </div>
+      <div class="row">
+        <span class="dot" style="background: #dfe6ec"></span>Pesawat
+      </div>
+    </div>
+
+    <div class="overlay" id="hint">
+      Drag to orbit &middot; scroll to zoom<br />click a vehicle for its name
+    </div>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
