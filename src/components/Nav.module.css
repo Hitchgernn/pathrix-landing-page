@@ -25,12 +25,19 @@
   border-bottom-color: var(--on-dark-line);
 }
 
+/* The mark is the logotype SVG, which inherits `color` via currentColor — so the
+   inversion and hover rules below still drive it, exactly as they did the text. */
 .mark {
-  font-family: var(--font-display);
-  font-size: clamp(16px, 2vw, 21px);
-  letter-spacing: 0.16em;
+  display: flex;
+  align-items: center;
   color: var(--ink-soft);
   transition: color 0.45s ease;
+}
+
+.markLogo {
+  display: block;
+  height: clamp(15px, 1.7vw, 20px);
+  width: auto;
 }
 
 .mark:hover {
