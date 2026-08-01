@@ -81,16 +81,26 @@ Do not introduce a third.**
 
 `--sky-0 #eff5fa` · `--sky-1 #dfeaf3` · `--sky-2 #c6d9e8` · `--ink #101e2a` ·
 `--ink-deep #0c1822` (Fitur only) · `--ink-soft #17293a` · `--blue #1f6592` ·
-`--blue-lift #5aa9dd` · `--warm #c2603a` · `--paper #e7f0f7`
+`--blue-lift #5aa9dd` · `--warm #d9a521` · `--paper #e7f0f7`
 
-Two token values deviate from the prototype, deliberately, for WCAG AA:
+The warm accent is yellow and is **three** values, because no single yellow can
+read as 11px text on both the dark and the light backgrounds:
+
+- `--warm #d9a521` — background use only (step 03 marker, `::selection`). Pair it
+  with `--ink` text: 7.54:1. A light foreground on it fails AA (~2:1), so the two
+  places that used to do that now use `--ink`. Same hex as the `GOLD` material in
+  `src/hero/landmarks/tugu.js`, deliberately — keep them in sync.
+- `--warm-text #f2c94c` — text on the dark backgrounds. 10.66:1 on `--ink`,
+  11.32:1 on `--ink-deep`. Also the nav active-section underline.
+- `--warm-deep #7c5e13` — text on the light backgrounds. 4.95:1 on `--sky-1`.
+  This case was previously undocumented and unhandled: the Kontak error note used
+  `--warm` on `--sky-1` at 3.42:1, already below AA before the yellow change.
+
+Two other token values deviate from the prototype, deliberately, for WCAG AA:
 
 - `--on-dark-meta` is `.56` (prototype used `.45`, which measured 3.8–4.05:1 for
   11px type — below the 4.5:1 floor).
 - `--on-light-meta` is `.7` (prototype `.5` measured 2.92:1).
-- `--warm-text #d2704a` exists because `--warm` at 11px only reaches 4.30:1 on
-  `--ink-deep`. `--warm` itself is unchanged and still used wherever it is a
-  *background* (step 03 marker) or `::selection`.
 
 Changing these back will fail the accessibility target.
 

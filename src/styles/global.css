@@ -46,7 +46,7 @@ a:hover {
 
 ::selection {
   background: var(--warm);
-  color: #f4efe9;
+  color: var(--ink);
 }
 
 h1,

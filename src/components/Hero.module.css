@@ -166,6 +166,12 @@
 .ctaArrow {
   font-size: 17px;
   line-height: 1;
+  transition: color 0.3s ease;
+}
+
+/* Hover only: the arrow picks up the warm accent, the resting state does not. */
+.cta:hover .ctaArrow {
+  color: var(--warm-text);
 }
 
 /*
