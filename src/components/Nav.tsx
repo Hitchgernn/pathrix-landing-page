@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import styles from "./Nav.module.css";
+import { PathrixMark } from "./PathrixMark";
 import { ctaUrl, navLinks, type SectionId } from "../content/site";
 import { currentScrollY, viewportHeight } from "../lib/scroll";
 
@@ -76,8 +77,8 @@ export function Nav() {
   return (
     <>
       <nav className={styles.nav} data-past={past} aria-label="Navigasi utama">
-        <a href="#beranda" className={styles.mark}>
-          PATHRIX
+        <a href="#beranda" className={styles.mark} aria-label="Pathrix, ke beranda">
+          <PathrixMark className={styles.markLogo} />
         </a>
 
         <div className={styles.links}>
