@@ -78,7 +78,8 @@
   color: var(--paper);
 }
 
-/* Active-section indicator. */
+/* Active-section indicator. Fixed gold rather than currentColor so the mark
+   stays the same functional accent in both nav states. */
 .link[data-active="true"]::after {
   content: "";
   position: absolute;
@@ -86,7 +87,7 @@
   right: 0;
   bottom: -7px;
   height: 1px;
-  background: currentColor;
+  background: var(--warm-text);
 }
 
 .actions {

@@ -3,5 +3,5 @@
   <!-- Transit node: a stop on a line, the mark the product is built around. -->
   <path d="M6 22h20" stroke="#5aa9dd" stroke-width="2" stroke-linecap="round" />
   <path d="M16 22V9" stroke="#e7f0f7" stroke-width="2" stroke-linecap="round" />
-  <circle cx="16" cy="9" r="3.4" fill="#c2603a" />
+  <circle cx="16" cy="9" r="3.4" fill="#d9a521" />
 </svg>

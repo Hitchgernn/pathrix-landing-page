@@ -7,6 +7,50 @@
   background: radial-gradient(120% 90% at 50% 12%, var(--sky-0) 0%, var(--sky-1) 46%, var(--sky-2) 100%);
 }
 
+/*
+ * Static sky clouds: three banks — left, right, and one under the tagline
+ * straddling the centre line, weighted toward the right —
+ * each three overlapping ellipses so the silhouette is
+ * lumpy rather than one smooth oval. The centre bank sits below the wordmark
+ * band, so it is free to cross the middle; the diorama canvas is above it in
+ * the stack but transparent, so the bank shows through the sky beside the Tugu
+ * and is occluded where the island covers it, which is the depth cue we want.
+ * Placement of the other two is forced: the sky gradient's white-point is 50% 12%, so centre-top is
+ * already within ~4% of white and white puffs there are invisible — an earlier
+ * pass sat exactly there and read as haze. Out at x < 22% / x > 78%, below the
+ * top, the sky has fallen toward --sky-1/--sky-2 and white registers. That also
+ * keeps them clear of the horizontal band the wordmark occupies: they render
+ * behind it and clip nothing, but a bright puff showing through dense
+ * letterforms reads as blotchy noise. White laid *over* the sky gradient is a
+ * highlight, not a third hue, so the "only two page background colours" rule
+ * still holds. Solid core plus a mid stop gives each puff body; the outer stop
+ * is explicit rgba(255,255,255,0) because the `transparent` keyword is
+ * rgba(0,0,0,0) and interpolating through it greys the falloff. Nothing
+ * animates, so there is nothing for prefers-reduced-motion to reduce — the
+ * absent guard is deliberate.
+ */
+.clouds {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    /* left bank */
+    radial-gradient(ellipse 15vw 4.2vw at 13% 30%, #fff 0%, rgba(255, 255, 255, 0.92) 42%, rgba(255, 255, 255, 0) 72%),
+    radial-gradient(ellipse 9vw 3vw at 20% 34%, #fff 0%, rgba(255, 255, 255, 0.85) 45%, rgba(255, 255, 255, 0) 74%),
+    radial-gradient(ellipse 7vw 2.4vw at 6% 35%, #fff 0%, rgba(255, 255, 255, 0.8) 45%, rgba(255, 255, 255, 0) 74%),
+    /* right bank */
+    radial-gradient(ellipse 16vw 4.4vw at 87% 25%, #fff 0%, rgba(255, 255, 255, 0.9) 42%, rgba(255, 255, 255, 0) 72%),
+    radial-gradient(ellipse 10vw 3vw at 79% 29%, #fff 0%, rgba(255, 255, 255, 0.84) 45%, rgba(255, 255, 255, 0) 74%),
+    radial-gradient(ellipse 6.5vw 2.2vw at 94% 30%, #fff 0%, rgba(255, 255, 255, 0.78) 45%, rgba(255, 255, 255, 0) 74%),
+    /* centre bank, below the tagline, straddling the centre line with rather
+       more of it to the right: the 13vw radius spans 26vw, so a 52% centre puts
+       its left edge at ~39% and its right edge at ~65%. */
+    radial-gradient(ellipse 13vw 3.6vw at 52% 44%, #fff 0%, rgba(255, 255, 255, 0.88) 42%, rgba(255, 255, 255, 0) 72%),
+    radial-gradient(ellipse 8vw 2.6vw at 58% 47%, #fff 0%, rgba(255, 255, 255, 0.8) 45%, rgba(255, 255, 255, 0) 74%),
+    radial-gradient(ellipse 6vw 2.1vw at 46% 47%, #fff 0%, rgba(255, 255, 255, 0.74) 45%, rgba(255, 255, 255, 0) 74%);
+}
+
 /* Fine grain over the gradient. */
 .grain {
   position: absolute;
@@ -40,6 +84,8 @@
   gap: 16px;
   width: 100%;
   max-width: 1080px;
+  /* The eyebrow sits below the wordmark, so it owns the gap above itself. */
+  margin-top: clamp(14px, 2vw, 20px);
 }
 
 @media (min-width: 900px) {
@@ -68,9 +114,10 @@
   white-space: nowrap;
 }
 
-/* Below 900px the tagline wraps into a block instead of a single hairline row. */
+/* Below 900px the tagline wraps into a block instead of a single hairline row.
+   Same gap above as the row variant — exactly one of the two is ever visible. */
 .taglineBlock {
-  margin: 0;
+  margin: clamp(14px, 2vw, 20px) 0 0;
   max-width: 30ch;
   font-family: var(--font-mono);
   font-size: 11px;
@@ -83,7 +130,8 @@
 }
 
 .wordmark {
-  margin: clamp(16px, 2.4vw, 24px) 0 0;
+  /* Kept positive so the wordmark cannot creep into .poster's nav clearance. */
+  margin: clamp(4px, 0.6vw, 8px) 0 0;
   font-family: var(--font-display);
   font-weight: 400;
   font-size: var(--wordmark);
@@ -91,16 +139,6 @@
   letter-spacing: 0.005em;
   color: var(--ink-soft);
   white-space: nowrap;
-}
-
-.subline {
-  margin-top: clamp(10px, 1.4vw, 14px);
-  font-family: var(--font-mono);
-  font-size: clamp(9px, 1vw, 11px);
-  letter-spacing: 0.28em;
-  text-transform: uppercase;
-  color: var(--on-light-meta);
-  text-wrap: balance;
 }
 
 /*
@@ -166,6 +204,12 @@
 .ctaArrow {
   font-size: 17px;
   line-height: 1;
+  transition: color 0.3s ease;
+}
+
+/* Hover only: the arrow picks up the warm accent, the resting state does not. */
+.cta:hover .ctaArrow {
+  color: var(--warm-text);
 }
 
 /*

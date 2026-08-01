@@ -102,10 +102,11 @@
   color: var(--ink);
 }
 
-/* The single warm spark in this section. */
+/* The single warm spark in this section. Dark text on the yellow, matching the
+   [data-accent="lift"] pairing above — a light foreground would fail AA. */
 .marker[data-accent="warm"] {
   background: var(--warm);
-  color: #fbf3e6;
+  color: var(--ink);
 }
 
 .stepTitle {
