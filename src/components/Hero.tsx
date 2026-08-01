@@ -12,6 +12,7 @@ import { ctaUrl, tagline } from "../content/site";
 export function Hero() {
   return (
     <section id="beranda" className={styles.hero} aria-labelledby="hero-wordmark">
+      <div className={styles.clouds} aria-hidden="true" />
       <div className={styles.grain} aria-hidden="true" />
 
       <div className={styles.poster}>
