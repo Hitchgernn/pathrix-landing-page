@@ -24,8 +24,6 @@ export const emailIsPlaceholder = contactEmail === CONTACT_EMAIL_FALLBACK;
 export const tagline =
   "WebGIS-Based AI Agent for Intelligent Multimodal Mobility in Yogyakarta";
 
-export const heroSubline = "Kota Yogyakarta · Simpul Transit · Indeks TOD";
-
 export const navLinks = [
   { id: "beranda", label: "Beranda" },
   { id: "cara-kerja", label: "Cara Kerja" },

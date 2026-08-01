@@ -40,6 +40,8 @@
   gap: 16px;
   width: 100%;
   max-width: 1080px;
+  /* The eyebrow sits below the wordmark, so it owns the gap above itself. */
+  margin-top: clamp(14px, 2vw, 20px);
 }
 
 @media (min-width: 900px) {
@@ -68,9 +70,10 @@
   white-space: nowrap;
 }
 
-/* Below 900px the tagline wraps into a block instead of a single hairline row. */
+/* Below 900px the tagline wraps into a block instead of a single hairline row.
+   Same gap above as the row variant — exactly one of the two is ever visible. */
 .taglineBlock {
-  margin: 0;
+  margin: clamp(14px, 2vw, 20px) 0 0;
   max-width: 30ch;
   font-family: var(--font-mono);
   font-size: 11px;
@@ -83,7 +86,8 @@
 }
 
 .wordmark {
-  margin: clamp(16px, 2.4vw, 24px) 0 0;
+  /* Kept positive so the wordmark cannot creep into .poster's nav clearance. */
+  margin: clamp(4px, 0.6vw, 8px) 0 0;
   font-family: var(--font-display);
   font-weight: 400;
   font-size: var(--wordmark);
@@ -91,16 +95,6 @@
   letter-spacing: 0.005em;
   color: var(--ink-soft);
   white-space: nowrap;
-}
-
-.subline {
-  margin-top: clamp(10px, 1.4vw, 14px);
-  font-family: var(--font-mono);
-  font-size: clamp(9px, 1vw, 11px);
-  letter-spacing: 0.28em;
-  text-transform: uppercase;
-  color: var(--on-light-meta);
-  text-wrap: balance;
 }
 
 /*

@@ -1,10 +1,10 @@
 import styles from "./Hero.module.css";
 import { Diorama } from "./Diorama";
-import { ctaUrl, heroSubline, tagline } from "../content/site";
+import { ctaUrl, tagline } from "../content/site";
 
 /**
- * Centred poster composition: tagline between two hairlines, the giant wordmark,
- * a mono sub-line, then the diorama, then one CTA pinned bottom-centre.
+ * Centred poster composition: the giant wordmark, the tagline under it between
+ * two hairlines, then the diorama, then one CTA pinned bottom-centre.
  *
  * Both tagline variants are in the markup and CSS picks one at the 900px
  * breakpoint — so the hero is correct on first paint and without JavaScript.
@@ -15,6 +15,9 @@ export function Hero() {
       <div className={styles.grain} aria-hidden="true" />
 
       <div className={styles.poster}>
+        <h1 id="hero-wordmark" className={styles.wordmark} data-hero-reveal>
+          PATHRIX
+        </h1>
         <div className={styles.taglineRow} data-hero-reveal>
           <span className={styles.rule} aria-hidden="true" />
           <span className={styles.tagline}>{tagline}</span>
@@ -23,13 +26,6 @@ export function Hero() {
         <p className={styles.taglineBlock} data-hero-reveal>
           {tagline}
         </p>
-
-        <h1 id="hero-wordmark" className={styles.wordmark} data-hero-reveal>
-          PATHRIX
-        </h1>
-        <span className={styles.subline} data-hero-reveal>
-          {heroSubline}
-        </span>
       </div>
 
       <div className={styles.stage}>
