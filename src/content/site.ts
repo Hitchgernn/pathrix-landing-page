@@ -22,7 +22,7 @@ export const mapUrlIsPlaceholder = ctaUrl === MAP_URL_FALLBACK;
 export const emailIsPlaceholder = contactEmail === CONTACT_EMAIL_FALLBACK;
 
 export const tagline =
-  "WebGIS-Based AI Agent for Intelligent Multimodal Mobility in Yogyakarta";
+  "AI Agent for Multimodal Mobility Navigation in Yogyakarta";
 
 export const navLinks = [
   { id: "beranda", label: "Beranda" },
@@ -35,38 +35,38 @@ export type SectionId = (typeof navLinks)[number]["id"];
 
 export const masalah = {
   eyebrow: "Masalahnya",
-  heading: "Pindah moda di Yogyakarta jaraknya dekat. Rasanya jauh.",
+  heading: "Baru sampai di Yogyakarta, dan peta kota belum ada di kepala.",
   paraOne:
-    "Turun dari kereta, lanjut naik bus, sisanya jalan kaki. Di atas peta jaraknya cuma beberapa ratus meter — tapi tanpa trotoar yang utuh, penyeberangan yang aman, dan peneduh, potongan terakhir itulah yang membuat orang memilih kembali ke sepeda motor.",
+    "Ribuan mahasiswa dan wisatawan datang ke Yogyakarta tiap tahun tanpa kendaraan pribadi. TransJogja, KRL, dan KA Bandara YIA sudah ada, tapi infonya tersebar di banyak sumber berbeda — dan begitu turun dari halte atau stasiun, tidak ada yang menjelaskan sisa perjalanan itu.",
   // Second paragraph carries an inline underlined emphasis, so it is split
   // around it rather than stored as one string.
   paraTwo: {
-    before: "Perencana kota tahu masalah ini ada. Yang sulit adalah menunjukkan ",
-    emphasis: "di mana persisnya",
-    after: ", dan simpul mana yang harus dibenahi lebih dulu. Pathrix menjawab dua pertanyaan itu.",
+    before: "Aplikasi navigasi umum tahu jalan raya, tapi tidak memetakan ",
+    emphasis: "andong dan becak",
+    after: " — konektor first/last mile yang justru paling dibutuhkan pendatang. Pathrix mengisi celah itu, lewat satu AI Agent yang bisa diajak bicara.",
   },
 } as const;
 
 export const caraKerja = {
   eyebrow: "Cara Kerja",
-  heading: "Dari lapangan ke keputusan, dalam tiga langkah.",
+  heading: "Dari satu kalimat, jadi rute lengkap, dalam tiga langkah.",
   steps: [
     {
       index: "01",
-      title: "Kumpulkan data",
-      body: "Foto survei trotoar, jalur transit, titik halte dan stasiun, sampai ulasan warga — semuanya ditarik jadi satu basis data spasial yang bisa ditelusuri.",
+      title: "Ketik maumu",
+      body: "Satu kalimat bebas ke AI Agent — \"rute ke mall terdekat, tampilkan kos-kosan di sekitarnya\" — tanpa perlu paham menu layer atau filter GIS.",
       accent: "lift",
     },
     {
       index: "02",
-      title: "AI menilai",
-      body: "Computer vision membaca kualitas pedestrian dari foto, NLP membaca keluhan warga, lalu tiap simpul dinilai lintas dimensi TOD dan dibandingkan satu sama lain.",
+      title: "AI Agent bergerak",
+      body: "Agent membaca maksudmu, menyalakan layer yang relevan, membaca area peta yang sedang kamu lihat, lalu menghitung rute lewat fungsi backend terstruktur — bukan dikarang model.",
       accent: "lift",
     },
     {
       index: "03",
-      title: "Keputusan siap pakai",
-      body: "Hasilnya bukan tumpukan tabel. Peta prioritas menunjukkan simpul mana yang paling butuh perbaikan, dan intervensi apa yang paling berdampak di sana.",
+      title: "Rute siap dijalani",
+      body: "Itinerary bertahap muncul — jalan kaki, andong/becak, TransJogja/KRL — lengkap opsi termudah/tercepat/termurah dan estimasi karbon yang kamu hemat.",
       accent: "warm",
     },
   ],
@@ -74,43 +74,43 @@ export const caraKerja = {
 
 export const fitur = {
   eyebrow: "Fitur",
-  heading: "Satu layar untuk melihat, bertanya, dan memutuskan.",
+  heading: "Satu layar untuk bertanya, melihat rute, dan berangkat.",
   ctaLabel: "Buka peta",
   items: [
     {
       index: "01",
       title: "Peta multimoda",
-      body: "Trans Jogja, jalur kereta, terminal, dan titik antarmoda dalam satu peta yang bisa dinyalakan per lapisan.",
+      body: "TransJogja, jalur KRL, KA Bandara YIA, sampai pangkalan andong dan becak dalam satu peta yang bisa dinyalakan per lapisan.",
       accent: "lift",
     },
     {
       index: "02",
-      title: "Panel AI per simpul",
-      body: "Klik satu halte atau stasiun, dapat ringkasan kondisinya dan daftar hal yang paling perlu dibenahi di sana.",
+      title: "AI Agent, bukan chatbot",
+      body: "Cukup ketik maksudmu — agent yang memanggil fungsi untuk menyalakan layer dan mengatur zoom, tanpa kamu buka menu manual.",
       accent: "lift",
     },
     {
       index: "03",
       title: "Tanya bahasa sehari-hari",
-      body: "“Halte mana yang paling sulit dijangkau pejalan kaki?” — dijawab langsung sebagai sorotan di peta.",
+      body: "“Ada kuliner apa di area ini?” — agent membaca area peta yang sedang kamu lihat dan menjawab langsung sebagai sorotan di peta.",
       accent: "lift",
     },
     {
       index: "04",
-      title: "Jangkauan jalan kaki",
-      body: "Lihat area yang benar-benar terlayani dalam waktu jalan kaki yang nyaman — bukan lingkaran ideal di atas kertas.",
+      title: "Rute multi-tujuan",
+      body: "Satu perintah untuk beberapa tujuan sekaligus, disusun jadi itinerary dengan opsi rute termudah, tercepat, atau termurah.",
       accent: "lift",
     },
     {
       index: "05",
-      title: "Walkability dari foto",
-      body: "Model computer vision membaca trotoar, penyeberangan, dan peneduh langsung dari foto survei lapangan.",
+      title: "Konektor first/last mile",
+      body: "Pangkalan andong dan becak hasil survei lapangan, dipetakan sebagai penghubung dari halte atau stasiun ke tujuan akhir.",
       accent: "lift",
     },
     {
       index: "06",
-      title: "Suara pengguna",
-      body: "Ulasan dan keluhan warga dibaca sebagai sentimen per lokasi, jadi data lapangan punya konteks manusia.",
+      title: "Sustainability Tracker",
+      body: "Tiap rute transportasi umum menunjukkan penghematan jejak karbon dibanding kendaraan pribadi — dihitung, bukan dikarang.",
       accent: "warm",
     },
   ],
@@ -169,8 +169,8 @@ export const FIELD_PHOTO_SIZE = { width: 640, height: 800 } as const;
 
 export const kontak = {
   eyebrow: "Kontak",
-  heading: "Mari benahi simpul transit Yogyakarta bersama.",
-  body: "Pathrix dibangun untuk dipakai orang yang benar-benar mengambil keputusan — dinas perhubungan, badan perencanaan, kampus, dan komunitas pejalan kaki. Kalau kamu salah satunya, kami ingin dengar.",
+  heading: "Mari bantu pendatang Yogyakarta bergerak lebih mudah.",
+  body: "Pathrix dibangun bersama pihak yang menggerakkan mobilitas kota — Dishub DIY, KAI Commuter, kampus, dan pelaku UMKM lokal. Kalau kamu salah satunya, atau punya data lapangan yang bisa memperkaya peta, kami ingin dengar.",
   emailLabel: "Surel",
   fields: {
     nama: { label: "Nama", placeholder: "Nama kamu" },
