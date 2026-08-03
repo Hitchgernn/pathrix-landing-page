@@ -544,9 +544,11 @@ for (const vp of viewports) {
     })),
   );
 
-  imgs.length === 5
-    ? pass("all five Fitur images present", `${imgs.length}`)
-    : fail("all five Fitur images present", `found ${imgs.length}`);
+  // Just the concept visual since the field-survey photo grid was removed; the
+  // checks below derive from this set, so they follow the count.
+  imgs.length === 1
+    ? pass("Fitur concept visual present", `${imgs.length}`)
+    : fail("Fitur concept visual present", `found ${imgs.length}`);
 
   const broken = imgs.filter((i) => i.w === 0 || i.h === 0);
   broken.length === 0

@@ -179,7 +179,7 @@ Restrained and instrumented: every control reads as a measuring-device element, 
 Circular 38px badges carrying the mono step/index number (`01`–`06`). Two variants only: **lift** (`blue-lift` background, `ink` text — the default, used for every index but one per section) and **warm** (`tugu-gold` background, `ink` text — spent exactly once per section, on whichever item is the section's payoff). This is the clearest expression of the One Warm Rule in the component layer.
 
 ### Cards / Containers — "Hairline Grid," not cards
-There is no bordered-card component. Feature and step grids are a single `1px` gap of `on-dark-line` between cells, with each cell painting the section's background color back over the gap — the separation reads as a hairline, not a boxed card. Internal padding is fluid (`clamp(26–40px)`). Image/photo containers (`.shot`, `.fieldItem`) are the one place a visible 1px border (`rgba(paper, .16)`) plus soft radius appears, functioning as a frame rather than a card edge.
+There is no bordered-card component. Feature and step grids are a single `1px` gap of `on-dark-line` between cells, with each cell painting the section's background color back over the gap — the separation reads as a hairline, not a boxed card. Internal padding is fluid (`clamp(26–40px)`). The concept-visual frame (`.shot`) is the one place a visible 1px border (`rgba(paper, .16)`) plus soft radius appears, functioning as a frame rather than a card edge — and it carries a mono figcaption naming itself as a concept, because the product it depicts does not exist yet.
 
 ### Inputs / Fields
 - **Style:** 1px `rgba(ink, .2)` border, 10px radius, `#fbfdfe` background, mono uppercase label positioned above the field (never inline/floating).

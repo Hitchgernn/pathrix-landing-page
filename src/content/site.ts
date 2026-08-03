@@ -114,7 +114,6 @@ export const fitur = {
       accent: "warm",
     },
   ],
-  fieldLabel: "Foto survei lapangan",
 } as const;
 
 /**
@@ -142,36 +141,17 @@ export const productShot = {
   src: "/img/webgis",
 } as const;
 
-/** Placeholder survey imagery, same arrangement as productShot above. */
-export const fieldPhotos = [
-  {
-    id: "pathrix-field-1",
-    caption: "Foto trotoar",
-    alt: "Trotoar yang terputus di dekat simpul transit: paving hilang, tanah terbuka, dan tiang utilitas berdiri di tengah jalur pejalan kaki.",
-    src: "/img/field-1",
-  },
-  {
-    id: "pathrix-field-2",
-    caption: "Foto halte",
-    alt: "Halte Trans Jogja dengan atap peneduh, bangku, dan papan rute di tepi trotoar berpaving pemandu.",
-    src: "/img/field-2",
-  },
-  {
-    id: "pathrix-field-3",
-    caption: "Foto penyeberangan",
-    alt: "Penyeberangan zebra yang catnya sudah pudar tanpa pelindung penyeberangan, dengan sepeda motor berhenti di atas marka.",
-    src: "/img/field-3",
-  },
-  {
-    id: "pathrix-field-4",
-    caption: "Foto stasiun",
-    alt: "Bagian depan stasiun dengan kanopi peron, garis batas aman kuning, dan calon penumpang menunggu di peron.",
-    src: "/img/field-4",
-  },
-] as const;
-
-/** Rendered size of each field photo (4:5). Used to reserve layout. */
-export const FIELD_PHOTO_SIZE = { width: 640, height: 800 } as const;
+/*
+ * The four field-survey photos that used to sit below the feature grid are
+ * gone. They were generated art of trotoar/halte/penyeberangan/stasiun —
+ * evidence for the earlier walkability-scoring product, not for the andong and
+ * becak pangkalan this PRD actually surveys. Presenting the wrong product's
+ * fabricated photographs as "Foto survei lapangan" was the risk; the survey
+ * itself is still claimed, in feature 05 above, where it is true.
+ * The generated files remain in public/img/field-*.{jpg,webp} and their source
+ * in scripts/art/fields.py, unreferenced, should real survey imagery replace
+ * them later.
+ */
 
 export const kontak = {
   eyebrow: "Kontak",
