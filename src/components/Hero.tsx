@@ -1,6 +1,7 @@
 import styles from "./Hero.module.css";
 import { Diorama } from "./Diorama";
-import { ctaUrl, tagline } from "../content/site";
+import { ctaUrl } from "../content/site";
+import { useCopy } from "../lib/locale";
 
 /**
  * Centred poster composition: the giant wordmark, the tagline under it between
@@ -10,6 +11,7 @@ import { ctaUrl, tagline } from "../content/site";
  * breakpoint — so the hero is correct on first paint and without JavaScript.
  */
 export function Hero() {
+  const { tagline, ui } = useCopy();
   return (
     <section id="beranda" className={styles.hero} aria-labelledby="hero-wordmark">
       <div className={styles.clouds} aria-hidden="true" />
@@ -37,7 +39,7 @@ export function Hero() {
 
       <div className={styles.ctaRow}>
         <a className={styles.cta} href={ctaUrl} data-hero-reveal>
-          Jelajahi Peta
+          {ui.exploreMap}
           <span className={styles.ctaArrow} aria-hidden="true">
             &#8594;
           </span>

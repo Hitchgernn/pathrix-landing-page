@@ -1,6 +1,7 @@
 import { useState } from "react";
 import styles from "./Kontak.module.css";
-import { contactEmail, contactEndpoint, kontak } from "../content/site";
+import { contactEmail, contactEndpoint } from "../content/site";
+import { useCopy } from "../lib/locale";
 
 type Status = "idle" | "sending" | "sent" | "error" | "handoff";
 
@@ -16,6 +17,7 @@ const SEND_TIMEOUT_MS = 15000;
  * actually happened.
  */
 export function Kontak() {
+  const { kontak, ui } = useCopy();
   const [status, setStatus] = useState<Status>("idle");
   const hasEndpoint = contactEndpoint.length > 0;
 
@@ -29,8 +31,8 @@ export function Kontak() {
 
     if (!hasEndpoint) {
       // No backend: compose a real message instead of pretending it was sent.
-      const subject = `Pathrix — pesan dari ${nama}`;
-      const body = `Nama: ${nama}\nSurel atau instansi: ${kontakValue}\n\n${pesan}`;
+      const subject = `${kontak.mailto.subjectPrefix}${nama}`;
+      const body = `${kontak.mailto.nameLabel}${nama}\n${kontak.mailto.contactLabel}${kontakValue}\n\n${pesan}`;
       window.location.href = `mailto:${contactEmail}?subject=${encodeURIComponent(
         subject,
       )}&body=${encodeURIComponent(body)}`;
@@ -64,7 +66,7 @@ export function Kontak() {
 
   const label =
     status === "sending"
-      ? "Mengirim…"
+      ? ui.sending
       : status === "sent"
         ? kontak.submitSentLabel
         : kontak.submitLabel;

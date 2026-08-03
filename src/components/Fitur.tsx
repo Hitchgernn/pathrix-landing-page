@@ -1,9 +1,11 @@
 import styles from "./Fitur.module.css";
 import { ImageSlot } from "./ImageSlot";
-import { ctaUrl, fitur, productShot } from "../content/site";
+import { ctaUrl, productShot } from "../content/site";
+import { useCopy } from "../lib/locale";
 
 /** Heading + outline link, the concept visual, the hairline feature grid. */
 export function Fitur() {
+  const { fitur, productShot: shotCopy } = useCopy();
   return (
     <section id="fitur" className={styles.section} aria-labelledby="fitur-heading">
       <div className={styles.shell}>
@@ -32,13 +34,13 @@ export function Fitur() {
           <div className={styles.shot}>
             <ImageSlot
               src={productShot.src}
-              alt={productShot.alt}
-              caption={productShot.caption}
+              alt={shotCopy.alt}
+              caption={shotCopy.caption}
               width={productShot.width}
               height={productShot.height}
             />
           </div>
-          <figcaption className={styles.shotNote}>{productShot.note}</figcaption>
+          <figcaption className={styles.shotNote}>{shotCopy.note}</figcaption>
         </figure>
 
         <div className={styles.grid}>

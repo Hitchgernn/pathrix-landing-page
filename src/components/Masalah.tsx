@@ -1,8 +1,9 @@
 import styles from "./Masalah.module.css";
-import { masalah } from "../content/site";
+import { useCopy } from "../lib/locale";
 
 /** Ink section, two columns: heading left, two paragraphs right. No anchor. */
 export function Masalah() {
+  const { masalah } = useCopy();
   return (
     <section className={styles.section} aria-labelledby="masalah-heading">
       <div className={styles.seam} aria-hidden="true" />

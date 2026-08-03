@@ -1,5 +1,5 @@
 import styles from "./CaraKerja.module.css";
-import { caraKerja } from "../content/site";
+import { useCopy } from "../lib/locale";
 
 /**
  * Three steps in one row with a hairline connector that draws itself on scroll.
@@ -8,6 +8,7 @@ import { caraKerja } from "../content/site";
  * so GSAP's target never disappears mid-animation.
  */
 export function CaraKerja() {
+  const { caraKerja } = useCopy();
   return (
     <section id="cara-kerja" className={styles.section} aria-labelledby="cara-kerja-heading">
       <div className={styles.shell}>

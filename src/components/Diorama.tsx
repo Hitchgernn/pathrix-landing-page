@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import styles from "./Diorama.module.css";
+import { useCopy } from "../lib/locale";
 
 type Props = {
   /** Camera framing. The hero uses "stage". */
@@ -40,6 +41,7 @@ function webglSupported(): boolean {
  * fallback, and deferring the three.js download until after first paint.
  */
 export function Diorama({ view = "stage", tint = "#dfeaf3" }: Props) {
+  const { ui } = useCopy();
   const hostRef = useRef<HTMLDivElement | null>(null);
   const [ready, setReady] = useState(false);
   const [failed, setFailed] = useState(() => !webglSupported());
@@ -108,7 +110,7 @@ export function Diorama({ view = "stage", tint = "#dfeaf3" }: Props) {
           <img
             className={styles.fallbackImage}
             src="/hero/diorama-fallback.svg"
-            alt="Ilustrasi diorama pulau simpul transit Yogyakarta: monumen Tugu di pusat, dikelilingi jalur jalan dan jalur kereta."
+            alt={ui.dioramaFallbackAlt}
             width={1240}
             height={800}
           />
