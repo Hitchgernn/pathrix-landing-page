@@ -18,8 +18,27 @@
     backdrop-filter 0.45s ease;
 }
 
+/*
+ * Sky ground, while the light hero is what passes behind the bar. Everything
+ * else (mark, links, CTA, burger) keeps its light-mode ink styling — only the
+ * backdrop arrives. .94 is not arbitrary: the wordmark slides under this bar,
+ * and at that alpha an inactive link over the veiled wordmark measures 4.80:1.
+ * Thinner and the links fade out again exactly where they did before.
+ *
+ * The short duration is the point, not an oversight. This ground is a
+ * legibility guarantee, not a flourish: the wordmark reaches the bar ~85px into
+ * the scroll, which a flick crosses in well under the .45s the ink inversion
+ * uses, and at .45s the links were still at 2.54:1 when it arrived.
+ */
+.nav[data-ground="light"] {
+  background: rgba(223, 234, 243, 0.94);
+  backdrop-filter: blur(10px);
+  border-bottom-color: rgba(23, 41, 58, 0.12);
+  transition-duration: 0.16s;
+}
+
 /* Inverted state, past ~72% of the first viewport. */
-.nav[data-past="true"] {
+.nav[data-ground="dark"] {
   background: rgba(16, 30, 42, 0.9);
   backdrop-filter: blur(10px);
   border-bottom-color: var(--on-dark-line);
@@ -44,8 +63,8 @@
   color: var(--blue);
 }
 
-.nav[data-past="true"] .mark,
-.nav[data-past="true"] .mark:hover {
+.nav[data-ground="dark"] .mark,
+.nav[data-ground="dark"] .mark:hover {
   color: var(--paper);
 }
 
@@ -67,9 +86,17 @@
   }
 }
 
+/*
+ * .70, not the prototype's .55: at .55 an inactive link measured 3.33:1 on the
+ * sky — under AA for 12px text — so this was already failing before the bar
+ * ever gained a background. Same correction the tokens made for --on-dark-meta.
+ * .70 reaches 5.08:1 on the sky and 4.80:1 over the wordmark veiled by the bar;
+ * .68 cleared the 4.5 floor by only .04, too thin a margin to hold against text
+ * antialiasing.
+ */
 .link {
   position: relative;
-  color: rgba(23, 41, 58, 0.55);
+  color: rgba(23, 41, 58, 0.7);
   transition: color 0.3s ease;
 }
 
@@ -77,11 +104,11 @@
   color: var(--ink-soft);
 }
 
-.nav[data-past="true"] .link {
+.nav[data-ground="dark"] .link {
   color: rgba(231, 240, 247, 0.55);
 }
 
-.nav[data-past="true"] .link[data-active="true"] {
+.nav[data-ground="dark"] .link[data-active="true"] {
   color: var(--paper);
 }
 
@@ -126,12 +153,12 @@
   color: var(--paper);
 }
 
-.nav[data-past="true"] .cta {
+.nav[data-ground="dark"] .cta {
   background: var(--paper);
   color: var(--ink);
 }
 
-.nav[data-past="true"] .cta:hover {
+.nav[data-ground="dark"] .cta:hover {
   background: var(--blue-lift);
   color: var(--ink);
 }
@@ -163,7 +190,7 @@
   }
 }
 
-.nav[data-past="true"] .burger {
+.nav[data-ground="dark"] .burger {
   border-color: rgba(231, 240, 247, 0.3);
 }
 
@@ -175,7 +202,7 @@
   transition: background 0.45s ease;
 }
 
-.nav[data-past="true"] .burger span {
+.nav[data-ground="dark"] .burger span {
   background: var(--paper);
 }
 

@@ -274,7 +274,7 @@ for (const vp of viewports) {
   await page.goto(BASE, { waitUntil: "networkidle" });
   await page.waitForTimeout(800);
 
-  const before = await page.getAttribute("nav", "data-past");
+  const before = await page.getAttribute("nav", "data-ground");
   // html has scroll-behavior:smooth, so a scrollTo is animated — disable it here
   // or the assertion races the scroll.
   await page.evaluate(() => {
@@ -285,15 +285,53 @@ for (const vp of viewports) {
   // on hydration, and hydration occasionally lands past a fixed 700ms under
   // software GL — which made this check fail ~1 run in 6 with nothing wrong.
   await page
-    .waitForFunction(() => document.querySelector("nav")?.dataset.past === "true", null, {
+    .waitForFunction(() => document.querySelector("nav")?.dataset.ground === "dark", null, {
       timeout: 5000,
     })
     .catch(() => {});
-  const after = await page.getAttribute("nav", "data-past");
+  const after = await page.getAttribute("nav", "data-ground");
 
-  before === "false" && after === "true"
+  before === "none" && after === "dark"
     ? pass("nav inverts past the hero")
     : fail("nav inverts past the hero", `before=${before} after=${after}`);
+
+  // Regression: early in the hero the wordmark slides up behind the bar. A
+  // transparent bar there made the 55%-ink links composite to exactly the
+  // wordmark's own colour — 1:1, invisible. The bar must own a background
+  // before the wordmark arrives.
+  await page.evaluate(() => window.scrollTo(0, 160));
+  // Settle on the sky value specifically. Asserting merely "not transparent"
+  // passes on the ink bar still fading out from the previous assertion.
+  const SKY_BAR = "rgba(223, 234, 243";
+  await page
+    .waitForFunction(
+      (sky) => {
+        const nav = document.querySelector("nav");
+        return (
+          nav?.dataset.ground === "light" &&
+          getComputedStyle(nav).backgroundColor.startsWith(sky)
+        );
+      },
+      SKY_BAR,
+      { timeout: 5000 },
+    )
+    .catch(() => {});
+  const overHero = await page.evaluate(() => {
+    const nav = document.querySelector("nav");
+    const wm = document.querySelector("#beranda h1").getBoundingClientRect();
+    const link = nav.querySelector('a[href="#cara-kerja"]').getBoundingClientRect();
+    return {
+      ground: nav.dataset.ground,
+      bg: getComputedStyle(nav).backgroundColor,
+      wordmarkBehind: link.top < wm.bottom && link.bottom > wm.top,
+    };
+  });
+  overHero.ground === "light" && overHero.wordmarkBehind && overHero.bg.startsWith(SKY_BAR)
+    ? pass("nav grounds itself where the wordmark passes behind", overHero.bg)
+    : fail(
+        "nav grounds itself where the wordmark passes behind",
+        `ground=${overHero.ground} wordmarkBehind=${overHero.wordmarkBehind} bg=${overHero.bg}`,
+      );
 
   // Anchor jump must clear the fixed nav.
   await page.evaluate(() => window.scrollTo(0, 0));

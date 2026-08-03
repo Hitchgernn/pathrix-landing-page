@@ -5,16 +5,30 @@ import { ctaUrl, navLinks, type SectionId } from "../content/site";
 import { currentScrollY, viewportHeight } from "../lib/scroll";
 
 /**
- * Fixed nav. Transparent over the hero, inverted to ink once scrolled past ~72%
- * of the first viewport. Below 900px the links collapse into a hamburger.
+ * How much ground the bar gives itself, matched to the register of whatever is
+ * behind it. `none` is only valid at rest, when nothing is behind it at all:
+ * scroll a little and the wordmark slides up under the bar, and 55%-ink links
+ * over the solid-ink wordmark composite to exactly the wordmark's own colour —
+ * 1:1, invisible. No single link colour survives both the pale sky and that
+ * ink, so the bar takes its own backdrop instead.
+ */
+type Ground = "none" | "light" | "dark";
+
+/** Past this much scroll anything at all can pass behind the bar. */
+const GROUND_AT = 12;
+
+/**
+ * Fixed nav. Transparent at rest, a sky bar while the light hero passes behind
+ * it, ink once the dark sections arrive (~72% of the first viewport). Below
+ * 900px the links collapse into a hamburger.
  *
  * Which variant shows is decided by CSS, not JS: the markup carries both, so the
  * bar is correct on first paint, correct when prerendered, and correct with
- * JavaScript disabled. JS only drives the inversion, the active link, and the
+ * JavaScript disabled. JS only drives the ground, the active link, and the
  * menu — all enhancements.
  */
 export function Nav() {
-  const [past, setPast] = useState(false);
+  const [ground, setGround] = useState<Ground>("none");
   const [active, setActive] = useState<SectionId | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const burgerRef = useRef<HTMLButtonElement>(null);
@@ -27,7 +41,10 @@ export function Nav() {
   const followedLink = useRef(false);
 
   useEffect(() => {
-    const onScroll = () => setPast(currentScrollY() > viewportHeight() * 0.72);
+    const onScroll = () => {
+      const y = currentScrollY();
+      setGround(y > viewportHeight() * 0.72 ? "dark" : y > GROUND_AT ? "light" : "none");
+    };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onScroll, { passive: true });
@@ -122,7 +139,7 @@ export function Nav() {
 
   return (
     <>
-      <nav className={styles.nav} data-past={past} aria-label="Navigasi utama">
+      <nav className={styles.nav} data-ground={ground} aria-label="Navigasi utama">
         <a href="#beranda" className={styles.mark} aria-label="Pathrix, ke beranda">
           <PathrixMark className={styles.markLogo} />
         </a>
