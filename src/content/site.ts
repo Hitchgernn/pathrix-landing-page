@@ -129,7 +129,13 @@ export const fitur = {
  */
 export const productShot = {
   id: "pathrix-webgis",
-  caption: "Screenshot WebGIS Pathrix",
+  caption: "Konsep visual WebGIS Pathrix",
+  /**
+   * Rendered as a visible figcaption, not just alt text. The product does not
+   * exist yet and this image is generated art — the page has to say so where a
+   * reader actually sees it, not only in the source.
+   */
+  note: "Konsep visual — produk belum dibangun",
   alt: "Antarmuka WebGIS Pathrix: peta simpul transit Yogyakarta dengan panel lapisan, kolom tanya bahasa sehari-hari, dan panel penilaian AI untuk satu simpul.",
   width: 1600,
   height: 900,

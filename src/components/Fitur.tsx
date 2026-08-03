@@ -30,15 +30,22 @@ export function Fitur() {
           </a>
         </div>
 
-        <div className={styles.shot} data-reveal>
-          <ImageSlot
-            src={productShot.src}
-            alt={productShot.alt}
-            caption={productShot.caption}
-            width={productShot.width}
-            height={productShot.height}
-          />
-        </div>
+        {/*
+          The image is generated placeholder art, not a capture of a shipped
+          product — the figcaption states that on the page itself.
+        */}
+        <figure className={styles.shotBlock} data-reveal>
+          <div className={styles.shot}>
+            <ImageSlot
+              src={productShot.src}
+              alt={productShot.alt}
+              caption={productShot.caption}
+              width={productShot.width}
+              height={productShot.height}
+            />
+          </div>
+          <figcaption className={styles.shotNote}>{productShot.note}</figcaption>
+        </figure>
 
         <div className={styles.grid}>
           {fitur.items.map((item) => (

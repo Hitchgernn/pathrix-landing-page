@@ -72,6 +72,26 @@
   line-height: 1;
 }
 
+/* Wraps the framed shot plus its disclosure line. The note cannot live inside
+   .shot: that box is overflow:hidden and the ImageSlot fills it absolutely. */
+.shotBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 0;
+}
+
+/* Same mono metadata voice as .fieldLabel below — this is an annotation on the
+   image, not a caption competing with the feature grid. */
+.shotNote {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--on-dark-meta);
+  text-wrap: pretty;
+}
+
 .shot {
   position: relative;
   width: 100%;
