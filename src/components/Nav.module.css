@@ -210,11 +210,23 @@
   color: var(--blue-lift);
 }
 
+/* A <button>, so the element defaults have to be undone to keep the original
+   quiet mono-label appearance. */
 .menuClose {
+  align-self: flex-start;
   margin-top: 22px;
+  padding: 4px 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
   font-family: var(--font-mono);
   font-size: 11px;
   letter-spacing: 0.24em;
   text-transform: uppercase;
   color: var(--on-dark-meta);
+  transition: color 0.3s ease;
+}
+
+.menuClose:hover {
+  color: var(--paper);
 }
