@@ -188,6 +188,23 @@ export const kontak = {
   },
   submitLabel: "Kirim pesan",
   submitSentLabel: "Terkirim",
+  /**
+   * Form status messages. The two recovery cases are split around the address
+   * so it can render as a real mailto: link — an error that names its recovery
+   * should also put that recovery one click away, not just describe it.
+   */
+  notes: {
+    sent: "Terima kasih — pesanmu tercatat.",
+    error: {
+      before: "Pesan gagal terkirim. Coba lagi, atau kirim langsung ke ",
+      after: ".",
+    },
+    /** No backend: the browser was handed a mailto: that may do nothing at all. */
+    handoff: {
+      before: "Membuka aplikasi surel kamu. Kalau tidak terbuka, kirim manual ke ",
+      after: ".",
+    },
+  },
 } as const;
 
 export const footer = {
