@@ -11,14 +11,30 @@
 
   --blue: #1f6592;
   --blue-lift: #5aa9dd;
-  --warm: #c2603a;
   /*
-   * --warm at 11px does not clear WCAG AA on the dark backgrounds (4.30:1 on
-   * --ink-deep, 4.05:1 on --ink). This lifted tone keeps the same hue and reads
-   * as the same spark, at 5.27:1 / 4.96:1. --warm itself is unchanged and still
-   * used wherever it is a *background* (step 03 marker) or ::selection.
+   * The warm accent is three values, not one. A single yellow cannot be both
+   * bright enough to read as 11px text on the *dark* backgrounds and dark enough
+   * to read as 11px text on the light --sky-1 — those pull opposite ways on
+   * luminance. The old two-value split already encoded background-vs-foreground;
+   * --warm-deep adds the foreground-on-light case that was missing rather than
+   * forcing three jobs through two values.
+   *
+   *   --warm       background use only. Paired with --ink text: 7.54:1.
+   *   --warm-text  text on the dark backgrounds. 10.66:1 on --ink,
+   *                11.32:1 on --ink-deep.
+   *   --warm-deep  text on the light backgrounds. 4.95:1 on --sky-1.
+   *
+   * --warm-deep is a fix, not just a recolour: the old --warm #c2603a was being
+   * used as text on --sky-1 at 3.42:1, i.e. that site was already failing AA
+   * before the yellow change and nobody had noticed.
+   *
+   * --warm #d9a521 is deliberately the same hex as the GOLD material of the Tugu
+   * monument in src/hero/landmarks/tugu.js — the 3D scene and the page accent are
+   * meant to match. Keep them in sync.
    */
-  --warm-text: #d2704a;
+  --warm: #d9a521;
+  --warm-text: #f2c94c;
+  --warm-deep: #7c5e13;
   --paper: #e7f0f7;
 
   /* Text on dark */

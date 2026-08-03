@@ -163,6 +163,21 @@
   color: var(--blue);
 }
 
+/* This section's background is light (--sky-1), so the error note needs the
+   darkened token. Do not "simplify" this to var(--warm): that is the background
+   tone and only reaches 3.42:1 here. */
 .note[data-tone="error"] {
-  color: var(--warm);
+  color: var(--warm-deep);
+}
+
+/* Inherits the note's tone so the recovery address stays readable in both the
+   error and handoff states. The explicit hover overrides the global a:hover. */
+.noteLink {
+  color: inherit;
+  border-bottom: 1px solid currentColor;
+}
+
+.noteLink:hover {
+  color: inherit;
+  opacity: 0.75;
 }
