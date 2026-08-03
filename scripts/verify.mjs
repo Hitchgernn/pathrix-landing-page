@@ -281,7 +281,14 @@ for (const vp of viewports) {
     document.documentElement.style.scrollBehavior = "auto";
     window.scrollTo(0, window.innerHeight * 0.8);
   });
-  await page.waitForTimeout(700);
+  // Wait for the state rather than sleeping at it: the scroll listener attaches
+  // on hydration, and hydration occasionally lands past a fixed 700ms under
+  // software GL — which made this check fail ~1 run in 6 with nothing wrong.
+  await page
+    .waitForFunction(() => document.querySelector("nav")?.dataset.past === "true", null, {
+      timeout: 5000,
+    })
+    .catch(() => {});
   const after = await page.getAttribute("nav", "data-past");
 
   before === "false" && after === "true"
@@ -308,6 +315,15 @@ for (const vp of viewports) {
         `section top ${anchor.sectionTop.toFixed(0)} vs nav bottom ${anchor.navBottom.toFixed(0)}`,
       );
 
+  // Same hydration race as the invert check above: the IntersectionObserver that
+  // sets data-active only exists once React has hydrated.
+  await page
+    .waitForFunction(
+      () => document.querySelector('nav a[data-active="true"]')?.getAttribute("href") === "#fitur",
+      null,
+      { timeout: 5000 },
+    )
+    .catch(() => {});
   const active = await page.evaluate(() => {
     const el = document.querySelector('nav a[data-active="true"]');
     return el ? el.getAttribute("href") : null;
@@ -409,12 +425,15 @@ for (const vp of viewports) {
   const text = (await page.textContent("body")) ?? "";
   // The build prerenders the markup, so all of the copy must be present without
   // any script running.
+  // One fragment per section, so a section dropping out of the prerender is
+  // caught. These are copied from src/content/site.ts and must be updated with
+  // it — a rewrite there fails this check until they are.
   const required = [
     "PATHRIX",
-    "Pindah moda di Yogyakarta",
-    "Dari lapangan ke keputusan",
-    "Satu layar untuk melihat",
-    "Mari benahi simpul transit",
+    "Baru sampai di Yogyakarta",
+    "Dari satu kalimat",
+    "Satu layar untuk bertanya",
+    "Mari bantu pendatang",
     "MAPID WebGIS Competition 2026",
   ];
   const missing = required.filter((s) => !text.includes(s));
