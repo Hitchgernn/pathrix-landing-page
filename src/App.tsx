@@ -7,8 +7,19 @@ import { Fitur } from "./components/Fitur";
 import { Kontak } from "./components/Kontak";
 import { Footer } from "./components/Footer";
 import { initReveals, type RevealHandle } from "./lib/reveals";
+import { LocaleProvider, useCopy } from "./lib/locale";
+import { DEFAULT_LOCALE, type Locale } from "./content/types";
 
-export default function App() {
+export default function App({ locale = DEFAULT_LOCALE }: { locale?: Locale }) {
+  return (
+    <LocaleProvider locale={locale}>
+      <Page />
+    </LocaleProvider>
+  );
+}
+
+function Page() {
+  const c = useCopy();
   useEffect(() => {
     // Reduced motion: skip the reveals entirely. The page is already in its
     // final state, so there is nothing to restore.
@@ -48,7 +59,7 @@ export default function App() {
   return (
     <>
       <a className="skipLink" href="#beranda">
-        Lewati ke konten
+        {c.ui.skipLink}
       </a>
       <Nav />
       <main>

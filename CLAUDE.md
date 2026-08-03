@@ -48,7 +48,9 @@ Vite 5 + React 18 + TypeScript, three.js `0.180.0` (pinned), GSAP 3.12 + ScrollT
 src/main.tsx            hydrates prerendered markup (falls back to client render)
 src/entry-server.tsx    build-time SSR render entry (feeds prerender.mjs)
 src/App.tsx             page composition + scroll-reveal wiring
-src/content/site.ts     ALL page copy — verbatim from Pathrix.dc.html
+src/content/site.ts     locale-independent values (env config, geometry, nav ids)
+src/content/{id,en}.ts  page copy per locale (id verbatim from Pathrix.dc.html);
+                         see AGENTS.md "Internationalization" before touching i18n
 src/components/         one .tsx + one .module.css per page section
 src/lib/                scroll plumbing, media queries, GSAP reveal helpers
 src/styles/tokens.css   design tokens (colors, fonts, rhythm) — see below

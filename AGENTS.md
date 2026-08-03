@@ -39,17 +39,24 @@ cache policy and gzip, so it is the one that reflects production.
 ## Layout
 
 ```
-index.html              shell; contains the <!--app-html--> prerender placeholder
+index.html              shell; contains the <!--app-html--> prerender placeholder,
+                        plus <!--lang-detect--> and <!--hreflang-links--> (see i18n)
 src/main.tsx            hydrates the prerendered markup (falls back to render)
-src/entry-server.tsx    build-time render entry
-src/App.tsx             page composition + reveal wiring
-src/content/site.ts     ALL page copy, verbatim from the prototype
-src/components/         one .tsx + one .module.css per section
+src/entry-server.tsx    build-time render entry; render(locale) + meta(locale)
+src/App.tsx             page composition + reveal wiring; wraps the tree in
+                        LocaleProvider
+src/content/site.ts     locale-independent values (env config, geometry, nav ids)
+src/content/types.ts    the Copy type — the shape both locales must satisfy
+src/content/id.ts       Indonesian copy (default locale), verbatim from the PRD
+src/content/en.ts       English copy — editorial translation, see i18n below
+src/lib/locale.tsx      LocaleContext, useCopy(), useLocale(), localeFromDocument()
+src/components/         one .tsx + one .module.css per section; copy comes from
+                        useCopy(), never a direct site.ts import
 src/lib/                scroll plumbing, media queries, GSAP reveals
 src/styles/tokens.css   design tokens (colours, fonts, rhythm)
 src/styles/global.css   resets, @font-face, skip link
 src/hero/               the three.js diorama (ported, see below)
-scripts/verify.mjs      browser verification suite — 54 checks
+scripts/verify.mjs      browser verification suite — 66 checks
 scripts/vehicle-check.mjs vehicle heading, terrain clearance, traffic gaps
 scripts/check-pause.mjs proves the render loop pauses off-screen
 scripts/framing-check.mjs diorama framing + image content sanity
@@ -291,11 +298,12 @@ Verify at 390, 768, 924, 1280, 1440, and 1920 wide, and at 540px tall.
 
 React CSR ships an empty `<div id="root">`, which fails the "readable with
 JavaScript disabled" requirement outright. `scripts/prerender.mjs` runs after
-`vite build`, renders `src/entry-server.tsx` to static markup, and substitutes it
-into the `<!--app-html-->` placeholder in `dist/index.html`. `main.tsx` then
-hydrates.
+`vite build`, builds one SSR bundle, then loops over both locales — calling
+`render(locale)` and `meta(locale)` from that bundle — to produce
+`dist/index.html` (id) and `dist/en/index.html` (en). `main.tsx` then hydrates
+whichever one was served.
 
-Two things to know if you touch this:
+Three things to know if you touch this:
 
 - The SSR pass sets `configFile: false`. It must not inherit the client build's
   `manualChunks` — in an SSR build `three`/`gsap` are externals and rollup
@@ -303,6 +311,48 @@ Two things to know if you touch this:
 - Anything that touches `document` at module scope or during first render breaks
   the prerender. `Diorama.tsx`'s WebGL probe returns `true` when `document` is
   undefined so the prerendered markup matches what a capable browser hydrates.
+- Every per-locale substitution (`<html lang>`, `<title>`, the four meta tags,
+  the two placeholder comments) goes through `mustReplace()`, which throws if
+  its pattern doesn't match. A stale pattern fails the build loudly instead of
+  silently shipping the wrong locale's `<title>`.
+
+## Internationalization
+
+Two locales: `id` (default, `/`) and `en` (`/en/`), both fully prerendered —
+each is readable with JavaScript disabled, in its own language, at its own URL.
+
+- **Content.** `src/content/types.ts` defines `Copy`; `id.ts` and `en.ts` each
+  implement it in full. `caraKerja.steps` is a 3-tuple, `fitur.items` a
+  6-tuple, `navLabels` a `Record<SectionId, string>` — a locale with the wrong
+  number of cards or nav entries fails `tsc`, not review. Components never
+  import copy from `site.ts` directly; they call `useCopy()`
+  (`src/lib/locale.tsx`), which reads `LocaleContext` set by `App`.
+- **`andong` and `becak` keep their Indonesian names in English**, glossed once
+  on first use (`masalah.paraTwo.emphasis` in `en.ts`) then bare after. They are
+  the product's differentiator, not vocabulary to flatten — do not translate
+  them to "horse cart" / "pedicab".
+- **Detection.** A synchronous script injected at the `<!--lang-detect-->`
+  placeholder runs before paint: a `localStorage["pathrix.lang"]` override
+  always wins; otherwise it scans `navigator.languages` for `id`/`en`,
+  defaulting to `id`. It uses `location.replace` (never a redirect status, so
+  Back leaves the site rather than bouncing between locales) and a
+  `sessionStorage` guard against a same-tab loop. **Not IP/region** — a foreign
+  tourist standing in Yogyakarta has an Indonesian IP and wants English; region
+  is not language.
+- **Manual override.** The footer `ID / EN` switcher (`Footer.tsx`) is real
+  `<a href="/">` / `<a href="/en/">` — works with JS disabled, crawlable — and
+  writes `localStorage["pathrix.lang"]` on click so the choice survives future
+  visits.
+- **Dev server.** `npm run dev` always serves the raw, Indonesian `index.html`
+  (no `/en/` route in dev). Test English locally at
+  `localhost:5174/?lang=en` — `localeFromDocument()` has a
+  `import.meta.env.DEV`-gated override for this that compiles out of
+  production.
+- **Hosting.** `/en/` needs the same `max-age=0, must-revalidate` cache rule as
+  `/` in both `vercel.json` and `public/_headers` — a cached `/en/index.html`
+  pins clients to deleted chunk hashes exactly like a cached `/` would.
+  `scripts/serve.mjs` 301s bare `/en` to `/en/` (otherwise it falls into the SPA
+  fallback and silently serves the Indonesian page).
 
 ## Images
 
@@ -444,6 +494,9 @@ Rejected approaches, do not retry:
 - Team names are deliberately absent.
 - No statistics, metrics, or invented numbers anywhere. This was an explicit
   product decision.
+- No domain is configured, so `hreflang` alternates between `/` and `/en/` are
+  root-relative, which search engines may not credit. Override with
+  `VITE_SITE_URL` (no trailing slash) once one is assigned.
 
 ## Do not
 

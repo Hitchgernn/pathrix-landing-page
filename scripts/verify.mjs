@@ -453,42 +453,76 @@ for (const vp of viewports) {
 }
 
 {
-  const ctx = await browser.newContext({
-    viewport: { width: 1440, height: 900 },
-    javaScriptEnabled: false,
-  });
-  const page = await ctx.newPage();
-  await page.goto(BASE, { waitUntil: "domcontentloaded" });
-  await page.waitForTimeout(400);
-  const text = (await page.textContent("body")) ?? "";
-  // The build prerenders the markup, so all of the copy must be present without
-  // any script running.
-  // One fragment per section, so a section dropping out of the prerender is
-  // caught. These are copied from src/content/site.ts and must be updated with
-  // it — a rewrite there fails this check until they are.
-  const required = [
-    "PATHRIX",
-    "Baru sampai di Yogyakarta",
-    "Dari satu kalimat",
-    "Satu layar untuk bertanya",
-    "Mari bantu pendatang",
-    "MAPID WebGIS Competition 2026",
-  ];
-  const missing = required.filter((s) => !text.includes(s));
-  missing.length === 0
-    ? pass("readable with JavaScript disabled", `${text.trim().length} chars of copy`)
-    : fail("readable with JavaScript disabled", `missing: ${missing.join(", ")}`);
+  // One fragment per section per locale, so a section (or a locale) dropping
+  // out of the prerender is caught. These are copied from src/content/id.ts
+  // and src/content/en.ts and must be updated with them — a rewrite there
+  // fails this check until they are.
+  const LOCALES = {
+    id: {
+      path: "/",
+      lang: "id",
+      strings: [
+        "PATHRIX",
+        "Baru sampai di Yogyakarta",
+        "Dari satu kalimat",
+        "Satu layar untuk bertanya",
+        "Mari bantu pendatang",
+        "MAPID WebGIS Competition 2026",
+      ],
+    },
+    en: {
+      path: "/en/",
+      lang: "en",
+      strings: [
+        "PATHRIX",
+        "Just arrived in Yogyakarta",
+        "From one sentence",
+        "One screen to ask",
+        "Help newcomers to Yogyakarta",
+        "MAPID WebGIS Competition 2026",
+      ],
+    },
+  };
 
-  // The static fallback must not leave a blank box where the diorama goes.
-  const heroHasContent = await page.evaluate(() => {
-    const h1 = document.querySelector("#beranda h1");
-    return Boolean(h1) && h1.getBoundingClientRect().height > 20;
-  });
-  heroHasContent
-    ? pass("hero laid out with JavaScript disabled")
-    : fail("hero laid out with JavaScript disabled");
-  await page.close();
-  await ctx.close();
+  for (const [locale, spec] of Object.entries(LOCALES)) {
+    const ctx = await browser.newContext({
+      viewport: { width: 1440, height: 900 },
+      javaScriptEnabled: false,
+    });
+    const page = await ctx.newPage();
+    await page.goto(BASE + spec.path, { waitUntil: "domcontentloaded" });
+    await page.waitForTimeout(400);
+
+    // The build prerenders the markup, so all of the copy — and the correct
+    // <html lang> — must be present without any script running.
+    const htmlLang = await page.getAttribute("html", "lang");
+    htmlLang === spec.lang
+      ? pass(`<html lang> correct (${locale})`, htmlLang ?? "null")
+      : fail(`<html lang> correct (${locale})`, `got "${htmlLang}"`);
+
+    const text = (await page.textContent("body")) ?? "";
+    const missing = spec.strings.filter((s) => !text.includes(s));
+    missing.length === 0
+      ? pass(`readable with JavaScript disabled (${locale})`, `${text.trim().length} chars of copy`)
+      : fail(`readable with JavaScript disabled (${locale})`, `missing: ${missing.join(", ")}`);
+
+    // The static fallback must not leave a blank box where the diorama goes.
+    const heroHasContent = await page.evaluate(() => {
+      const h1 = document.querySelector("#beranda h1");
+      return Boolean(h1) && h1.getBoundingClientRect().height > 20;
+    });
+    heroHasContent
+      ? pass(`hero laid out with JavaScript disabled (${locale})`)
+      : fail(`hero laid out with JavaScript disabled (${locale})`);
+
+    const hreflangCount = await page.locator('link[rel="alternate"][hreflang]').count();
+    hreflangCount === 3
+      ? pass(`hreflang alternates present (${locale})`, `${hreflangCount} links`)
+      : fail(`hreflang alternates present (${locale})`, `found ${hreflangCount}, expected 3`);
+
+    await page.close();
+    await ctx.close();
+  }
 }
 
 // --------------------------------------------------- responsive sweep
@@ -659,6 +693,77 @@ for (const vp of viewports) {
       ? pass("reduced motion: one frame, loop never starts", `delta ${delta.toFixed(4)}`)
       : fail("reduced motion: loop should not run", `delta ${delta.toFixed(4)}`);
   }
+  await page.close();
+  await ctx.close();
+}
+
+// ---------------------------------------------------------------- i18n
+// Footer language switcher: real links, pointing at the other locale.
+{
+  const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+  await page.goto(BASE, { waitUntil: "networkidle" });
+
+  const idHref = await page.locator('footer a[href="/"]').last().getAttribute("href");
+  const enHref = await page.getAttribute('footer a[href="/en/"]', "href");
+  idHref === "/" && enHref === "/en/"
+    ? pass("footer language switcher present", "/ and /en/ both linked")
+    : fail("footer language switcher present", `id href="${idHref}" en href="${enHref}"`);
+
+  await page.close();
+}
+
+// Fresh-profile browser-language detection: en-US lands on /en/, id-ID stays.
+{
+  const enCtx = await browser.newContext({
+    viewport: { width: 1440, height: 900 },
+    locale: "en-US",
+  });
+  const enPage = await enCtx.newPage();
+  await enPage.goto(BASE, { waitUntil: "networkidle" });
+  const enUrl = new URL(enPage.url());
+  enUrl.pathname === "/en/"
+    ? pass("en-US browser locale redirects to /en/", enUrl.pathname)
+    : fail("en-US browser locale redirects to /en/", enUrl.pathname);
+  await enPage.close();
+  await enCtx.close();
+
+  const idCtx = await browser.newContext({
+    viewport: { width: 1440, height: 900 },
+    locale: "id-ID",
+  });
+  const idPage = await idCtx.newPage();
+  await idPage.goto(BASE, { waitUntil: "networkidle" });
+  const idUrl = new URL(idPage.url());
+  idUrl.pathname === "/"
+    ? pass("id-ID browser locale stays at /", idUrl.pathname)
+    : fail("id-ID browser locale stays at /", idUrl.pathname);
+
+  // No redirect loop: a reload must not bounce the visitor anywhere else.
+  await idPage.reload({ waitUntil: "networkidle" });
+  const idUrlAfterReload = new URL(idPage.url());
+  idUrlAfterReload.pathname === "/"
+    ? pass("no redirect loop on reload", idUrlAfterReload.pathname)
+    : fail("no redirect loop on reload", idUrlAfterReload.pathname);
+  await idPage.close();
+  await idCtx.close();
+}
+
+// Manual override beats detection: switching to ID from /en/ on an
+// English-browser profile must stick after a reload, not bounce back to /en/.
+{
+  const ctx = await browser.newContext({
+    viewport: { width: 1440, height: 900 },
+    locale: "en-US",
+  });
+  const page = await ctx.newPage();
+  await page.goto(BASE + "/en/", { waitUntil: "networkidle" });
+  await page.click('footer a[href="/"]');
+  await page.waitForURL((url) => url.pathname === "/", { timeout: 5000 }).catch(() => {});
+  await page.reload({ waitUntil: "networkidle" });
+  const url = new URL(page.url());
+  url.pathname === "/"
+    ? pass("manual language override survives reload", url.pathname)
+    : fail("manual language override survives reload", url.pathname);
   await page.close();
   await ctx.close();
 }

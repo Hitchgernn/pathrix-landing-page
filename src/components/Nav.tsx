@@ -3,6 +3,7 @@ import styles from "./Nav.module.css";
 import { PathrixMark } from "./PathrixMark";
 import { ctaUrl, navLinks, type SectionId } from "../content/site";
 import { currentScrollY, viewportHeight } from "../lib/scroll";
+import { useCopy } from "../lib/locale";
 
 /**
  * How much ground the bar gives itself, matched to the register of whatever is
@@ -28,6 +29,7 @@ const GROUND_AT = 12;
  * menu — all enhancements.
  */
 export function Nav() {
+  const { navLabels, ui } = useCopy();
   const [ground, setGround] = useState<Ground>("none");
   const [active, setActive] = useState<SectionId | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -139,13 +141,13 @@ export function Nav() {
 
   return (
     <>
-      <nav className={styles.nav} data-ground={ground} aria-label="Navigasi utama">
-        <a href="#beranda" className={styles.mark} aria-label="Pathrix, ke beranda">
+      <nav className={styles.nav} data-ground={ground} aria-label={ui.navAriaLabel}>
+        <a href="#beranda" className={styles.mark} aria-label={ui.markAriaLabel}>
           <PathrixMark className={styles.markLogo} />
         </a>
 
         <div className={styles.links}>
-          {navLinks.map(({ id, label }) => (
+          {navLinks.map(({ id }) => (
             <a
               key={id}
               href={`#${id}`}
@@ -153,14 +155,14 @@ export function Nav() {
               data-active={active === id}
               aria-current={active === id ? "true" : undefined}
             >
-              {label}
+              {navLabels[id]}
             </a>
           ))}
         </div>
 
         <div className={styles.actions}>
           <a href={ctaUrl} className={styles.cta}>
-            Jelajahi Peta
+            {ui.exploreMap}
             <span className={styles.arrow} aria-hidden="true">
               &#8594;
             </span>
@@ -169,7 +171,7 @@ export function Nav() {
             ref={burgerRef}
             type="button"
             className={styles.burger}
-            aria-label={menuOpen ? "Tutup menu" : "Buka menu"}
+            aria-label={menuOpen ? ui.menuCloseLabel : ui.menuOpenLabel}
             aria-expanded={menuOpen}
             aria-controls="nav-menu"
             onClick={() => setMenuOpen((open) => !open)}
@@ -187,10 +189,10 @@ export function Nav() {
           className={styles.menu}
           role="dialog"
           aria-modal="true"
-          aria-label="Menu navigasi"
+          aria-label={ui.menuAriaLabel}
           onClick={() => setMenuOpen(false)}
         >
-          {navLinks.map(({ id, label }) => (
+          {navLinks.map(({ id }) => (
             <a
               key={id}
               href={`#${id}`}
@@ -199,13 +201,13 @@ export function Nav() {
                 followedLink.current = true;
               }}
             >
-              {label}
+              {navLabels[id]}
             </a>
           ))}
           {/* A real button, not a styled span: the close affordance has to be
               reachable by keyboard and announced as an action. */}
           <button type="button" className={styles.menuClose} onClick={() => setMenuOpen(false)}>
-            Tutup &times;
+            {ui.menuCloseButton}
           </button>
         </div>
       )}

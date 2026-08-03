@@ -8,7 +8,7 @@
  */
 import { build } from "vite";
 import react from "@vitejs/plugin-react";
-import { readFile, writeFile, rm } from "node:fs/promises";
+import { readFile, writeFile, rm, mkdir } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
 
@@ -33,17 +33,108 @@ await build({
   },
 });
 
-const { render } = await import(resolve(ssrOut, "entry-server.mjs"));
-const html = render();
+const { render, meta } = await import(resolve(ssrOut, "entry-server.mjs"));
 
-const indexPath = resolve(root, "dist/index.html");
-const template = await readFile(indexPath, "utf8");
+const templatePath = resolve(root, "dist/index.html");
+const template = await readFile(templatePath, "utf8");
 
-if (!template.includes("<!--app-html-->")) {
-  throw new Error("index.html is missing the <!--app-html--> placeholder");
+/**
+ * Absolute origin for hreflang alternates — search engines don't credit
+ * relative ones. Unset until a domain is assigned; see AGENTS.md's "Still
+ * unresolved" list. Emits root-relative hrefs instead of inventing a value.
+ */
+const SITE_URL = (process.env.VITE_SITE_URL || "").replace(/\/$/, "");
+if (!SITE_URL) {
+  console.warn(
+    "prerender: VITE_SITE_URL is unset — hreflang alternates will be root-relative, which search engines may not credit. See AGENTS.md.",
+  );
+}
+const abs = (path) => (SITE_URL ? `${SITE_URL}${path}` : path);
+
+const LOCALES = [
+  { locale: "id", path: "/", outPath: "dist/index.html" },
+  { locale: "en", path: "/en/", outPath: "dist/en/index.html" },
+];
+
+/** Replaces exactly once; throws instead of silently no-op'ing a stale pattern. */
+function mustReplace(html, pattern, replacement, label) {
+  if (!pattern.test(html)) throw new Error(`prerender: pattern for "${label}" not found`);
+  return html.replace(pattern, replacement);
 }
 
-await writeFile(indexPath, template.replace("<!--app-html-->", html), "utf8");
+for (const { locale, path, outPath } of LOCALES) {
+  const copyMeta = meta(locale);
+  const appHtml = render(locale);
+
+  const hreflang = [
+    { hreflang: "id", href: abs("/") },
+    { hreflang: "en", href: abs("/en/") },
+    { hreflang: "x-default", href: abs("/") },
+  ]
+    .map((l) => `    <link rel="alternate" hreflang="${l.hreflang}" href="${l.href}" />`)
+    .join("\n");
+
+  let html = template;
+  html = mustReplace(html, /<!--app-html-->/, appHtml, "app-html");
+  html = mustReplace(html, /<html lang="[^"]*">/, `<html lang="${locale}">`, "html lang");
+  html = mustReplace(html, /<title>[^<]*<\/title>/, `<title>${copyMeta.title}</title>`, "title");
+  html = mustReplace(
+    html,
+    /<meta\s+name="description"\s+content="[^"]*"\s*\/>/,
+    `<meta name="description" content="${copyMeta.description}" />`,
+    "meta description",
+  );
+  html = mustReplace(
+    html,
+    /<meta property="og:title" content="[^"]*" \/>/,
+    `<meta property="og:title" content="${copyMeta.ogTitle}" />`,
+    "og:title",
+  );
+  html = mustReplace(
+    html,
+    /<meta\s+property="og:description"\s+content="[^"]*"\s*\/>/,
+    `<meta property="og:description" content="${copyMeta.ogDescription}" />`,
+    "og:description",
+  );
+  html = mustReplace(html, /<!--hreflang-links-->/, hreflang, "hreflang-links");
+  html = mustReplace(html, /<!--lang-detect-->/, buildDetectScript(), "lang-detect");
+
+  const outFile = resolve(root, outPath);
+  await mkdir(dirname(outFile), { recursive: true });
+  await writeFile(outFile, html, "utf8");
+  console.log(`prerendered ${appHtml.length} bytes of markup into ${outPath} (${path})`);
+}
+
 await rm(ssrOut, { recursive: true, force: true });
 
-console.log(`prerendered ${html.length} bytes of markup into dist/index.html`);
+/**
+ * Runs before first paint, so it has to be synchronous and inline. A stored
+ * override always wins over detection; `location.replace` (never a 3xx) so
+ * Back leaves the site instead of bouncing between locales, and a
+ * sessionStorage guard stops a same-tab redirect loop if detection and the
+ * served page ever disagree twice in a row.
+ */
+function buildDetectScript() {
+  return `<script>(function(){
+  try {
+    var STORE = "pathrix.lang";
+    var GUARD = "pathrix.lang.redirected";
+    var here = location.pathname.indexOf("/en/") === 0 ? "en" : "id";
+    var stored = localStorage.getItem(STORE);
+    var target = stored === "en" || stored === "id" ? stored : null;
+    if (!target) {
+      var langs = navigator.languages || [navigator.language || "id"];
+      target = "id";
+      for (var i = 0; i < langs.length; i++) {
+        var primary = String(langs[i]).slice(0, 2).toLowerCase();
+        if (primary === "en") { target = "en"; break; }
+        if (primary === "id") { target = "id"; break; }
+      }
+    }
+    if (target !== here && !sessionStorage.getItem(GUARD)) {
+      sessionStorage.setItem(GUARD, "1");
+      location.replace(target === "en" ? "/en/" : "/");
+    }
+  } catch (e) { /* storage unavailable — stay on the served locale */ }
+})();</script>`;
+}
