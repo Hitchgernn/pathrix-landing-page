@@ -2,7 +2,7 @@
 .claude
 .agents
 .kiro
-CLAUDE.md
+.impeccable
 
 # Generated knowledge graph — rebuild with `graphify update .`
 graphify-out
