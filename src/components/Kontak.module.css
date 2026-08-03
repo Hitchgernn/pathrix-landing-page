@@ -169,3 +169,15 @@
 .note[data-tone="error"] {
   color: var(--warm-deep);
 }
+
+/* Inherits the note's tone so the recovery address stays readable in both the
+   error and handoff states. The explicit hover overrides the global a:hover. */
+.noteLink {
+  color: inherit;
+  border-bottom: 1px solid currentColor;
+}
+
+.noteLink:hover {
+  color: inherit;
+  opacity: 0.75;
+}

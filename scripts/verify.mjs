@@ -274,19 +274,64 @@ for (const vp of viewports) {
   await page.goto(BASE, { waitUntil: "networkidle" });
   await page.waitForTimeout(800);
 
-  const before = await page.getAttribute("nav", "data-past");
+  const before = await page.getAttribute("nav", "data-ground");
   // html has scroll-behavior:smooth, so a scrollTo is animated — disable it here
   // or the assertion races the scroll.
   await page.evaluate(() => {
     document.documentElement.style.scrollBehavior = "auto";
     window.scrollTo(0, window.innerHeight * 0.8);
   });
-  await page.waitForTimeout(700);
-  const after = await page.getAttribute("nav", "data-past");
+  // Wait for the state rather than sleeping at it: the scroll listener attaches
+  // on hydration, and hydration occasionally lands past a fixed 700ms under
+  // software GL — which made this check fail ~1 run in 6 with nothing wrong.
+  await page
+    .waitForFunction(() => document.querySelector("nav")?.dataset.ground === "dark", null, {
+      timeout: 5000,
+    })
+    .catch(() => {});
+  const after = await page.getAttribute("nav", "data-ground");
 
-  before === "false" && after === "true"
+  before === "none" && after === "dark"
     ? pass("nav inverts past the hero")
     : fail("nav inverts past the hero", `before=${before} after=${after}`);
+
+  // Regression: early in the hero the wordmark slides up behind the bar. A
+  // transparent bar there made the 55%-ink links composite to exactly the
+  // wordmark's own colour — 1:1, invisible. The bar must own a background
+  // before the wordmark arrives.
+  await page.evaluate(() => window.scrollTo(0, 160));
+  // Settle on the sky value specifically. Asserting merely "not transparent"
+  // passes on the ink bar still fading out from the previous assertion.
+  const SKY_BAR = "rgba(223, 234, 243";
+  await page
+    .waitForFunction(
+      (sky) => {
+        const nav = document.querySelector("nav");
+        return (
+          nav?.dataset.ground === "light" &&
+          getComputedStyle(nav).backgroundColor.startsWith(sky)
+        );
+      },
+      SKY_BAR,
+      { timeout: 5000 },
+    )
+    .catch(() => {});
+  const overHero = await page.evaluate(() => {
+    const nav = document.querySelector("nav");
+    const wm = document.querySelector("#beranda h1").getBoundingClientRect();
+    const link = nav.querySelector('a[href="#cara-kerja"]').getBoundingClientRect();
+    return {
+      ground: nav.dataset.ground,
+      bg: getComputedStyle(nav).backgroundColor,
+      wordmarkBehind: link.top < wm.bottom && link.bottom > wm.top,
+    };
+  });
+  overHero.ground === "light" && overHero.wordmarkBehind && overHero.bg.startsWith(SKY_BAR)
+    ? pass("nav grounds itself where the wordmark passes behind", overHero.bg)
+    : fail(
+        "nav grounds itself where the wordmark passes behind",
+        `ground=${overHero.ground} wordmarkBehind=${overHero.wordmarkBehind} bg=${overHero.bg}`,
+      );
 
   // Anchor jump must clear the fixed nav.
   await page.evaluate(() => window.scrollTo(0, 0));
@@ -308,6 +353,15 @@ for (const vp of viewports) {
         `section top ${anchor.sectionTop.toFixed(0)} vs nav bottom ${anchor.navBottom.toFixed(0)}`,
       );
 
+  // Same hydration race as the invert check above: the IntersectionObserver that
+  // sets data-active only exists once React has hydrated.
+  await page
+    .waitForFunction(
+      () => document.querySelector('nav a[data-active="true"]')?.getAttribute("href") === "#fitur",
+      null,
+      { timeout: 5000 },
+    )
+    .catch(() => {});
   const active = await page.evaluate(() => {
     const el = document.querySelector('nav a[data-active="true"]');
     return el ? el.getAttribute("href") : null;
@@ -409,12 +463,15 @@ for (const vp of viewports) {
   const text = (await page.textContent("body")) ?? "";
   // The build prerenders the markup, so all of the copy must be present without
   // any script running.
+  // One fragment per section, so a section dropping out of the prerender is
+  // caught. These are copied from src/content/site.ts and must be updated with
+  // it — a rewrite there fails this check until they are.
   const required = [
     "PATHRIX",
-    "Pindah moda di Yogyakarta",
-    "Dari lapangan ke keputusan",
-    "Satu layar untuk melihat",
-    "Mari benahi simpul transit",
+    "Baru sampai di Yogyakarta",
+    "Dari satu kalimat",
+    "Satu layar untuk bertanya",
+    "Mari bantu pendatang",
     "MAPID WebGIS Competition 2026",
   ];
   const missing = required.filter((s) => !text.includes(s));
@@ -525,9 +582,11 @@ for (const vp of viewports) {
     })),
   );
 
-  imgs.length === 5
-    ? pass("all five Fitur images present", `${imgs.length}`)
-    : fail("all five Fitur images present", `found ${imgs.length}`);
+  // Just the concept visual since the field-survey photo grid was removed; the
+  // checks below derive from this set, so they follow the count.
+  imgs.length === 1
+    ? pass("Fitur concept visual present", `${imgs.length}`)
+    : fail("Fitur concept visual present", `found ${imgs.length}`);
 
   const broken = imgs.filter((i) => i.w === 0 || i.h === 0);
   broken.length === 0

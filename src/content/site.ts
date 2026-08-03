@@ -114,7 +114,6 @@ export const fitur = {
       accent: "warm",
     },
   ],
-  fieldLabel: "Foto survei lapangan",
 } as const;
 
 /**
@@ -129,43 +128,30 @@ export const fitur = {
  */
 export const productShot = {
   id: "pathrix-webgis",
-  caption: "Screenshot WebGIS Pathrix",
+  caption: "Konsep visual WebGIS Pathrix",
+  /**
+   * Rendered as a visible figcaption, not just alt text. The product does not
+   * exist yet and this image is generated art — the page has to say so where a
+   * reader actually sees it, not only in the source.
+   */
+  note: "Konsep visual — produk belum dibangun",
   alt: "Antarmuka WebGIS Pathrix: peta simpul transit Yogyakarta dengan panel lapisan, kolom tanya bahasa sehari-hari, dan panel penilaian AI untuk satu simpul.",
   width: 1600,
   height: 900,
   src: "/img/webgis",
 } as const;
 
-/** Placeholder survey imagery, same arrangement as productShot above. */
-export const fieldPhotos = [
-  {
-    id: "pathrix-field-1",
-    caption: "Foto trotoar",
-    alt: "Trotoar yang terputus di dekat simpul transit: paving hilang, tanah terbuka, dan tiang utilitas berdiri di tengah jalur pejalan kaki.",
-    src: "/img/field-1",
-  },
-  {
-    id: "pathrix-field-2",
-    caption: "Foto halte",
-    alt: "Halte Trans Jogja dengan atap peneduh, bangku, dan papan rute di tepi trotoar berpaving pemandu.",
-    src: "/img/field-2",
-  },
-  {
-    id: "pathrix-field-3",
-    caption: "Foto penyeberangan",
-    alt: "Penyeberangan zebra yang catnya sudah pudar tanpa pelindung penyeberangan, dengan sepeda motor berhenti di atas marka.",
-    src: "/img/field-3",
-  },
-  {
-    id: "pathrix-field-4",
-    caption: "Foto stasiun",
-    alt: "Bagian depan stasiun dengan kanopi peron, garis batas aman kuning, dan calon penumpang menunggu di peron.",
-    src: "/img/field-4",
-  },
-] as const;
-
-/** Rendered size of each field photo (4:5). Used to reserve layout. */
-export const FIELD_PHOTO_SIZE = { width: 640, height: 800 } as const;
+/*
+ * The four field-survey photos that used to sit below the feature grid are
+ * gone. They were generated art of trotoar/halte/penyeberangan/stasiun —
+ * evidence for the earlier walkability-scoring product, not for the andong and
+ * becak pangkalan this PRD actually surveys. Presenting the wrong product's
+ * fabricated photographs as "Foto survei lapangan" was the risk; the survey
+ * itself is still claimed, in feature 05 above, where it is true.
+ * The generated files remain in public/img/field-*.{jpg,webp} and their source
+ * in scripts/art/fields.py, unreferenced, should real survey imagery replace
+ * them later.
+ */
 
 export const kontak = {
   eyebrow: "Kontak",
@@ -182,6 +168,23 @@ export const kontak = {
   },
   submitLabel: "Kirim pesan",
   submitSentLabel: "Terkirim",
+  /**
+   * Form status messages. The two recovery cases are split around the address
+   * so it can render as a real mailto: link — an error that names its recovery
+   * should also put that recovery one click away, not just describe it.
+   */
+  notes: {
+    sent: "Terima kasih — pesanmu tercatat.",
+    error: {
+      before: "Pesan gagal terkirim. Coba lagi, atau kirim langsung ke ",
+      after: ".",
+    },
+    /** No backend: the browser was handed a mailto: that may do nothing at all. */
+    handoff: {
+      before: "Membuka aplikasi surel kamu. Kalau tidak terbuka, kirim manual ke ",
+      after: ".",
+    },
+  },
 } as const;
 
 export const footer = {

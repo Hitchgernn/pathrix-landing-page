@@ -72,6 +72,26 @@
   line-height: 1;
 }
 
+/* Wraps the framed shot plus its disclosure line. The note cannot live inside
+   .shot: that box is overflow:hidden and the ImageSlot fills it absolutely. */
+.shotBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 0;
+}
+
+/* The system's mono metadata voice — this is an annotation on the image, not a
+   caption competing with the feature grid. */
+.shotNote {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--on-dark-meta);
+  text-wrap: pretty;
+}
+
 .shot {
   position: relative;
   width: 100%;
@@ -128,32 +148,3 @@
   text-wrap: pretty;
 }
 
-.fieldBlock {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.fieldLabel {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.24em;
-  text-transform: uppercase;
-  color: var(--on-dark-meta);
-}
-
-.fieldGrid {
-  display: grid;
-  /* min() so the floor can never exceed the available width — see Kontak. */
-  grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr));
-  gap: clamp(12px, 1.6vw, 20px);
-}
-
-.fieldItem {
-  position: relative;
-  aspect-ratio: 4 / 5;
-  border-radius: clamp(10px, 1.2vw, 16px);
-  overflow: hidden;
-  border: 1px solid rgba(231, 240, 247, 0.16);
-  background: var(--ink-soft);
-}
