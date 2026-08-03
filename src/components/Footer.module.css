@@ -51,3 +51,29 @@
 .link:hover {
   color: var(--paper);
 }
+
+/* Same quiet mono voice as .competition — a toggle, not a nav destination. */
+.langGroup {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.16em;
+}
+
+.langLink {
+  color: rgba(231, 240, 247, 0.6);
+}
+
+.langLink + .langLink::before {
+  content: "/";
+  margin-right: 6px;
+  color: rgba(231, 240, 247, 0.4);
+}
+
+.langLink[data-active="true"],
+.langLink:hover {
+  color: var(--paper);
+}
