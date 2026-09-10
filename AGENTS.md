@@ -118,6 +118,11 @@ Changing these back will fail the accessibility target.
 
 - **Quarkiz** — the wordmark `PATHRIX` only (hero h1, nav mark, footer mark).
   Self-hosted, subset to `A-Za-z` (7.1KB woff2, from 28KB).
+  **Licensed "Personal Use Only"** (`uploads/quarkiz-font/Befonts-License.txt`).
+  Self-hosting it on a public site is redistribution, and a competition entry
+  for a product is not obviously personal use. Unresolved — see "Still
+  unresolved". Either buy a commercial licence or change the wordmark face
+  before a public deploy; do not quietly ship it.
 - **Archivo** (400/500/600/700) — everything else.
 - **IBM Plex Mono** (400/500) — eyebrows, labels, step numbers, form labels.
 
@@ -504,7 +509,8 @@ npm run verify:pause           # counts WebGL draw calls in/out of view
 npm run verify:framing         # rotation framing + image content
 npm run verify:weight          # transfer size + cache reuse
 
-npm run dev &                  # :5174 — verify:vehicles needs this one, not dist/
+npm run dev &                  # :5174 (pinned in vite.config.ts, strictPort) —
+                               # verify:vehicles needs this one, not dist/
 npm run verify:vehicles        # heading, terrain clearance, traffic gaps
 ```
 
@@ -602,6 +608,9 @@ Rejected approaches, do not retry:
   and reports real success or failure; without it, it composes a `mailto:`. It
   **never fakes a success state** — do not "simplify" this into an inline
   confirmation.
+- **The Quarkiz wordmark font is "Personal Use Only"** and is currently
+  self-hosted and served. This is a licensing exposure, not a style question —
+  see "Typography". Decide it before a public deploy.
 - Team names are deliberately absent.
 - No statistics, metrics, or invented numbers anywhere. This was an explicit
   product decision.

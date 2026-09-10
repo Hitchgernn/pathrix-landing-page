@@ -21,7 +21,7 @@ The design prototype **`Pathrix.dc.html`** is the visual spec. Match it — do n
 ## Commands
 
 ```
-npm run dev              # dev server (:5174)
+npm run dev              # dev server (:5174, pinned + strictPort in vite.config.ts)
 npm run build            # tsc --noEmit && vite build && prerender — all three steps required
 npm run typecheck
 npm run serve             # dist/ on :4174 WITH cache headers + gzip — verify against THIS, not preview
