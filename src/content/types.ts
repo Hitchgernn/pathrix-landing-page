@@ -90,6 +90,8 @@ export type Copy = {
   };
   footer: {
     competition: string;
+    /** Attribution required by the Tugu model's CC BY-NC-ND licence. */
+    modelCredit: string;
   };
   ui: {
     skipLink: string;

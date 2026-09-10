@@ -35,6 +35,30 @@
   text-transform: uppercase;
 }
 
+/* Quieter than .competition: a licence notice, not a line anyone reads twice. */
+.credit {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  line-height: 1.5;
+  letter-spacing: 0.04em;
+  /* Wide enough that "CC BY-NC-ND 4.0" and the link do not each land on a line
+     of their own; the licence reads as one sentence. */
+  max-width: 64ch;
+  text-wrap: pretty;
+}
+
+.creditLink {
+  /* Stands in for the JSX space the static prerender cannot carry. */
+  margin-left: 0.4em;
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.creditLink:hover {
+  color: var(--paper);
+}
+
 .links {
   display: flex;
   flex-wrap: wrap;
