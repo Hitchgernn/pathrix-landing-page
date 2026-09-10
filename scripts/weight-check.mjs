@@ -49,13 +49,16 @@ async function load(label) {
   });
 
   await page.goto(BASE, { waitUntil: "networkidle" });
-  await page.waitForTimeout(3000);
+  // The diorama mounts at requestIdleCallback (2s timeout) and only then fetches
+  // the Tugu .glb, so a 3s window closed before the model request finished and
+  // the cold total silently omitted it. Wait long enough to actually see it.
+  await page.waitForTimeout(7000);
   // Reach the images too.
   await page.evaluate(() => {
     document.documentElement.style.scrollBehavior = "auto";
     document.getElementById("fitur")?.scrollIntoView({ block: "start" });
   });
-  await page.waitForTimeout(2200);
+  await page.waitForTimeout(3000);
 
   const local = seen.filter((s) => s.url.startsWith("/"));
   const byType = {};
@@ -74,8 +77,14 @@ async function load(label) {
 
   // What arrives before the hero is usable, i.e. excluding the deferred 3D chunk
   // and the below-the-fold imagery.
+  // /hero/ joins the exclusions: the Tugu .glb is fetched by the diorama at idle,
+  // after the hero wordmark has painted, so it is deferred weight like three.js
+  // rather than something the first view waits on.
   const critical = local.filter(
-    (s) => !/three-|diorama-/.test(s.url) && !s.url.startsWith("/img/"),
+    (s) =>
+      !/three-|diorama-/.test(s.url) &&
+      !s.url.startsWith("/img/") &&
+      !s.url.startsWith("/hero/"),
   );
   console.log(
     `  critical path (no three.js, no imagery): ${(critical.reduce((a, b) => a + b.size, 0) / 1024).toFixed(1)} KB across ${critical.length} requests`,
