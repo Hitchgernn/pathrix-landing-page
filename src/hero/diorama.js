@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import { createStage } from "./stage.js";
-import { createLights } from "./core/lights.js";
+import { createEnvironment, createLights } from "./core/lights.js";
 import { createIsland } from "./world/island.js";
 import { createProps } from "./world/props.js";
 import { createWater } from "./world/water.js";
@@ -118,7 +118,11 @@ function buildScene(container, viewName, transparent, tint) {
   world.add(phase("props", () => createProps(island)));
   world.add(phase("tracks", () => createTracks(paths, placements)));
 
-  const tugu = phase("tugu", () => createTugu());
+  // Built once here rather than inside the Tugu so the PMREM pass, which needs
+  // the renderer, stays out of the landmark module's hands.
+  const envMap = phase("environment", () => createEnvironment(renderer));
+
+  const tugu = phase("tugu", () => createTugu(envMap));
   world.add(tugu.group);
 
   const vehicles = phase("vehicles", () => createVehicles(paths));
@@ -166,14 +170,23 @@ function buildScene(container, viewName, transparent, tint) {
    * KHR_parallel_shader_compile where the driver supports it, so the main thread
    * stays free; it falls back to synchronous compilation otherwise. Either way
    * the caller waits for `ready` before rendering the first frame.
+   *
+   * The Tugu arrives over the network, so the compile has to wait on it first —
+   * compiling ahead of the model would miss its programs entirely and push them
+   * into the first frame, which is the cost compileAsync exists to avoid.
+   * `tugu.loaded` never rejects; a failed fetch leaves the procedural fallback
+   * standing.
    */
-  const ready =
-    typeof renderer.compileAsync === "function"
-      ? renderer
-          .compileAsync(scene, camera)
-          .then(() => phase("first render (precompiled)", draw))
-          .catch(() => phase("first render (compile fallback)", draw))
-      : Promise.resolve().then(() => phase("first render (sync compile)", draw));
+  const ready = tugu.loaded
+    .then(() =>
+      typeof renderer.compileAsync === "function"
+        ? renderer
+            .compileAsync(scene, camera)
+            .then(() => phase("first render (precompiled)", draw))
+            .catch(() => phase("first render (compile fallback)", draw))
+        : phase("first render (sync compile)", draw),
+    )
+    .catch(() => phase("first render (model failed)", draw));
 
   return {
     ready,
@@ -199,6 +212,9 @@ function buildScene(container, viewName, transparent, tint) {
         if (Array.isArray(material)) material.forEach((m) => m.dispose());
         else material?.dispose();
       });
+      // The scene traversal above only reaches geometries and materials; the
+      // environment map is held by neither.
+      envMap.dispose();
       stage.dispose();
     },
   };
