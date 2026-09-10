@@ -3,7 +3,10 @@ import react from "@vitejs/plugin-react";
 
 export default defineConfig({
   plugins: [react()],
-  server: { open: false },
+  // Pinned, not incidental: scripts/vehicle-check.mjs defaults to :5174 and the
+  // docs quote it. strictPort so a busy port fails loudly instead of drifting to
+  // another number and quietly breaking that check.
+  server: { open: false, port: 5174, strictPort: true },
   build: {
     target: "es2020",
     assetsInlineLimit: 0,
