@@ -24,6 +24,22 @@ export function Footer() {
         <div className={styles.brand}>
           <span className={styles.mark}>PATHRIX</span>
           <span className={styles.competition}>{footer.competition}</span>
+          {/* Attribution is a licence condition on the diorama's Tugu model,
+              not decoration — see AGENTS.md. Do not remove it. */}
+          <span className={styles.credit}>
+            {/* No {" "} separator: entry-server.tsx renders with
+                renderToStaticMarkup, which emits no <!-- --> markers, so two
+                adjacent text nodes cannot hydrate. The gap is CSS. */}
+            {footer.modelCredit}
+            <a
+              className={styles.creditLink}
+              href="https://sketchfab.com/Djonk"
+              rel="noopener noreferrer nofollow"
+              target="_blank"
+            >
+              sketchfab.com/Djonk
+            </a>
+          </span>
         </div>
         <nav className={styles.links} aria-label={ui.footerNavAriaLabel}>
           {navLinks.map(({ id }) => (

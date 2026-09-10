@@ -25,6 +25,7 @@ const TYPES = {
   ".webp": "image/webp",
   ".jpg": "image/jpeg",
   ".png": "image/png",
+  ".glb": "model/gltf-binary",
   ".woff2": "font/woff2",
   ".otf": "font/otf",
   ".ttf": "font/ttf",
@@ -32,7 +33,10 @@ const TYPES = {
   ".txt": "text/plain; charset=utf-8",
 };
 
-const COMPRESSIBLE = new Set([".html", ".js", ".css", ".svg", ".json", ".txt"]);
+// .glb is in here on purpose. meshopt's encoding is byte-filtered specifically so
+// that a general-purpose compressor can still work on it — gzip takes the Tugu
+// model from 153KB to 94KB. Do not assume "already compressed" and drop it.
+const COMPRESSIBLE = new Set([".html", ".js", ".css", ".svg", ".json", ".txt", ".glb"]);
 
 /** Minimal _headers parser: "/path/glob" followed by indented "Key: value" lines. */
 function parseHeaders(file) {
