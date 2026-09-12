@@ -90,7 +90,7 @@ export const fiturShots = [
   { id: "plain-language", width: 900, height: 1341, src: "/img/fitur-plain-language" },
   { id: "multistop", width: 900, height: 1341, src: "/img/fitur-multistop" },
   { id: "firstlastmile", width: 900, height: 1341, src: "/img/fitur-firstlastmile" },
-  { id: "sustainability", width: 900, height: 604, src: "/img/fitur-sustainability" },
+  { id: "sustainability", width: 900, height: 1341, src: "/img/fitur-sustainability" },
 ] as const;
 
 /**
