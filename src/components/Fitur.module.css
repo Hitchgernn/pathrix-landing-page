@@ -16,20 +16,19 @@
 
 .head {
   display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 28px;
-}
-
-.headingCol {
-  display: flex;
   flex-direction: column;
   gap: 18px;
   max-width: 640px;
 }
 
 .eyebrow {
+  display: inline-flex;
+  align-self: flex-start;
+  align-items: center;
+  height: 26px;
+  padding: 0 12px;
+  border-radius: 999px;
+  background: rgba(108, 163, 212, 0.14);
   font-family: var(--font-mono);
   font-size: 11px;
   letter-spacing: 0.26em;
@@ -43,6 +42,147 @@
   letter-spacing: -0.035em;
   color: var(--on-dark-head);
   text-wrap: pretty;
+}
+
+/*
+ * Bento grid: min() so the floor can never exceed the available width — see
+ * Kontak. Cells 1 and 6 claim two tracks each via .cellWide.
+ */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(272px, 100%), 1fr));
+  gap: 16px;
+}
+
+.cell {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: var(--radius-card);
+  background: var(--card-surface);
+  box-shadow: var(--shadow-card-sm);
+  color: var(--ink-soft);
+}
+
+.cellWide {
+  box-shadow: var(--shadow-card);
+}
+
+/* Image bleeds to the card edges; index badge floats over it. Standard cells
+   crop 4:3 (matches CaraKerja's photo treatment for the same source aspect);
+   the two wide cells get a shorter 16:9 crop to suit their footprint. */
+.media {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  background: var(--ink-soft);
+}
+
+.cellWide .media {
+  aspect-ratio: 16 / 9;
+}
+
+.indexBadge {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  display: inline-flex;
+  align-items: center;
+  height: 26px;
+  padding: 0 12px;
+  border-radius: 999px;
+  background: rgba(16, 30, 42, 0.55);
+  backdrop-filter: blur(6px);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--paper);
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: clamp(22px, 2.6vw, 32px);
+}
+
+/*
+ * `grid-column: span 2` on an `auto-fit` grid does NOT clamp to 1 column when
+ * only one real track fits — the browser adds a content-sized IMPLICIT column
+ * instead, which overflowed the viewport at narrow widths (verified: the cell
+ * rendered ~85px wider than the 390px viewport). Only span 2 once the grid
+ * has actually resolved to 2+ tracks: 2 * 272px min + 16px gap needs roughly
+ * 560px of content width, which the shell's gutter reaches at ~620px viewport.
+ */
+@media (min-width: 620px) {
+  .cellWide {
+    grid-column: span 2;
+  }
+}
+
+/*
+ * The payoff cell (Sustainability Tracker) keeps its existing solid warm fill
+ * instead of the card-surface treatment — the system's one "here's the
+ * punchline" tile, same convention as CaraKerja's highlighted step and
+ * Audiens' closing group.
+ */
+.cell[data-accent="warm"] {
+  background: var(--warm);
+  box-shadow: var(--shadow-card);
+}
+
+.cellTitle {
+  font-size: 19px;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+}
+
+.cell[data-accent="warm"] .cellTitle {
+  color: var(--ink);
+}
+
+.cellBody {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--on-light-body);
+  text-wrap: pretty;
+}
+
+.cell[data-accent="warm"] .cellBody {
+  color: rgba(16, 30, 42, 0.72);
+}
+
+/*
+ * Eco chip on the payoff cell: flags that this specific claim is about carbon
+ * savings (gold marks "flagship item," eco marks "this claim is carbon").
+ * Background is a light tint of --eco (var() can't carry alpha, so this
+ * mirrors the token's hex #115f35 at low opacity — same pattern as the
+ * eyebrow's rgba(108, 163, 212, .14) tint of --blue-lift above). The icon
+ * uses --eco-deep, the variant tokens.css documents as contrast-verified
+ * against the --warm gold fill specifically (5.87:1) — --eco itself is the
+ * chip's own background here, and --eco-text is only verified on the dark ink
+ * backgrounds, not on warm.
+ */
+.ecoChip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  align-self: flex-start;
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  background: rgba(17, 95, 53, 0.18);
+  color: var(--eco-deep);
+}
+
+.ecoIcon {
+  width: 17px;
+  height: 17px;
+}
+
+.ctaRow {
+  display: flex;
+  justify-content: center;
 }
 
 .outlineCta {
@@ -68,83 +208,6 @@
 }
 
 .arrow {
-  font-size: 16px;
-  line-height: 1;
+  width: 16px;
+  height: 16px;
 }
-
-/* Wraps the framed shot plus its disclosure line. The note cannot live inside
-   .shot: that box is overflow:hidden and the ImageSlot fills it absolutely. */
-.shotBlock {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin: 0;
-}
-
-/* The system's mono metadata voice — this is an annotation on the image, not a
-   caption competing with the feature grid. */
-.shotNote {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--on-dark-meta);
-  text-wrap: pretty;
-}
-
-.shot {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 16 / 9;
-  border-radius: clamp(12px, 1.4vw, 20px);
-  overflow: hidden;
-  border: 1px solid rgba(231, 240, 247, 0.16);
-  background: var(--ink-soft);
-}
-
-/*
- * Hairline grid, not bordered cards: 1px gaps over a translucent background,
- * with each cell painting the section colour back over it.
- */
-.grid {
-  display: grid;
-  /* min() so the floor can never exceed the available width — see Kontak. */
-  grid-template-columns: repeat(auto-fit, minmax(min(272px, 100%), 1fr));
-  gap: 1px;
-  background: var(--on-dark-line);
-  border: 1px solid var(--on-dark-line);
-}
-
-.cell {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  padding: clamp(26px, 3vw, 40px);
-  background: var(--ink-deep);
-}
-
-.cellIndex {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.2em;
-  color: var(--blue-lift);
-}
-
-/* The single warm index in the grid. */
-.cellIndex[data-accent="warm"] {
-  color: var(--warm-text);
-}
-
-.cellTitle {
-  font-size: 19px;
-  letter-spacing: -0.015em;
-  color: var(--on-dark-head);
-}
-
-.cellBody {
-  font-size: 15px;
-  line-height: 1.6;
-  color: var(--on-dark-body-quiet);
-  text-wrap: pretty;
-}
-
