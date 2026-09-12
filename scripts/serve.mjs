@@ -75,10 +75,10 @@ function headersFor(urlPath) {
 createServer((req, res) => {
   let urlPath = decodeURIComponent(new URL(req.url, "http://x").pathname);
 
-  // Bare "/en" is a directory on disk, so without this it would fall through
-  // to the SPA-fallback branch below and silently serve the Indonesian page.
-  if (urlPath === "/en") {
-    res.writeHead(301, { Location: "/en/" });
+  // Bare "/id" is a directory on disk, so without this it would fall through
+  // to the SPA-fallback branch below and silently serve the English page.
+  if (urlPath === "/id") {
+    res.writeHead(301, { Location: "/id/" });
     res.end();
     return;
   }

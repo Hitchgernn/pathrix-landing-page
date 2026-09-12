@@ -26,6 +26,13 @@
 }
 
 .eyebrow {
+  display: inline-flex;
+  align-self: flex-start;
+  align-items: center;
+  height: 26px;
+  padding: 0 12px;
+  border-radius: 999px;
+  background: rgba(10, 101, 184, 0.1);
   font-family: var(--font-mono);
   font-size: 11px;
   letter-spacing: 0.26em;
@@ -70,17 +77,36 @@
   font-weight: 600;
   letter-spacing: -0.02em;
   color: var(--blue);
-  border-bottom: 1px solid rgba(31, 101, 146, 0.35);
+  border-bottom: 1px solid rgba(10, 101, 184, 0.35);
 }
 
+/*
+ * The form is the page's one other "floating" surface besides the hero CTA —
+ * a real card now (soft shadow, gradient cap) rather than a flat hairline
+ * panel, since it sits over imagery-adjacent content the same way the hero
+ * button floats over the diorama.
+ */
 .form {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 18px;
-  padding: clamp(26px, 3vw, 40px);
-  background: rgba(255, 255, 255, 0.55);
-  border: 1px solid rgba(23, 41, 58, 0.14);
-  border-radius: clamp(12px, 1.4vw, 18px);
+  padding: clamp(28px, 3vw, 44px);
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(23, 41, 58, 0.1);
+  border-radius: var(--radius-panel);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+}
+
+.form::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--blue) 0%, var(--warm) 100%);
 }
 
 .label {
@@ -168,6 +194,12 @@
    tone and only reaches 3.42:1 here. */
 .note[data-tone="error"] {
   color: var(--warm-deep);
+}
+
+/* Success is semantically distinct from the default/handoff info tone: 7.91:1
+   on --sky-1, clears AA. */
+.note[data-tone="sent"] {
+  color: var(--eco-deep);
 }
 
 /* Inherits the note's tone so the recovery address stays readable in both the

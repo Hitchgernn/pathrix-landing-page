@@ -9,8 +9,18 @@
   --ink-deep: #0c1822;
   --ink-soft: #17293a;
 
-  --blue: #1f6592;
-  --blue-lift: #5aa9dd;
+  /*
+   * --blue / --blue-lift are sampled from the official PATHRIX brand mark
+   * (the pin icon's blue, Proposal Pathrix_MAPID_20260802_192021_0000.pdf,
+   * cover — source RGB ≈ 10,101,184) rather than an invented instrument-blue.
+   * The Home/diorama scene (src/hero/) is untouched and keeps its own colours;
+   * this pair only drives accent use across the rest of the page.
+   *   --blue       text/fill on light backgrounds. 4.82:1 on --sky-1.
+   *   --blue-lift  text on the dark backgrounds. 6.31:1 on --ink,
+   *                6.69:1 on --ink-deep, 5.53:1 on --ink-soft.
+   */
+  --blue: #0a65b8;
+  --blue-lift: #6ca3d4;
   /*
    * The warm accent is three values, not one. A single yellow cannot be both
    * bright enough to read as 11px text on the *dark* backgrounds and dark enough
@@ -19,23 +29,29 @@
    * --warm-deep adds the foreground-on-light case that was missing rather than
    * forcing three jobs through two values.
    *
-   *   --warm       background use only. Paired with --ink text: 7.54:1.
-   *   --warm-text  text on the dark backgrounds. 10.66:1 on --ink,
-   *                11.32:1 on --ink-deep.
-   *   --warm-deep  text on the light backgrounds. 4.95:1 on --sky-1.
+   * All three are now derived from the brand mark's gold (source RGB ≈
+   * 250,193,60, sampled from the same proposal cover as --blue above) rather
+   * than the diorama Tugu material — the Home scene keeps its own gold
+   * unchanged, this is the page accent only.
    *
-   * --warm-deep is a fix, not just a recolour: the old --warm #c2603a was being
-   * used as text on --sky-1 at 3.42:1, i.e. that site was already failing AA
-   * before the yellow change and nobody had noticed.
-   *
-   * --warm #d9a521 is deliberately the same hex as the GOLD material of the Tugu
-   * monument in src/hero/landmarks/tugu.js — the 3D scene and the page accent are
-   * meant to match. Keep them in sync.
+   *   --warm       background use only. Paired with --ink text: 10.28:1.
+   *   --warm-text  text on the dark backgrounds. 11.73:1 on --ink,
+   *                12.45:1 on --ink-deep, 10.29:1 on --ink-soft.
+   *   --warm-deep  text on the light backgrounds. 5.63:1 on --sky-1.
    */
-  --warm: #d9a521;
-  --warm-text: #f2c94c;
-  --warm-deep: #7c5e13;
+  --warm: #fac13c;
+  --warm-text: #ffd166;
+  --warm-deep: #775403;
   --paper: #e7f0f7;
+
+  /*
+   * Shared brand gradient — blue to gold, the two brand-mark colors read as one
+   * motif. Used as a decorative bar/border only (never as text), so it carries
+   * no contrast requirement of its own. Reused across section seams, the
+   * step-connector line, and card accent borders as the system's one recurring
+   * "signature" element tying the retinted palette together.
+   */
+  --gradient-accent: linear-gradient(90deg, var(--blue-lift) 0%, var(--warm) 100%);
 
   /* Text on dark */
   --on-dark-head: #f2f7fb;
@@ -69,4 +85,29 @@
 
   /* Anchors must clear the real nav height. */
   --anchor-offset: clamp(100px, 10vw, 124px);
+
+  /* Card system — reuses --sky-0 as the card surface so "two backgrounds only"
+     stays literally true; cards are a foreground surface, not a third bg. */
+  --card-surface: var(--sky-0);
+  --radius-panel: clamp(12px, 1.5vw, 20px);
+  --radius-card: clamp(20px, 2.2vw, 28px);
+  --shadow-card: 0 24px 48px -24px rgba(16, 30, 42, 0.28);
+  --shadow-card-sm: 0 12px 28px -14px rgba(16, 30, 42, 0.24);
+
+  /*
+   * Eco accent — narrowly scoped to carbon-savings claims (Fitur item 06,
+   * CaraKerja step 03, Audiens group 05, Kontak's success note). Never a
+   * section background. Same background/on-dark/on-light methodology as
+   * --warm/--warm-text/--warm-deep.
+   *
+   *   --eco       accent/text on the --warm gold fill (payoff-cell eco-chip).
+   *               4.70:1 on #fac13c.
+   *   --eco-text  text on the dark backgrounds. 9.81:1 on --ink, 10.41:1 on
+   *               --ink-deep, 8.61:1 on --ink-soft.
+   *   --eco-deep  text on light backgrounds. 7.91:1 on --sky-1, and 5.87:1 on
+   *               the --warm gold fill (payoff-cell eco-chip).
+   */
+  --eco: #115f35;
+  --eco-text: #79d8a5;
+  --eco-deep: #0d4f2e;
 }

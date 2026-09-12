@@ -6,19 +6,16 @@
   overflow: hidden;
 }
 
-/* Hairline seam where the light hero meets the ink section. */
+/* Brand seam where the light hero meets the ink section — the blue-to-gold
+   motif announces the accent retint right at the fold. */
 .seam {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
-  height: 1px;
-  background: linear-gradient(
-    90deg,
-    rgba(90, 169, 221, 0) 0%,
-    rgba(90, 169, 221, 0.7) 50%,
-    rgba(90, 169, 221, 0) 100%
-  );
+  height: 2px;
+  background: var(--gradient-accent);
+  opacity: 0.85;
 }
 
 .shell {
@@ -38,6 +35,13 @@
 }
 
 .eyebrow {
+  display: inline-flex;
+  align-self: flex-start;
+  align-items: center;
+  height: 26px;
+  padding: 0 12px;
+  border-radius: 999px;
+  background: rgba(108, 163, 212, 0.14);
   font-family: var(--font-mono);
   font-size: 11px;
   letter-spacing: 0.26em;
@@ -46,8 +50,8 @@
 }
 
 .heading {
-  font-size: clamp(30px, 4.6vw, 58px);
-  line-height: 1.06;
+  font-size: clamp(32px, 5.2vw, 64px);
+  line-height: 1.04;
   letter-spacing: -0.035em;
   color: var(--on-dark-head);
   text-wrap: pretty;
@@ -70,5 +74,78 @@
 .emphasis {
   font-style: normal;
   color: var(--on-dark-head);
-  border-bottom: 1px solid rgba(90, 169, 221, 0.6);
+  border-bottom: 1px solid rgba(108, 163, 212, 0.7);
+}
+
+/* The one PRD quote gets its own weight: a left rule in the brand gradient,
+   set apart from the plain paragraph above it rather than reading as more
+   of the same body copy. */
+.quote {
+  margin: 0;
+  padding: 4px 0 4px 22px;
+  border-left: 3px solid transparent;
+  border-image: var(--gradient-accent) 1;
+  font-size: clamp(17px, 1.7vw, 21px);
+  line-height: 1.58;
+  color: var(--on-dark-body);
+  text-wrap: pretty;
+}
+
+/*
+ * Two cited figures from the proposal's Latar Belakang, as small elevated
+ * cards on the shared --card-surface — a real foreground surface lifted off
+ * the ink background via --shadow-card-sm, rather than a tinted chip.
+ */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr));
+  gap: 16px;
+  margin: 10px 0 0;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 18px 20px;
+  border-radius: var(--radius-panel);
+  background: var(--card-surface);
+  box-shadow: var(--shadow-card-sm);
+}
+
+.statIcon {
+  width: 22px;
+  height: 22px;
+  margin-bottom: 4px;
+  color: var(--warm-deep);
+}
+
+.stat:nth-child(2) .statIcon {
+  color: var(--blue);
+}
+
+.statValue {
+  font-size: clamp(24px, 2.8vw, 32px);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+
+.statLabel {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--on-light-body);
+  text-wrap: pretty;
+}
+
+.statSource {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--on-light-meta);
 }

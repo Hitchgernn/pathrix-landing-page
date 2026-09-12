@@ -16,7 +16,7 @@ Rules:
 
 **`AGENTS.md` is the authoritative spec for this repo** — stack rationale, every dev/verify command, the diorama's six regression-prone fixes, GSAP rules, responsive breakpoints, image encoding, caching policy, and an explicit "Do not" list. It is long because most of it documents bugs that were already hit and fixed once; re-reading it is cheaper than re-discovering them. What follows here is the condensed version — when in doubt, or before touching `src/hero/`, GSAP, images, or caching, read the relevant section of `AGENTS.md` in full.
 
-The design prototype **`Pathrix.dc.html`** is the visual spec. Match it — do not redesign, add sections, or add imagery/icons not already there. All copy is Indonesian, copied verbatim from the prototype; the tagline is the one English string. `Pathrix Hero.dc.html` is a rejected earlier hero direction — reference only, never port from it.
+The design prototype **`Pathrix.dc.html`** is the visual spec for the Hero, which stays matched to it — do not redesign the Hero or add imagery/icons it doesn't already have. The other six sections (Masalah, CaraKerja, Fitur, Audiens, Kontak, Footer) have since moved on to a bold card-based visual system documented in `DESIGN.md` — a deliberate evolution past the prototype, not a violation of it. No new sections are added either way. All copy is Indonesian, copied verbatim from the prototype; the tagline is the one English string. `Pathrix Hero.dc.html` is a rejected earlier hero direction — reference only, never port from it.
 
 ## Commands
 
@@ -67,7 +67,7 @@ public/_headers          Netlify/Cloudflare cache policy — must mirror vercel.
 uploads/                 PRD + original standalone diorama reference (not built)
 ```
 
-**Design tokens** (`src/styles/tokens.css`): exactly two page background colors — `--sky-*` (light) and `--ink*` (dark). Do not introduce a third. Two token values (`--on-dark-meta`, `--on-light-meta`, `--warm-text`) intentionally deviate from the prototype for WCAG AA contrast — do not revert them to match the prototype exactly.
+**Design tokens** (`src/styles/tokens.css`): exactly two page background colors — `--sky-*` (light) and `--ink*` (dark). Do not introduce a third. Two token values (`--on-dark-meta`, `--on-light-meta`) intentionally deviate from the prototype for WCAG AA contrast — do not revert them to match the prototype exactly. `--blue`/`--blue-lift` and `--warm`/`--warm-text`/`--warm-deep` were retinted (2026-09) to the official PATHRIX brand mark's hex values (sampled from the proposal PDF), replacing the earlier prototype-only "instrument-blue"/Tugu-material gold — the Home/diorama scene under `src/hero/` was left untouched and keeps its own colors, so the diorama gold and the page's `--warm` are no longer required to match hex-for-hex.
 
 **The diorama (`src/hero/`)** is a fixed-camera three.js scene (no OrbitControls, no scroll-linked camera) ported as-is from the prototype. It is rotated 120° via a `world` group (`WORLD_SPIN` in `diorama.js`), never via the camera or scene root, because lights are deliberately left un-rotated. All road vehicles share one `ROAD_SPEED` and lane center — no per-vehicle speed/offset, or the tight-radius geometry causes visible overlap. The Tugu is a **loaded glTF**, not procedural: it is CC-BY-NC-ND, so the footer credit is a licence condition, not decoration; its environment map goes on the **metal only** (on the white marble it flattens the shading); and the procedural monument stays in `tugu.js` as the load-failure fallback. Full rationale (render-loop visibility gating, resize-clears-buffer, transparent canvas, vehicle heading via `Matrix4.lookAt` not `Object3D.lookAt`) is in AGENTS.md's "Diorama" section — read it before changing anything under `src/hero/`.
 
@@ -77,11 +77,15 @@ uploads/                 PRD + original standalone diorama reference (not built)
 
 **Env vars** (`.env.example`): `VITE_MAP_URL`, `VITE_CONTACT_EMAIL`, `VITE_CONTACT_ENDPOINT` — all currently unresolved placeholders (see AGENTS.md "Still unresolved"). Ask before shipping a change that resolves these rather than assuming.
 
+## Commit messages
+
+Format: `<type>: <message>` (e.g. `feat: add locale-aware nav links`, `fix: correct diorama vehicle heading`). Single line only — no body/description paragraph. A `Co-Authored-By:` trailer is fine to include.
+
 ## Do not
 
 - Add a hero video, particle field, gradient mesh, blob shape, or animated gradient text.
 - Add emoji, badge rows, testimonials, logo clouds, pricing, or FAQ accordions.
-- Add statistics or invented numeric claims (explicit product decision).
+- Add invented/fabricated numeric claims. Figures cited from the MAPID competition proposal (with a named source, e.g. "Satu Data Indonesia, 2025") are allowed in small, footnoted form — this was relaxed 2026-09 (see Masalah's stats row) — but nothing uncited or made up.
 - Introduce a third page background color.
 - Reintroduce `IntersectionObserver` gating on the diorama render loop.
 - Rotate the camera or scene root to reframe the diorama — rotate the `world` group.

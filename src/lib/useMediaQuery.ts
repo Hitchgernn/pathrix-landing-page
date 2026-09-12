@@ -26,8 +26,6 @@ export function useMediaQuery(query: string): boolean {
 
 /** Breakpoint 1: nav collapses, hero tagline wraps. */
 export const WIDE_NAV_QUERY = "(min-width: 900px)";
-/** Breakpoint 2: the three steps share a row, so the connector can be drawn. */
-export const STEP_ROW_QUERY = "(min-width: 1040px)";
 
 export function usePrefersReducedMotion(): boolean {
   return useMediaQuery("(prefers-reduced-motion: reduce)");

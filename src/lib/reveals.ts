@@ -14,10 +14,7 @@ const REVEAL = { y: 34, opacity: 0, duration: 0.9, ease: "power3.out" } as const
 
 export type RevealHandle = { destroy: () => void };
 
-export async function initReveals(
-  root: HTMLElement,
-  opts: { drawConnector: boolean },
-): Promise<RevealHandle> {
+export async function initReveals(root: HTMLElement): Promise<RevealHandle> {
   const timeouts: number[] = [];
   let cleanup: () => void = () => {};
 
@@ -53,39 +50,6 @@ export async function initReveals(
       ScrollTrigger.batch(targets, {
         start: "top 88%",
         onEnter: (batch) => gsap.from(batch, { ...REVEAL, stagger: 0.09 }),
-      });
-    }
-
-    // Connector line: one-shot draw, only where the steps share a row.
-    if (opts.drawConnector) {
-      const lines = root.querySelectorAll<HTMLElement>("[data-draw]");
-      lines.forEach((line) => {
-        let drawn = false;
-
-        gsap.from(line, {
-          scaleX: 0,
-          duration: 1.2,
-          ease: "power2.inOut",
-          scrollTrigger: {
-            trigger: line.closest("section") ?? line,
-            start: "top 74%",
-            once: true,
-            onEnter: () => {
-              drawn = true;
-            },
-          },
-        });
-
-        // Safety net: if no trigger has advanced after ~2.5s (a measurement
-        // failure, a scroller we guessed wrong, a refresh that never ran), set
-        // the line visible outright rather than shipping a collapsed element.
-        timeouts.push(
-          window.setTimeout(() => {
-            if (drawn) return;
-            gsap.killTweensOf(line);
-            gsap.set(line, { scaleX: 1, clearProps: "transform" });
-          }, 2500),
-        );
       });
     }
 

@@ -52,8 +52,8 @@ if (!SITE_URL) {
 const abs = (path) => (SITE_URL ? `${SITE_URL}${path}` : path);
 
 const LOCALES = [
-  { locale: "id", path: "/", outPath: "dist/index.html" },
-  { locale: "en", path: "/en/", outPath: "dist/en/index.html" },
+  { locale: "en", path: "/", outPath: "dist/index.html" },
+  { locale: "id", path: "/id/", outPath: "dist/id/index.html" },
 ];
 
 /** Replaces exactly once; throws instead of silently no-op'ing a stale pattern. */
@@ -67,8 +67,8 @@ for (const { locale, path, outPath } of LOCALES) {
   const appHtml = render(locale);
 
   const hreflang = [
-    { hreflang: "id", href: abs("/") },
-    { hreflang: "en", href: abs("/en/") },
+    { hreflang: "en", href: abs("/") },
+    { hreflang: "id", href: abs("/id/") },
     { hreflang: "x-default", href: abs("/") },
   ]
     .map((l) => `    <link rel="alternate" hreflang="${l.hreflang}" href="${l.href}" />`)
@@ -119,12 +119,12 @@ function buildDetectScript() {
   try {
     var STORE = "pathrix.lang";
     var GUARD = "pathrix.lang.redirected";
-    var here = location.pathname.indexOf("/en/") === 0 ? "en" : "id";
+    var here = location.pathname.indexOf("/id/") === 0 ? "id" : "en";
     var stored = localStorage.getItem(STORE);
     var target = stored === "en" || stored === "id" ? stored : null;
     if (!target) {
-      var langs = navigator.languages || [navigator.language || "id"];
-      target = "id";
+      var langs = navigator.languages || [navigator.language || "en"];
+      target = "en";
       for (var i = 0; i < langs.length; i++) {
         var primary = String(langs[i]).slice(0, 2).toLowerCase();
         if (primary === "en") { target = "en"; break; }
@@ -133,7 +133,7 @@ function buildDetectScript() {
     }
     if (target !== here && !sessionStorage.getItem(GUARD)) {
       sessionStorage.setItem(GUARD, "1");
-      location.replace(target === "en" ? "/en/" : "/");
+      location.replace(target === "id" ? "/id/" : "/");
     }
   } catch (e) { /* storage unavailable — stay on the served locale */ }
 })();</script>`;
