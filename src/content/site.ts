@@ -75,8 +75,8 @@ export const productShot = {
  */
 export const caraKerjaShots = [
   { id: "carakerja-01", width: 700, height: 1043, src: "/img/carakerja-01" },
-  { id: "carakerja-02", width: 700, height: 1043, src: "/img/carakerja-02" },
-  { id: "carakerja-03", width: 700, height: 1043, src: "/img/carakerja-03" },
+  { id: "carakerja-02", width: 700, height: 470, src: "/img/carakerja-02" },
+  { id: "carakerja-03", width: 700, height: 470, src: "/img/carakerja-03" },
 ] as const;
 
 /**

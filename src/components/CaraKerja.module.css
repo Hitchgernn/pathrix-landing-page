@@ -70,14 +70,16 @@
   background: var(--warm);
 }
 
-/* Photos are 700x1043 (~0.671:1) portrait renders, not the old 720x540
-   landscape SVGs — 2/3 (0.667:1) is a hair tighter than the source ratio but
-   close enough that object-fit: cover only trims a sliver off the long edge,
-   not a meaningful crop of the framed subject. */
+/* Step 1's photo is 700x1043 portrait; steps 2-3 were replaced with 700x470
+   landscape renders, so no single aspect-ratio matches all three sources
+   exactly. 4/3 (matching Fitur's standard-cell convention) is a middle
+   ground: it trims the portrait source's top/bottom a bit and the landscape
+   sources' sides a bit, rather than badly cropping one shape to fit the
+   other's native ratio. */
 .illustration {
   position: relative;
   width: 100%;
-  aspect-ratio: 2 / 3;
+  aspect-ratio: 4 / 3;
   background: var(--ink-soft);
 }
 
