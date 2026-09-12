@@ -24,6 +24,15 @@
 # 10KB. If a real encoder (avifenc / libavif / sharp) is added later, emit AVIF
 # here and add the matching <source> back to ImageSlot.tsx.
 #
+# Output filenames are content-hashed (base.<8-hex>.ext), mirroring how Vite
+# fingerprints /assets/*. This is what lets public/_headers and vercel.json cache
+# /img/* as immutable: a replaced source photo produces a new hash/URL instead of
+# overwriting bytes under the old, already-cached one, which is what previously
+# left returning visitors (notably phones, which hold onto HTTP cache far more
+# aggressively than a desktop dev session) stuck on stale images for up to the
+# old 7-day TTL after a deploy. src/content/image-manifest.json maps each base
+# name to its current hashed name; site.ts reads it to build `src` paths.
+#
 # Run from the repo root: bash scripts/encode-images.sh
 set -euo pipefail
 cd "$(dirname "$0")/.."
@@ -31,7 +40,24 @@ cd "$(dirname "$0")/.."
 ART=scripts/art
 RASTER=$ART/raster
 OUT=public/img
+MANIFEST_FILE=src/content/image-manifest.json
 mkdir -p "$OUT" "$RASTER"
+
+# Every run regenerates every image from scratch (no incremental encode), so
+# clear old output first — otherwise a source change leaves the previous
+# hash's file behind as permanent dead weight (it's immutable-cached forever,
+# so nothing ever re-requests it, but it still ships in the repo/deploy).
+rm -f "$OUT"/*.webp "$OUT"/*.jpg
+
+sha8() {
+  if command -v sha256sum >/dev/null 2>&1; then
+    sha256sum "$1" | cut -c1-8
+  else
+    shasum -a 256 "$1" | cut -c1-8
+  fi
+}
+
+declare -A MANIFEST
 
 # Tool resolution: the "real" dev machine has ImageMagick 7 (`magick`) and
 # librsvg2-bin's `rsvg-convert` CLI. Some environments (this sandbox included)
@@ -80,45 +106,66 @@ rasterize() {
 rasterize "$ART/webgis.svg" "$RASTER/webgis.png" 2360 1328
 
 encode() {
-  local src=$1 base=$2 w=$3 wq=$4 jq=$5
-  "$IM" "$src" -resize "${w}x" -strip -quality "$wq" -define webp:method=6 "$OUT/$base.webp"
+  # hashsrc is the true content source for the hash — for webgis that's the
+  # authored SVG, not the rasterized intermediate PNG, since rsvg-convert
+  # output isn't guaranteed byte-identical across versions/machines and that
+  # would churn the hash (and cache-bust the image) with nothing about the
+  # art actually having changed. For the curated photos, hashsrc == src.
+  local src=$1 base=$2 w=$3 wq=$4 jq=$5 hashsrc=$6
+  local hash="${base}.$(sha8 "$hashsrc")"
+  "$IM" "$src" -resize "${w}x" -strip -quality "$wq" -define webp:method=6 "$OUT/$hash.webp"
   # Progressive JPEG fallback so it paints top-down on slow links.
   "$IM" "$src" -resize "${w}x" -strip -quality "$jq" -interlace Plane \
-    -sampling-factor 4:2:0 "$OUT/$base.jpg"
+    -sampling-factor 4:2:0 "$OUT/$hash.jpg"
+  MANIFEST[$base]=$hash
 }
 
 # The product shot is a UI mockup: thin 1px rules and small text, so it needs a
 # higher WebP quality than the soft photographic field images to avoid ringing.
-encode "$RASTER/webgis.png" "webgis" 1600 82 82
+encode "$RASTER/webgis.png" "webgis" 1600 82 82 "$ART/webgis.svg"
 
 # CaraKerja step photos — real photographic renders (replaced the earlier
 # hand-authored SVG illustrations), portrait phone-render images displayed in
 # a card roughly 300-380px wide.
 for n in 01 02 03; do
-  encode "$ART/photos/carakerja-$n.jpg" "carakerja-$n" 700 76 78
+  encode "$ART/photos/carakerja-$n.jpg" "carakerja-$n" 700 76 78 "$ART/photos/carakerja-$n.jpg"
 done
 
 # Fitur item photos — displayed in a bento card roughly 300-500px wide.
 for name in multimoda ai-agent plain-language multistop firstlastmile sustainability; do
-  encode "$ART/photos/fitur-$name.jpg" "fitur-$name" 900 76 78
+  encode "$ART/photos/fitur-$name.jpg" "fitur-$name" 900 76 78 "$ART/photos/fitur-$name.jpg"
 done
 
 # Audiens persona photos — displayed in a card roughly 300-450px wide.
 for name in mahasiswa wisatawan pekerja pemerintah umkm; do
-  encode "$ART/photos/audiens-$name.jpg" "audiens-$name" 800 76 78
+  encode "$ART/photos/audiens-$name.jpg" "audiens-$name" 800 76 78 "$ART/photos/audiens-$name.jpg"
 done
 
 # Penutup closing background — full-bleed section background, can render up
 # to ~1400-1600px wide on desktop, so it gets a larger display width and a
 # bit more headroom than the repeated grid images above.
-encode "$ART/photos/penutup.jpg" "penutup" 1800 74 76
+encode "$ART/photos/penutup.jpg" "penutup" 1800 74 76 "$ART/photos/penutup.jpg"
 
 shopt -s nullglob
 for f in "$RASTER"/field-*.png; do
   idx=$(basename "$f" .png | cut -d- -f2)
-  encode "$f" "field-$idx" 640 74 78
+  encode "$f" "field-$idx" 640 74 78 "$f"
 done
 shopt -u nullglob
+
+# Sorted so the committed manifest diffs cleanly (bash associative-array
+# iteration order is otherwise unspecified).
+{
+  echo "{"
+  first=1
+  for key in $(printf '%s\n' "${!MANIFEST[@]}" | sort); do
+    if [ "$first" -eq 1 ]; then first=0; else echo ","; fi
+    printf '  "%s": "%s"' "$key" "${MANIFEST[$key]}"
+  done
+  echo
+  echo "}"
+} > "$MANIFEST_FILE"
+echo "wrote $MANIFEST_FILE"
 
 echo
 echo "--- encoded sizes ---"
