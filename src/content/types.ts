@@ -2,7 +2,7 @@ import type { SectionId } from "./site";
 
 export type Locale = "id" | "en";
 
-export const DEFAULT_LOCALE: Locale = "id";
+export const DEFAULT_LOCALE: Locale = "en";
 export const LOCALES: readonly Locale[] = ["id", "en"];
 
 type Accent = "lift" | "warm";
@@ -17,6 +17,18 @@ type Step = {
 type FiturItem = {
   index: string;
   title: string;
+  body: string;
+  accent: Accent;
+};
+
+type Stat = {
+  value: string;
+  label: string;
+  source: string;
+};
+
+type AudiensGroup = {
+  label: string;
   body: string;
   accent: Accent;
 };
@@ -47,17 +59,32 @@ export type Copy = {
       emphasis: string;
       after: string;
     };
+    /** Two cited figures from the proposal's Latar Belakang, not invented numbers. */
+    stats: [Stat, Stat];
   };
   caraKerja: {
     eyebrow: string;
     heading: string;
     steps: [Step, Step, Step];
+    /** One line naming the two spatial methods behind step 02 — not a fourth step. */
+    methodNote: string;
+  };
+  audiens: {
+    eyebrow: string;
+    heading: string;
+    groups: [AudiensGroup, AudiensGroup, AudiensGroup, AudiensGroup, AudiensGroup];
   };
   fitur: {
     eyebrow: string;
     heading: string;
     ctaLabel: string;
     items: [FiturItem, FiturItem, FiturItem, FiturItem, FiturItem, FiturItem];
+    /**
+     * Two static UI field labels shown on the bento grid's cell-1 screenshot
+     * overlay chip (e.g. "Waktu tempuh" / "Moda transportasi") — descriptive
+     * field names, not live-looking values, so they carry no numeric claim.
+     */
+    shotOverlay: { labelOne: string; labelTwo: string };
   };
   productShot: {
     caption: string;
@@ -88,8 +115,24 @@ export type Copy = {
       contactLabel: string;
     };
   };
+  penutup: {
+    eyebrow: string;
+    heading: string;
+    body: string;
+    /** Links to the Kontak section. */
+    ctaLabel: string;
+  };
   footer: {
-    competition: string;
+    /** "MAPS THAT THINK!" — the competition's own tagline, same literal string both locales. */
+    giantText: string;
+    /** "Tim Pathrix" (id) / "Pathrix Team" (en). */
+    creditLabel: string;
+    /** "Muhammad Zakiyyuddin Abdul Adhiim" — proper noun, same both locales. */
+    creditName: string;
+    /** "Universitas Gadjah Mada" — proper noun, same both locales. */
+    university: string;
+    /** "Hubungi Kami" (id) / "Contact Us" (en); component appends ": halo@pathrix.id" itself. */
+    ctaLabel: string;
   };
   ui: {
     skipLink: string;

@@ -1,12 +1,12 @@
 import type { Copy } from "./types";
 
-/** Indonesian copy — the default locale, verbatim from the PRD rewrite. */
+/** Indonesian copy: the default locale, verbatim from the PRD rewrite. */
 export const id: Copy = {
   meta: {
-    title: "Pathrix — AI Agent WebGIS untuk Navigasi Multimoda Yogyakarta",
+    title: "Pathrix: AI Agent WebGIS untuk Navigasi Multimoda Yogyakarta",
     description:
-      "Pathrix adalah AI agent berbasis WebGIS yang menyusun rute multimoda di Yogyakarta — jalan kaki, andong/becak, TransJogja, KRL, dan KA Bandara YIA — dari satu kalimat perintah bebas.",
-    ogTitle: "Pathrix — Navigasi Multimoda Yogyakarta",
+      "Pathrix adalah AI agent berbasis WebGIS yang menyusun rute multimoda di Yogyakarta, dari jalan kaki, andong, becak, TransJogja, KRL, sampai KA Bandara YIA, hanya dari satu kalimat perintah bebas.",
+    ogTitle: "Pathrix: Navigasi Multimoda Yogyakarta",
     ogDescription:
       "AI Agent for Multimodal Mobility Navigation in Yogyakarta. MAPID WebGIS Competition 2026.",
   },
@@ -24,35 +24,49 @@ export const id: Copy = {
     eyebrow: "Masalahnya",
     heading: "Baru sampai di Yogyakarta, dan peta kota belum ada di kepala.",
     paraOne:
-      "Ribuan mahasiswa dan wisatawan datang ke Yogyakarta tiap tahun tanpa kendaraan pribadi. TransJogja, KRL, dan KA Bandara YIA sudah ada, tapi infonya tersebar di banyak sumber berbeda — dan begitu turun dari halte atau stasiun, tidak ada yang menjelaskan sisa perjalanan itu.",
+      "Ribuan mahasiswa dan wisatawan datang ke Yogyakarta tiap tahun tanpa kendaraan pribadi. TransJogja, KRL, dan KA Bandara YIA sudah ada, tapi infonya tersebar di banyak sumber berbeda. Begitu turun dari halte atau stasiun, tidak ada yang menjelaskan sisa perjalanan itu.",
     paraTwo: {
       before: "Aplikasi navigasi umum tahu jalan raya, tapi tidak memetakan ",
       emphasis: "andong dan becak",
       after:
-        " — konektor first/last mile yang justru paling dibutuhkan pendatang. Pathrix mengisi celah itu, lewat satu AI Agent yang bisa diajak bicara.",
+        " sebagai opsi first/last mile. Lebih dari sekadar penunjuk arah, Pathrix secara fleksibel menghubungkan berbagai moda transportasi dan memandu perjalananmu, sembari menjelaskan apa saja yang ada di sekitarmu lewat AI Agent.",
     },
+    stats: [
+      {
+        value: "6.548 jiwa",
+        label: "Migrasi masuk Kota Yogyakarta, 2025",
+        source: "Satu Data Indonesia, 2025",
+      },
+      {
+        value: "+21,31%",
+        label: "Kenaikan wisatawan mancanegara, Feb 2026",
+        source: "BAPPERIDA DIY, 2026",
+      },
+    ],
   },
 
   caraKerja: {
     eyebrow: "Cara Kerja",
     heading: "Dari satu kalimat, jadi rute lengkap, dalam tiga langkah.",
+    methodNote:
+      "Di balik langkah 02, dua metode spasial bekerja: Unified Multimodal Network Routing menyambungkan rute lintas moda, dan Isochrone Mapping menilai jangkauan jalan kaki dari tiap simpul transit. Keduanya perhitungan graf yang dijalankan lewat fungsi backend, dipanggil agent sesuai kebutuhan rute.",
     steps: [
       {
         index: "01",
         title: "Ketik maumu",
-        body: 'Satu kalimat bebas ke AI Agent — "rute ke mall terdekat, tampilkan kos-kosan di sekitarnya" — tanpa perlu paham menu layer atau filter GIS.',
+        body: 'Satu kalimat bebas ke AI Agent, misalnya "rute ke mall terdekat, tampilkan kos-kosan di sekitarnya", tanpa perlu paham menu layer atau filter GIS.',
         accent: "lift",
       },
       {
         index: "02",
         title: "AI Agent bergerak",
-        body: "Agent membaca maksudmu, menyalakan layer yang relevan, membaca area peta yang sedang kamu lihat, lalu menghitung rute lewat fungsi backend terstruktur — bukan dikarang model.",
+        body: "Agent membaca maksudmu, menyalakan layer yang relevan, membaca area peta yang sedang kamu lihat, lalu memanggil fungsi backend terstruktur untuk menghitung rute sesuai data peta yang sebenarnya.",
         accent: "lift",
       },
       {
         index: "03",
         title: "Rute siap dijalani",
-        body: "Itinerary bertahap muncul — jalan kaki, andong/becak, TransJogja/KRL — lengkap opsi termudah/tercepat/termurah dan estimasi karbon yang kamu hemat.",
+        body: "Itinerary bertahap muncul, mulai jalan kaki, andong/becak, sampai TransJogja/KRL, lengkap opsi termudah, tercepat, atau termurah, dan estimasi karbon yang kamu hemat.",
         accent: "warm",
       },
     ],
@@ -72,13 +86,13 @@ export const id: Copy = {
       {
         index: "02",
         title: "AI Agent, bukan chatbot",
-        body: "Cukup ketik maksudmu — agent yang memanggil fungsi untuk menyalakan layer dan mengatur zoom, tanpa kamu buka menu manual.",
+        body: "Cukup ketik maksudmu, dan agent yang memanggil fungsi untuk menyalakan layer serta mengatur zoom, tanpa kamu buka menu manual.",
         accent: "lift",
       },
       {
         index: "03",
         title: "Tanya bahasa sehari-hari",
-        body: "“Ada kuliner apa di area ini?” — agent membaca area peta yang sedang kamu lihat dan menjawab langsung sebagai sorotan di peta.",
+        body: "“Ada kuliner apa di area ini?” Agent membaca area peta yang sedang kamu lihat, lalu menjawab langsung sebagai sorotan di peta.",
         accent: "lift",
       },
       {
@@ -96,7 +110,43 @@ export const id: Copy = {
       {
         index: "06",
         title: "Sustainability Tracker",
-        body: "Tiap rute transportasi umum menunjukkan penghematan jejak karbon dibanding kendaraan pribadi — dihitung, bukan dikarang.",
+        body: "Tiap rute transportasi umum menunjukkan estimasi penghematan jejak karbon dibanding kendaraan pribadi, dihitung dari faktor emisi KLHK dan IPCC, lengkap sumber kutipannya.",
+        accent: "warm",
+      },
+    ],
+    shotOverlay: {
+      labelOne: "Waktu tempuh",
+      labelTwo: "Moda transportasi",
+    },
+  },
+
+  audiens: {
+    eyebrow: "Untuk Siapa",
+    heading: "Dibangun untuk tiap pihak yang menggerakkan kota ini.",
+    groups: [
+      {
+        label: "Mahasiswa & Pendatang",
+        body: "Rute harian ke kampus dan kos, tanpa perlu hafal jaringan TransJogja dan KRL dari nol.",
+        accent: "lift",
+      },
+      {
+        label: "Wisatawan",
+        body: "Rencana jalan-jalan lintas moda ke destinasi budaya, dengan titik andong dan becak yang benar-benar masuk sebagai bagian rute, bukan sekadar informasi tambahan.",
+        accent: "lift",
+      },
+      {
+        label: "Pekerja & Masyarakat Umum",
+        body: "Opsi rute tercepat atau termurah ke tempat kerja, lengkap estimasi karbon yang dihemat dibanding kendaraan pribadi.",
+        accent: "lift",
+      },
+      {
+        label: "Pemerintah & Operator Transportasi",
+        body: "Gambaran visual kawasan berbasis TOD untuk mengevaluasi seberapa merata layanan transportasi publik menjangkau tiap wilayah.",
+        accent: "lift",
+      },
+      {
+        label: "Pelaku UMKM & Pariwisata",
+        body: "Visibilitas lokasi usaha dan titik wisata budaya di peta yang sama yang dipakai pendatang untuk merencanakan rute.",
         accent: "warm",
       },
     ],
@@ -104,14 +154,14 @@ export const id: Copy = {
 
   productShot: {
     caption: "Konsep visual WebGIS Pathrix",
-    note: "Konsep visual — produk belum dibangun",
+    note: "Konsep visual: produk belum dibangun",
     alt: "Antarmuka WebGIS Pathrix: peta simpul transit Yogyakarta dengan panel lapisan, kolom tanya bahasa sehari-hari, dan panel penilaian AI untuk satu simpul.",
   },
 
   kontak: {
     eyebrow: "Kontak",
     heading: "Mari bantu pendatang Yogyakarta bergerak lebih mudah.",
-    body: "Pathrix dibangun bersama pihak yang menggerakkan mobilitas kota — Dishub DIY, KAI Commuter, kampus, dan pelaku UMKM lokal. Kalau kamu salah satunya, atau punya data lapangan yang bisa memperkaya peta, kami ingin dengar.",
+    body: "Pathrix dibangun bersama pihak yang menggerakkan mobilitas kota, seperti Dishub DIY, KAI Commuter, kampus, dan pelaku UMKM lokal. Kalau kamu salah satunya, atau punya data lapangan yang bisa memperkaya peta, kami ingin dengar.",
     emailLabel: "Surel",
     fields: {
       nama: { label: "Nama", placeholder: "Nama kamu" },
@@ -124,7 +174,7 @@ export const id: Copy = {
     submitLabel: "Kirim pesan",
     submitSentLabel: "Terkirim",
     notes: {
-      sent: "Terima kasih — pesanmu tercatat.",
+      sent: "Terima kasih, pesanmu tercatat.",
       error: {
         before: "Pesan gagal terkirim. Coba lagi, atau kirim langsung ke ",
         after: ".",
@@ -135,14 +185,25 @@ export const id: Copy = {
       },
     },
     mailto: {
-      subjectPrefix: "Pathrix — pesan dari ",
+      subjectPrefix: "Pathrix: pesan dari ",
       nameLabel: "Nama: ",
       contactLabel: "Surel atau instansi: ",
     },
   },
 
+  penutup: {
+    eyebrow: "Sebelum Berangkat",
+    heading: "Dari kaki Merapi sampai gerbang bandara, satu agent yang tahu jalannya.",
+    body: "Pathrix menyatukan jalan kaki, andong, becak, TransJogja, KRL, dan KA Bandara YIA dalam satu peta yang bisa diajak bicara. Tidak perlu lagi hafal rute satu per satu hanya untuk merasa di rumah di kota ini.",
+    ctaLabel: "Hubungi kami",
+  },
+
   footer: {
-    competition: "MAPID WebGIS Competition 2026",
+    giantText: "MAPS THAT THINK!",
+    creditLabel: "Tim PATHRIX",
+    creditName: "",
+    university: "Universitas Gadjah Mada",
+    ctaLabel: "Hubungi Kami",
   },
 
   ui: {
