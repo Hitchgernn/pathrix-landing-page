@@ -8,7 +8,21 @@
  * .env.example — shipping with the fallbacks still in place is a known gap.
  */
 
+import imageManifest from "./image-manifest.json";
+
 const env = import.meta.env;
+
+/**
+ * Maps a base image name to its current content-hashed /img/ path (e.g.
+ * "webgis" -> "/img/webgis.245c4ee9"). The hash changes only when
+ * scripts/encode-images.sh re-encodes that image from changed source art, so
+ * public/_headers and vercel.json can cache /img/* as immutable — a replaced
+ * photo gets a new URL instead of overwriting bytes under an old one that
+ * browsers (phones especially) may still be serving from cache.
+ */
+function img(base: keyof typeof imageManifest): string {
+  return `/img/${imageManifest[base]}`;
+}
 
 /** Placeholder. Needs the real WebGIS URL before launch. */
 export const MAP_URL_FALLBACK = "#fitur";
@@ -63,7 +77,7 @@ export const productShot = {
   id: "pathrix-webgis",
   width: 1600,
   height: 900,
-  src: "/img/webgis",
+  src: img("webgis"),
 } as const;
 
 /**
@@ -74,9 +88,9 @@ export const productShot = {
  * ./id.ts / ./en.ts. (Superseded the earlier hand-authored SVG placeholders.)
  */
 export const caraKerjaShots = [
-  { id: "carakerja-01", width: 700, height: 1043, src: "/img/carakerja-01" },
-  { id: "carakerja-02", width: 700, height: 470, src: "/img/carakerja-02" },
-  { id: "carakerja-03", width: 700, height: 470, src: "/img/carakerja-03" },
+  { id: "carakerja-01", width: 700, height: 1043, src: img("carakerja-01") },
+  { id: "carakerja-02", width: 700, height: 470, src: img("carakerja-02") },
+  { id: "carakerja-03", width: 700, height: 470, src: img("carakerja-03") },
 ] as const;
 
 /**
@@ -85,12 +99,12 @@ export const caraKerjaShots = [
  * matches the Fitur items in ./id.ts / ./en.ts.
  */
 export const fiturShots = [
-  { id: "multimoda", width: 900, height: 1341, src: "/img/fitur-multimoda" },
-  { id: "ai-agent", width: 900, height: 1341, src: "/img/fitur-ai-agent" },
-  { id: "plain-language", width: 900, height: 1341, src: "/img/fitur-plain-language" },
-  { id: "multistop", width: 900, height: 1341, src: "/img/fitur-multistop" },
-  { id: "firstlastmile", width: 900, height: 1341, src: "/img/fitur-firstlastmile" },
-  { id: "sustainability", width: 900, height: 1341, src: "/img/fitur-sustainability" },
+  { id: "multimoda", width: 900, height: 1341, src: img("fitur-multimoda") },
+  { id: "ai-agent", width: 900, height: 1341, src: img("fitur-ai-agent") },
+  { id: "plain-language", width: 900, height: 1341, src: img("fitur-plain-language") },
+  { id: "multistop", width: 900, height: 1341, src: img("fitur-multistop") },
+  { id: "firstlastmile", width: 900, height: 1341, src: img("fitur-firstlastmile") },
+  { id: "sustainability", width: 900, height: 1341, src: img("fitur-sustainability") },
 ] as const;
 
 /**
@@ -99,11 +113,11 @@ export const fiturShots = [
  * Order matches the Audiens groups in ./id.ts / ./en.ts.
  */
 export const audiensShots = [
-  { id: "mahasiswa", width: 800, height: 537, src: "/img/audiens-mahasiswa" },
-  { id: "wisatawan", width: 800, height: 537, src: "/img/audiens-wisatawan" },
-  { id: "pekerja", width: 800, height: 537, src: "/img/audiens-pekerja" },
-  { id: "pemerintah", width: 800, height: 537, src: "/img/audiens-pemerintah" },
-  { id: "umkm", width: 800, height: 537, src: "/img/audiens-umkm" },
+  { id: "mahasiswa", width: 800, height: 537, src: img("audiens-mahasiswa") },
+  { id: "wisatawan", width: 800, height: 537, src: img("audiens-wisatawan") },
+  { id: "pekerja", width: 800, height: 537, src: img("audiens-pekerja") },
+  { id: "pemerintah", width: 800, height: 537, src: img("audiens-pemerintah") },
+  { id: "umkm", width: 800, height: 537, src: img("audiens-umkm") },
 ] as const;
 
 /**
@@ -115,6 +129,6 @@ export const penutupShot = {
   id: "penutup",
   width: 1800,
   height: 1208,
-  src: "/img/penutup",
+  src: img("penutup"),
 } as const;
 

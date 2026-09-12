@@ -1,7 +1,7 @@
 import styles from "./ImageSlot.module.css";
 
 type Props = {
-  /** Base path without extension, e.g. "/img/webgis". AVIF/WebP/fallback are derived. */
+  /** Base path without extension, e.g. "/img/webgis.245c4ee9" (content-hashed by scripts/encode-images.sh; see site.ts's `img()`). AVIF/WebP/fallback are derived. */
   src: string | null;
   alt: string;
   /** Shown when `src` is null. */
