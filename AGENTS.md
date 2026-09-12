@@ -3,10 +3,17 @@
 Production landing page for **Pathrix**, a WebGIS-based AI agent for multimodal
 mobility in Yogyakarta, built for the MAPID WebGIS Competition 2026.
 
-The design prototype `Pathrix.dc.html` is **the visual spec**. Match it. Do not
-redesign, do not add sections, do not add stock imagery or icon sets that are not
-already there. All copy is Indonesian and already written in the prototype — copy
-it verbatim. The one English string is the tagline.
+The design prototype `Pathrix.dc.html` is **the visual spec for the Hero**. The
+Hero stays matched to it — do not redesign the Hero, and do not add stock imagery
+or icon sets it doesn't already have. The other six sections (Masalah, CaraKerja,
+Fitur, Audiens, Kontak, Footer) have since moved past the prototype to a bold
+card-based visual system — shadowed cards, pill buttons, hand-authored
+illustration, `@phosphor-icons/react` icons — documented in `DESIGN.md`. That is
+a deliberate, reviewed evolution of the design, not a violation of the prototype:
+the prototype was right for its time, the six body sections have since grown
+past it on purpose. No new *sections* are added either way, and all copy is
+Indonesian and already written in the prototype — copy it verbatim. The one
+English string is the tagline.
 
 ## Stack
 
@@ -47,8 +54,9 @@ src/App.tsx             page composition + reveal wiring; wraps the tree in
                         LocaleProvider
 src/content/site.ts     locale-independent values (env config, geometry, nav ids)
 src/content/types.ts    the Copy type — the shape both locales must satisfy
-src/content/id.ts       Indonesian copy (default locale), verbatim from the PRD
-src/content/en.ts       English copy — editorial translation, see i18n below
+src/content/id.ts       Indonesian copy, verbatim from the PRD — source of truth
+src/content/en.ts       English copy (default locale) — editorial translation,
+                        see i18n below
 src/lib/locale.tsx      LocaleContext, useCopy(), useLocale(), localeFromDocument()
 src/components/         one .tsx + one .module.css per section; copy comes from
                         useCopy(), never a direct site.ts import
@@ -247,11 +255,6 @@ change.
 - Hero reveals fire on load with a `0.09s` stagger. Everything else uses
   `ScrollTrigger.batch` at `start: "top 88%"` with
   `y:34, opacity:0, duration:.9, ease:"power3.out"`.
-- **Connector line:** one-shot `scaleX` from 0, `duration:1.2,
-  ease:"power2.inOut"`, `start:"top 74%", once:true`,
-  `transform-origin:left`. Safety net: if no ScrollTrigger has advanced after
-  ~2.5s, the line is set visible outright rather than shipping a permanently
-  collapsed element.
 - **Resolve the real scroll container before creating triggers** (`src/lib/scroll.ts`).
   If `document.body` is the scroll box rather than the window,
   `ScrollTrigger.defaults({scroller: document.body})`. Read scroll position as
@@ -265,18 +268,21 @@ The prototype has no media queries by constraint — everything is `clamp()` and
 **keep the fluid behaviour**: no layout may snap at a breakpoint the prototype
 crosses smoothly.
 
-Two real breakpoints:
+One real breakpoint:
 
 - **900px** — nav links collapse to a hamburger; the hero tagline switches from a
   single hairline-flanked line to a wrapped block.
-- **1040px** — the step connector appears (below it the steps no longer share a
-  row).
 
-Both are decided **in CSS, not JS**: each variant is in the markup and CSS picks
+(CaraKerja's 3-card grid used to gain a hairline connector line at a second
+breakpoint, 1040px, once all three steps shared a row. That connector was
+removed along with the flat/hairline CaraKerja layout it belonged to — see
+`DESIGN.md`'s card system — so 1040px is no longer a breakpoint anywhere in the
+codebase.)
+
+This is decided **in CSS, not JS**: each variant is in the markup and CSS picks
 one. This is what makes the nav and hero correct on first paint, correct when
-prerendered, and correct with JavaScript disabled. Do not move these back to
-`useMediaQuery` render branching. The connector stays in the DOM at
-`display:none` below 1040px so GSAP's target never disappears mid-tween.
+prerendered, and correct with JavaScript disabled. Do not move this back to
+`useMediaQuery` render branching.
 
 Every `auto-fit` grid uses `minmax(min(Npx, 100%), 1fr)`, not `minmax(Npx, 1fr)`.
 A bare floor wider than the viewport overflows the document — the Kontak grid's
@@ -300,7 +306,7 @@ React CSR ships an empty `<div id="root">`, which fails the "readable with
 JavaScript disabled" requirement outright. `scripts/prerender.mjs` runs after
 `vite build`, builds one SSR bundle, then loops over both locales — calling
 `render(locale)` and `meta(locale)` from that bundle — to produce
-`dist/index.html` (id) and `dist/en/index.html` (en). `main.tsx` then hydrates
+`dist/index.html` (en) and `dist/id/index.html` (id). `main.tsx` then hydrates
 whichever one was served.
 
 Three things to know if you touch this:
@@ -318,8 +324,11 @@ Three things to know if you touch this:
 
 ## Internationalization
 
-Two locales: `id` (default, `/`) and `en` (`/en/`), both fully prerendered —
+Two locales: `en` (default, `/`) and `id` (`/id/`), both fully prerendered —
 each is readable with JavaScript disabled, in its own language, at its own URL.
+English is the default because a large share of newcomers to Yogyakarta are
+foreign tourists, not just Indonesian students (2026-09 decision, reversing
+the original Indonesian-default).
 
 - **Content.** `src/content/types.ts` defines `Copy`; `id.ts` and `en.ts` each
   implement it in full. `caraKerja.steps` is a 3-tuple, `fitur.items` a
@@ -334,25 +343,27 @@ each is readable with JavaScript disabled, in its own language, at its own URL.
 - **Detection.** A synchronous script injected at the `<!--lang-detect-->`
   placeholder runs before paint: a `localStorage["pathrix.lang"]` override
   always wins; otherwise it scans `navigator.languages` for `id`/`en`,
-  defaulting to `id`. It uses `location.replace` (never a redirect status, so
+  defaulting to `en`. It uses `location.replace` (never a redirect status, so
   Back leaves the site rather than bouncing between locales) and a
   `sessionStorage` guard against a same-tab loop. **Not IP/region** — a foreign
   tourist standing in Yogyakarta has an Indonesian IP and wants English; region
   is not language.
-- **Manual override.** The footer `ID / EN` switcher (`Footer.tsx`) is real
-  `<a href="/">` / `<a href="/en/">` — works with JS disabled, crawlable — and
-  writes `localStorage["pathrix.lang"]` on click so the choice survives future
-  visits.
-- **Dev server.** `npm run dev` always serves the raw, Indonesian `index.html`
-  (no `/en/` route in dev). Test English locally at
-  `localhost:5174/?lang=en` — `localeFromDocument()` has a
+- **Manual override.** The `ID / EN` switcher appears in both `Nav.tsx`
+  (desktop bar ≥900px, plus the full-screen mobile menu below that) and
+  `Footer.tsx` — real `<a href="/id/">` / `<a href="/">` links, not JS-only
+  buttons, so they work with JS disabled and are crawlable. All three call the
+  shared `rememberLocale()` (`src/lib/locale.tsx`) on click, which writes
+  `localStorage["pathrix.lang"]` so the choice survives future visits.
+- **Dev server.** `npm run dev` always serves the raw, English `index.html`
+  (no `/id/` route in dev). Test Indonesian locally at
+  `localhost:5174/?lang=id` — `localeFromDocument()` has a
   `import.meta.env.DEV`-gated override for this that compiles out of
   production.
-- **Hosting.** `/en/` needs the same `max-age=0, must-revalidate` cache rule as
-  `/` in both `vercel.json` and `public/_headers` — a cached `/en/index.html`
+- **Hosting.** `/id/` needs the same `max-age=0, must-revalidate` cache rule as
+  `/` in both `vercel.json` and `public/_headers` — a cached `/id/index.html`
   pins clients to deleted chunk hashes exactly like a cached `/` would.
-  `scripts/serve.mjs` 301s bare `/en` to `/en/` (otherwise it falls into the SPA
-  fallback and silently serves the Indonesian page).
+  `scripts/serve.mjs` 301s bare `/id` to `/id/` (otherwise it falls into the SPA
+  fallback and silently serves the English page).
 
 ## Images
 
@@ -436,9 +447,8 @@ moving (but *not* whether they move in the right direction — that is
 `verify:vehicles`), still moving after a tab-switch, canvas not blank after a tab-switch,
 wordmark legibility and island coverage at six viewports, a 14-width responsive
 sweep, squat-window layout, nav inversion, active link, anchor clearance,
-connector draw and absence, image loading (WebP wins, no broken files, layout
-reserved, alt text present), the 120° rotation, GSAP-blocked, JS-disabled, and
-reduced motion.
+image loading (WebP wins, no broken files, layout reserved, alt text present),
+the 120° rotation, GSAP-blocked, JS-disabled, and reduced motion.
 
 Both scripts point at a cached Chromium explicitly (the installed Playwright
 version does not match the cached browser build). Override with `CHROME_PATH`.
@@ -491,10 +501,10 @@ Rejected approaches, do not retry:
   and reports real success or failure; without it, it composes a `mailto:`. It
   **never fakes a success state** — do not "simplify" this into an inline
   confirmation.
-- Team names are deliberately absent.
-- No statistics, metrics, or invented numbers anywhere. This was an explicit
-  product decision.
-- No domain is configured, so `hreflang` alternates between `/` and `/en/` are
+- No statistics, metrics, or invented numbers anywhere except the cited
+  figures already documented above (Masalah's 2 stats, Fitur's carbon claim) —
+  this was an explicit product decision, relaxed only for sourced figures.
+- No domain is configured, so `hreflang` alternates between `/` and `/id/` are
   root-relative, which search engines may not credit. Override with
   `VITE_SITE_URL` (no trailing slash) once one is assigned.
 
