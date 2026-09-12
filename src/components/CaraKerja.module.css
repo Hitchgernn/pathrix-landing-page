@@ -21,6 +21,13 @@
 }
 
 .eyebrow {
+  display: inline-flex;
+  align-self: flex-start;
+  align-items: center;
+  height: 26px;
+  padding: 0 12px;
+  border-radius: 999px;
+  background: rgba(108, 163, 212, 0.14);
   font-family: var(--font-mono);
   font-size: 11px;
   letter-spacing: 0.26em;
@@ -36,88 +43,98 @@
   text-wrap: pretty;
 }
 
-.steps {
-  position: relative;
-}
-
-/*
- * Hairline connector, aligned to the centre of the 38px step markers.
- * Breakpoint 2 (1040px): only shown where all three steps share a row.
- */
-.track {
-  display: none;
-  position: absolute;
-  top: 19px;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: var(--on-dark-line);
-}
-
-@media (min-width: 1040px) {
-  .track {
-    display: block;
-  }
-}
-
-.draw {
-  height: 1px;
-  background: linear-gradient(90deg, var(--blue-lift) 0%, var(--blue-lift) 62%, var(--warm) 100%);
-  transform-origin: left center;
-}
-
 .grid {
   display: grid;
   /* min() so the floor can never exceed the available width — see Kontak. */
-  grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
-  gap: clamp(32px, 4vw, 56px);
+  grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
+  gap: clamp(28px, 3vw, 40px);
 }
 
-.step {
+/*
+ * Bold illustrated cards on the shared --card-surface — a real foreground
+ * surface lifted off the ink section via --shadow-card, the same "card" move
+ * as Masalah's stat tiles but at full card scale instead of a small chip.
+ */
+.card {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  overflow: hidden;
+  border-radius: var(--radius-card);
+  background: var(--card-surface);
+  box-shadow: var(--shadow-card);
 }
 
-.markerRow {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-
-.marker {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 38px;
-  height: 38px;
-  border-radius: 999px;
-  font-family: var(--font-mono);
-  font-size: 13px;
-  font-weight: 500;
-}
-
-.marker[data-accent="lift"] {
-  background: var(--blue-lift);
-  color: var(--ink);
-}
-
-/* The single warm spark in this section. Dark text on the yellow, matching the
-   [data-accent="lift"] pairing above — a light foreground would fail AA. */
-.marker[data-accent="warm"] {
+/* The payoff step earns the section's one solid warm-fill card — same
+   convention as Fitur's bento payoff cell and Audiens' closing group. */
+.card[data-accent="warm"] {
   background: var(--warm);
-  color: var(--ink);
 }
 
-.stepTitle {
+/* Photos are 700x1043 (~0.671:1) portrait renders, not the old 720x540
+   landscape SVGs — 2/3 (0.667:1) is a hair tighter than the source ratio but
+   close enough that object-fit: cover only trims a sliver off the long edge,
+   not a meaningful crop of the framed subject. */
+.illustration {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  background: var(--ink-soft);
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: clamp(24px, 3vw, 32px);
+}
+
+.badge {
+  display: inline-flex;
+  align-self: flex-start;
+  align-items: center;
+  height: 28px;
+  padding: 0 13px;
+  border-radius: 999px;
+  background: rgba(10, 101, 184, 0.12);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--blue);
+}
+
+/* Card is already solid warm, so the badge inverts to an ink chip instead of
+   repeating the fill — the same on-warm text pairing tokens.css documents for
+   --warm-text (ink background, warm foreground; contrast is symmetric). */
+.badge[data-accent="warm"] {
+  background: var(--ink);
+  color: var(--warm-text);
+}
+
+.title {
   font-size: clamp(20px, 2.1vw, 26px);
   letter-spacing: -0.02em;
-  color: var(--on-dark-head);
+  color: var(--ink);
 }
 
-.stepBody {
+.body {
   font-size: 16px;
   line-height: 1.62;
-  color: var(--on-dark-body-soft);
+  color: var(--on-light-body);
+  text-wrap: pretty;
+}
+
+/* .72 alpha clears AA on --warm (5.24:1) — see Fitur's bento cell for the math. */
+.card[data-accent="warm"] .body {
+  color: rgba(16, 30, 42, 0.72);
+}
+
+/* A footnote below the grid, not a fourth card. */
+.methodNote {
+  max-width: 760px;
+  padding-top: clamp(24px, 3vw, 40px);
+  border-top: 1px solid var(--on-dark-line);
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--on-dark-meta);
   text-wrap: pretty;
 }
