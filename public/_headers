@@ -10,10 +10,10 @@
 /
   Cache-Control: public, max-age=0, must-revalidate
 
-/en/
+/id/
   Cache-Control: public, max-age=0, must-revalidate
 
-/en/index.html
+/id/index.html
   Cache-Control: public, max-age=0, must-revalidate
 
 # Content-hashed JS and CSS — safe to cache indefinitely.

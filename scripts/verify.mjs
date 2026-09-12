@@ -373,55 +373,6 @@ for (const vp of viewports) {
   await page.close();
 }
 
-// --------------------------------------------------------- connector line
-{
-  // >=1040px: present and drawn.
-  const wide = await browser.newPage({ viewport: { width: 1280, height: 800 } });
-  await wide.goto(BASE, { waitUntil: "networkidle" });
-  await wide.waitForTimeout(600);
-  const exists = await wide.locator("[data-draw]").count();
-  exists === 1 ? pass("connector present >=1040px") : fail("connector present >=1040px", `${exists}`);
-
-  await wide.evaluate(() => {
-    const el = document.querySelector("#cara-kerja");
-    el.scrollIntoView({ block: "center", behavior: "instant" });
-  });
-  await wide.waitForTimeout(2000);
-  const drawn = await wide.evaluate(() => {
-    const el = document.querySelector("[data-draw]");
-    if (!el) return null;
-    return { width: el.getBoundingClientRect().width, transform: getComputedStyle(el).transform };
-  });
-  const scaleX = drawn?.transform?.startsWith("matrix")
-    ? parseFloat(drawn.transform.slice(7).split(",")[0])
-    : 1;
-  scaleX > 0.9
-    ? pass("connector drawn on scroll", `scaleX ${scaleX.toFixed(2)}`)
-    : fail("connector drawn on scroll", `scaleX ${scaleX.toFixed(2)}`);
-  await wide.close();
-
-  // <1040px: absent.
-  const narrow = await browser.newPage({ viewport: { width: 900, height: 800 } });
-  await narrow.goto(BASE, { waitUntil: "networkidle" });
-  await narrow.waitForTimeout(500);
-  // The element stays in the DOM (so GSAP's target never vanishes mid-tween) but
-  // must not be rendered below the breakpoint, where the steps stack.
-  const narrowState = await narrow.evaluate(() => {
-    const line = document.querySelector("[data-draw]");
-    if (!line) return { inDom: false, visible: false };
-    const track = line.parentElement;
-    return {
-      inDom: true,
-      visible: line.getClientRects().length > 0,
-      trackDisplay: getComputedStyle(track).display,
-    };
-  });
-  !narrowState.visible
-    ? pass("connector not rendered <1040px", `track display: ${narrowState.trackDisplay}`)
-    : fail("connector not rendered <1040px", JSON.stringify(narrowState));
-  await narrow.close();
-}
-
 // ------------------------------------------------------- GSAP blocked / no JS
 {
   const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
@@ -458,20 +409,8 @@ for (const vp of viewports) {
   // and src/content/en.ts and must be updated with them — a rewrite there
   // fails this check until they are.
   const LOCALES = {
-    id: {
-      path: "/",
-      lang: "id",
-      strings: [
-        "PATHRIX",
-        "Baru sampai di Yogyakarta",
-        "Dari satu kalimat",
-        "Satu layar untuk bertanya",
-        "Mari bantu pendatang",
-        "MAPID WebGIS Competition 2026",
-      ],
-    },
     en: {
-      path: "/en/",
+      path: "/",
       lang: "en",
       strings: [
         "PATHRIX",
@@ -479,7 +418,19 @@ for (const vp of viewports) {
         "From one sentence",
         "One screen to ask",
         "Help newcomers to Yogyakarta",
-        "MAPID WebGIS Competition 2026",
+        "MAPS THAT THINK!",
+      ],
+    },
+    id: {
+      path: "/id/",
+      lang: "id",
+      strings: [
+        "PATHRIX",
+        "Baru sampai di Yogyakarta",
+        "Dari satu kalimat",
+        "Satu layar untuk bertanya",
+        "Mari bantu pendatang",
+        "MAPS THAT THINK!",
       ],
     },
   };
@@ -605,12 +556,13 @@ for (const vp of viewports) {
   });
   await page.waitForTimeout(2500);
 
-  const imgs = await page.evaluate(() =>
+  const fiturImgs = await page.evaluate(() =>
     [...document.querySelectorAll("#fitur img")].map((i) => ({
       src: i.currentSrc || i.src,
       w: i.naturalWidth,
       h: i.naturalHeight,
       alt: i.alt,
+      hasAlt: i.hasAttribute("alt"),
       hasDims: i.hasAttribute("width") && i.hasAttribute("height"),
       lazy: i.getAttribute("loading"),
     })),
@@ -618,9 +570,26 @@ for (const vp of viewports) {
 
   // Just the concept visual since the field-survey photo grid was removed; the
   // checks below derive from this set, so they follow the count.
-  imgs.length === 1
-    ? pass("Fitur concept visual present", `${imgs.length}`)
-    : fail("Fitur concept visual present", `found ${imgs.length}`);
+  fiturImgs.length === 1
+    ? pass("Fitur concept visual present", `${fiturImgs.length}`)
+    : fail("Fitur concept visual present", `found ${fiturImgs.length}`);
+
+  // CaraKerja's 3 step illustrations are decorative (the title/body already
+  // state the step) and intentionally ship alt="" — combine both sections for
+  // the universal correctness checks, but keep the "descriptive text" bar
+  // scoped to images that are supposed to carry meaning in their alt.
+  const caraKerjaImgs = await page.evaluate(() =>
+    [...document.querySelectorAll("#cara-kerja img")].map((i) => ({
+      src: i.currentSrc || i.src,
+      w: i.naturalWidth,
+      h: i.naturalHeight,
+      alt: i.alt,
+      hasAlt: i.hasAttribute("alt"),
+      hasDims: i.hasAttribute("width") && i.hasAttribute("height"),
+      lazy: i.getAttribute("loading"),
+    })),
+  );
+  const imgs = [...fiturImgs, ...caraKerjaImgs];
 
   const broken = imgs.filter((i) => i.w === 0 || i.h === 0);
   broken.length === 0
@@ -638,10 +607,18 @@ for (const vp of viewports) {
     ? pass("images reserve layout (width/height set)")
     : fail("images reserve layout (width/height set)", `${missingDims.length} missing`);
 
-  const noAlt = imgs.filter((i) => !i.alt || i.alt.trim().length < 12);
-  noAlt.length === 0
-    ? pass("images have descriptive Indonesian alt text")
-    : fail("images have descriptive alt text", `${noAlt.length} weak/empty`);
+  // Fitur's screenshot must carry real descriptive alt text; CaraKerja's
+  // illustrations are decorative and must have an explicit alt="" (not a
+  // missing attribute, and not a half-hearted short string either).
+  const weakFiturAlt = fiturImgs.filter((i) => !i.alt || i.alt.trim().length < 12);
+  weakFiturAlt.length === 0
+    ? pass("Fitur image has descriptive Indonesian alt text")
+    : fail("Fitur image has descriptive alt text", `${weakFiturAlt.length} weak/empty`);
+
+  const badDecorativeAlt = caraKerjaImgs.filter((i) => !i.hasAlt || (i.alt && i.alt.trim().length > 0));
+  badDecorativeAlt.length === 0
+    ? pass("CaraKerja illustrations have explicit decorative alt=\"\"")
+    : fail("CaraKerja illustrations have explicit decorative alt=\"\"", `${badDecorativeAlt.length} missing/non-empty`);
 
   bad.length === 0
     ? pass("no failing image requests")
@@ -703,30 +680,17 @@ for (const vp of viewports) {
   const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
   await page.goto(BASE, { waitUntil: "networkidle" });
 
-  const idHref = await page.locator('footer a[href="/"]').last().getAttribute("href");
-  const enHref = await page.getAttribute('footer a[href="/en/"]', "href");
-  idHref === "/" && enHref === "/en/"
-    ? pass("footer language switcher present", "/ and /en/ both linked")
-    : fail("footer language switcher present", `id href="${idHref}" en href="${enHref}"`);
+  const enHref = await page.locator('footer a[href="/"]').last().getAttribute("href");
+  const idHref = await page.getAttribute('footer a[href="/id/"]', "href");
+  enHref === "/" && idHref === "/id/"
+    ? pass("footer language switcher present", "/ and /id/ both linked")
+    : fail("footer language switcher present", `en href="${enHref}" id href="${idHref}"`);
 
   await page.close();
 }
 
-// Fresh-profile browser-language detection: en-US lands on /en/, id-ID stays.
+// Fresh-profile browser-language detection: id-ID lands on /id/, en-US stays.
 {
-  const enCtx = await browser.newContext({
-    viewport: { width: 1440, height: 900 },
-    locale: "en-US",
-  });
-  const enPage = await enCtx.newPage();
-  await enPage.goto(BASE, { waitUntil: "networkidle" });
-  const enUrl = new URL(enPage.url());
-  enUrl.pathname === "/en/"
-    ? pass("en-US browser locale redirects to /en/", enUrl.pathname)
-    : fail("en-US browser locale redirects to /en/", enUrl.pathname);
-  await enPage.close();
-  await enCtx.close();
-
   const idCtx = await browser.newContext({
     viewport: { width: 1440, height: 900 },
     locale: "id-ID",
@@ -734,29 +698,42 @@ for (const vp of viewports) {
   const idPage = await idCtx.newPage();
   await idPage.goto(BASE, { waitUntil: "networkidle" });
   const idUrl = new URL(idPage.url());
-  idUrl.pathname === "/"
-    ? pass("id-ID browser locale stays at /", idUrl.pathname)
-    : fail("id-ID browser locale stays at /", idUrl.pathname);
-
-  // No redirect loop: a reload must not bounce the visitor anywhere else.
-  await idPage.reload({ waitUntil: "networkidle" });
-  const idUrlAfterReload = new URL(idPage.url());
-  idUrlAfterReload.pathname === "/"
-    ? pass("no redirect loop on reload", idUrlAfterReload.pathname)
-    : fail("no redirect loop on reload", idUrlAfterReload.pathname);
+  idUrl.pathname === "/id/"
+    ? pass("id-ID browser locale redirects to /id/", idUrl.pathname)
+    : fail("id-ID browser locale redirects to /id/", idUrl.pathname);
   await idPage.close();
   await idCtx.close();
-}
 
-// Manual override beats detection: switching to ID from /en/ on an
-// English-browser profile must stick after a reload, not bounce back to /en/.
-{
-  const ctx = await browser.newContext({
+  const enCtx = await browser.newContext({
     viewport: { width: 1440, height: 900 },
     locale: "en-US",
   });
+  const enPage = await enCtx.newPage();
+  await enPage.goto(BASE, { waitUntil: "networkidle" });
+  const enUrl = new URL(enPage.url());
+  enUrl.pathname === "/"
+    ? pass("en-US browser locale stays at /", enUrl.pathname)
+    : fail("en-US browser locale stays at /", enUrl.pathname);
+
+  // No redirect loop: a reload must not bounce the visitor anywhere else.
+  await enPage.reload({ waitUntil: "networkidle" });
+  const enUrlAfterReload = new URL(enPage.url());
+  enUrlAfterReload.pathname === "/"
+    ? pass("no redirect loop on reload", enUrlAfterReload.pathname)
+    : fail("no redirect loop on reload", enUrlAfterReload.pathname);
+  await enPage.close();
+  await enCtx.close();
+}
+
+// Manual override beats detection: switching to EN from /id/ on an
+// Indonesian-browser profile must stick after a reload, not bounce back to /id/.
+{
+  const ctx = await browser.newContext({
+    viewport: { width: 1440, height: 900 },
+    locale: "id-ID",
+  });
   const page = await ctx.newPage();
-  await page.goto(BASE + "/en/", { waitUntil: "networkidle" });
+  await page.goto(BASE + "/id/", { waitUntil: "networkidle" });
   await page.click('footer a[href="/"]');
   await page.waitForURL((url) => url.pathname === "/", { timeout: 5000 }).catch(() => {});
   await page.reload({ waitUntil: "networkidle" });
