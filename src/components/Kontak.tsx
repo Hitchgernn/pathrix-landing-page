@@ -50,7 +50,11 @@ export function Kontak() {
       const response = await fetch(contactEndpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json", Accept: "application/json" },
-        body: JSON.stringify({ nama, kontak: kontakValue, pesan }),
+        // _replyto is Formspree's convention for setting the notification
+        // email's reply-to address. kontak isn't always an email (the field
+        // also accepts an institution name), but Formspree only uses this
+        // when it looks like one and otherwise just ignores it.
+        body: JSON.stringify({ nama, kontak: kontakValue, pesan, _replyto: kontakValue }),
         signal: controller.signal,
       });
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
