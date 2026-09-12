@@ -450,10 +450,17 @@ live in `scripts/art/`: `webgis.svg` (a UI mockup of the product screen) and
 penyeberangan, stasiun). `npm run images` rasterises and encodes them into
 `public/img/`.
 
-Replacing them with real assets needs no code change: drop the files in
-`public/img/` under the same base names, or point `src` in `src/content/site.ts`
-somewhere else. `src: null` still falls back to the flat `--ink-soft` block with
-the caption — **no gradient shimmer, no skeleton animation.**
+Replacing them with real assets needs no code change beyond re-running the
+encoder: drop the new source file in `scripts/art/` (or `scripts/art/photos/`)
+under the same name the script already expects and run `npm run images` — it
+re-encodes and rewrites `src/content/image-manifest.json`, which `site.ts`'s
+`img()` helper reads to build the `src` path. **Do not hand-copy a file into
+`public/img/` under an old filename** — output names are content-hashed (see
+Caching and payload below) precisely so a changed image gets a new URL; a
+same-named drop-in would either not match anything the manifest points at, or
+(if you also hand-edit the manifest) risk mismatching the hash. `src: null`
+still falls back to the flat `--ink-soft` block with the caption — **no
+gradient shimmer, no skeleton animation.**
 
 The placeholder art deliberately carries **no statistics or invented numbers**;
 the mockup's TOD panel uses unlabelled qualitative bars for that reason.
@@ -482,7 +489,17 @@ anything in the app. Policy lives in **two places that must stay in sync**:
 | --- | --- | --- |
 | `/` and `/index.html` | `max-age=0, must-revalidate` | A cached shell pins clients to deleted chunk hashes |
 | `/assets/*` | `max-age=31536000, immutable` | Vite content-hashes these; the name changes when the bytes do |
-| `/img/*`, `/fonts/*`, `/hero/*` | `max-age=604800, stale-while-revalidate` | Not hashed, so a long TTL rather than immutable |
+| `/img/*` | `max-age=31536000, immutable` | `scripts/encode-images.sh` content-hashes these too (base.\<hash\>.ext, tracked in `src/content/image-manifest.json`) — same reasoning as `/assets/*` |
+| `/fonts/*`, `/hero/*` | `max-age=604800, stale-while-revalidate` | Not hashed, so a long TTL rather than immutable |
+
+`/img/*` was on the long-TTL-not-immutable tier until 2026-09: filenames were
+fixed (e.g. always `pekerja.jpg`), so replacing a photo overwrote bytes under a
+URL that returning visitors — phones especially, which hold onto HTTP cache far
+more aggressively than a desktop dev session — could still be serving from
+cache for up to the old 7-day-plus-`stale-while-revalidate` window after a
+deploy, even though the deploy itself was correct. Content-hashing the output
+filenames (mirroring how Vite already handles `/assets/*`) closed that gap: a
+changed photo now gets a new URL instead of colliding with the cached one.
 
 No service worker. Nothing here needs offline support, and a SW would add a
 cache-invalidation failure mode for no benefit.
