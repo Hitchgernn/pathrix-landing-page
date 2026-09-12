@@ -1,38 +1,61 @@
 .footer {
+  position: relative;
   background: var(--ink);
-  /* .6 clears AA (6.04:1) at this size. */
   color: rgba(231, 240, 247, 0.6);
-  padding: clamp(44px, 5vw, 64px) var(--gutter);
+  padding: clamp(56px, 7vw, 96px) var(--gutter) clamp(40px, 5vw, 56px);
+}
+
+/* Same brand seam as Masalah's top-of-section fold — closes the page with the
+   motif it opened with. */
+.footer::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--gradient-accent);
+  opacity: 0.6;
 }
 
 .shell {
   max-width: var(--shell);
   margin: 0 auto;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 28px;
-}
-
-.brand {
+  width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: clamp(32px, 4.5vw, 56px);
 }
 
-.mark {
+/*
+ * The giant wordmark. Fluid via clamp(), same three-value shape as the Hero's
+ * --wordmark, but scaled down for "MAPS THAT THINK!"'s 16 characters against
+ * PATHRIX's 7 — a literal copy of --wordmark here would overflow every
+ * viewport it touches. Negative tracking (rather than the near-zero tracking
+ * on the Hero's single unbroken word) is what keeps a three-word, multi-line
+ * headline reading as one dense mass instead of a loose row of big letters —
+ * that distinction is what makes this "genuinely massive" instead of just a
+ * large font-size.
+ */
+.giant {
+  margin: 0;
   font-family: var(--font-display);
-  font-size: 19px;
-  letter-spacing: 0.16em;
+  font-weight: 400;
+  font-size: clamp(40px, 10vw, 132px);
+  line-height: 0.94;
+  letter-spacing: -0.015em;
   color: var(--paper);
+  text-wrap: balance;
 }
 
-.competition {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
+.linksRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px 28px;
+  padding-top: clamp(20px, 2.6vw, 28px);
+  border-top: 1px solid var(--on-dark-line);
 }
 
 .links {
@@ -52,7 +75,8 @@
   color: var(--paper);
 }
 
-/* Same quiet mono voice as .competition — a toggle, not a nav destination. */
+/* Same quiet mono voice used across the rest of the page for this toggle —
+   a control, not a nav destination. */
 .langGroup {
   display: inline-flex;
   align-items: center;
@@ -76,4 +100,41 @@
 .langLink[data-active="true"],
 .langLink:hover {
   color: var(--paper);
+}
+
+.bottom {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px 24px;
+  padding-top: clamp(20px, 2.6vw, 32px);
+  border-top: 1px solid var(--on-dark-line);
+}
+
+/* 11px mono needs the AA-tuned meta token, not an ad hoc opacity — see tokens.css. */
+.credit {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1.7;
+  letter-spacing: 0.06em;
+  color: var(--on-dark-meta);
+  text-wrap: pretty;
+}
+
+/* The one deliberately weighted link on the page's darkest surface — same
+   underline-link grammar as Kontak's .email, in the dark-background pairing
+   of the same accent (--blue-lift, not --blue). */
+.cta {
+  font-size: clamp(16px, 1.8vw, 20px);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--blue-lift);
+  border-bottom: 1px solid rgba(108, 163, 212, 0.4);
+}
+
+.cta:hover {
+  color: var(--paper);
+  border-bottom-color: var(--paper);
 }
