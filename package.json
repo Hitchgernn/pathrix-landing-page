@@ -10,6 +10,7 @@
     "typecheck": "tsc --noEmit",
     "serve": "node scripts/serve.mjs",
     "images": "bash scripts/encode-images.sh",
+    "model": "bash scripts/encode-model.sh",
     "verify": "node scripts/verify.mjs",
     "verify:pause": "node scripts/check-pause.mjs",
     "verify:weight": "node scripts/weight-check.mjs",

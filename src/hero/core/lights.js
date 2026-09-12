@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
 import { BASE_RADIUS } from "../config.js";
 
 export function createLights(scene) {
@@ -35,4 +36,23 @@ export function createLights(scene) {
   scene.add(fill);
 
   return { sun, hemi, fill };
+}
+
+/**
+ * A prefiltered environment map, for the Tugu model's metallic gold.
+ *
+ * Deliberately *not* assigned to `scene.environment`: that would re-shade every
+ * MeshStandardMaterial in the diorama — terrain, vehicles, water — and the
+ * island's look is already tuned against the three lights above. The map is
+ * handed to `createTugu()` and applied to the model's materials alone.
+ *
+ * RoomEnvironment rather than an HDR file: it is procedural, so it costs no
+ * network request, and a soft neutral studio box is what a small gold spire
+ * needs to read as metal at this scale.
+ */
+export function createEnvironment(renderer) {
+  const pmrem = new THREE.PMREMGenerator(renderer);
+  const texture = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+  pmrem.dispose();
+  return texture;
 }

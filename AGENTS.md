@@ -28,6 +28,7 @@ npm run preview         # vite preview on :4173 (no cache headers)
 npm run serve           # dist/ on :4174 WITH _headers + gzip — use this to verify
 npm run typecheck
 npm run images          # re-encode placeholder art into public/img
+npm run model           # re-pack the Tugu glTF into public/hero/tugu-jogja.glb
 
 npm run verify          # 54 browser checks
 npm run verify:pause    # render loop pauses off-screen
@@ -74,6 +75,8 @@ scripts/prerender.mjs   bakes markup into dist/index.html
 scripts/serve.mjs       static server that applies public/_headers + gzip
 scripts/art/            SOURCES for the placeholder imagery (svg + python)
 scripts/encode-images.sh art -> public/img (WebP + JPEG at display sizes)
+scripts/art/tugu-jogja/ SOURCE glTF for the monument (CC BY-NC-ND — see below)
+scripts/encode-model.sh art -> public/hero/tugu-jogja.glb (meshopt + 512 WebP)
 public/img/             encoded placeholder imagery (committed)
 public/fonts/           self-hosted Quarkiz (.woff2 subset + .otf/.ttf)
 public/hero/            static diorama fallback for no-WebGL
@@ -136,6 +139,74 @@ white-space: nowrap`.
 `src/hero/` is the prototype scene ported as-is. The camera is **fixed** (no
 OrbitControls, no scroll-linked camera); only the vehicles and water move.
 Preserve that. Do not convert the diorama to a video or an image sequence.
+
+### The Tugu model and its licence
+
+The monument is **not** procedural any more. `src/hero/landmarks/tugu.js` loads
+`public/hero/tugu-jogja.glb` through `GLTFLoader` + `MeshoptDecoder`; the plinth
+steps and the 12 perimeter posts around it are still built from primitives,
+because the model has neither and the plaza reads bare without them.
+
+**Licence: CC-BY-NC-ND-4.0.** "Tugu Jogja" by Djonk, from Sketchfab. The full
+text ships beside the asset at `public/hero/tugu-jogja.license.txt` and is copied
+from `scripts/art/tugu-jogja/license.txt`. Three consequences:
+
+- **BY** — attribution is rendered in the page footer (`footer.modelCredit` in
+  both locales). That line is a licence condition, not decoration. Do not remove
+  it, and do not let it fall out of `src/content/types.ts`.
+- **NC** — no commercial use. This was flagged and accepted as a known risk.
+  Re-raise it before the site is used to sell anything.
+- **ND** — modified versions may not be distributed. The build re-encodes the
+  file (meshopt, 512px WebP) and the loader retints the gold, which is arguably
+  a derivative.
+
+If a licence-clean replacement is ever sourced, everything above stays: only the
+`.glb` and the credit string change.
+
+The procedural monument **stays in `tugu.js`** as `buildProceduralMonument()`. It
+is what stands if the `.glb` fetch or decode fails — a bare plinth is not an
+acceptable degraded state. `createTugu()` is still synchronous and still returns
+a group the caller can add immediately; the model arrives via the `loaded`
+promise, which **never rejects**.
+
+Placement is pinned by one number: the spire top must stay at or below **10.49**,
+because `scripts/verify.mjs` asserts the island silhouette never climbs over the
+hero wordmark. `MODEL_SCALE` is derived from that ceiling and the 0.78 step top
+rather than hard-coded, so re-deriving it after a model swap is one edit.
+
+### Lighting the model — env map on the metal only
+
+`createEnvironment()` in `src/hero/core/lights.js` builds a PMREM-prefiltered
+`RoomEnvironment`. It is procedural, so it costs no network request.
+
+It is deliberately **not** assigned to `scene.environment`. Two reasons:
+
+- Globally it would re-shade every `MeshStandardMaterial` in the diorama —
+  terrain, vehicles, water — all of which are tuned against the three lights in
+  `createLights()`.
+- Even scoped to the Tugu, it must go on the **metal only**. The gold is
+  `metalness 0.71`, and a metal has no diffuse response, so under the scene
+  lights alone it renders near-black — that is the whole reason the map exists.
+  The white marble is the opposite case: an env map adds diffuse irradiance on
+  top of an already-generous ambient + hemisphere + sun, and the body flattens
+  into a featureless white silhouette. Verified by sweeping 0 / 0.3 / 0.6 against
+  screenshots — the shading on the shaft is visibly gone by 0.3.
+
+`envMapIntensity` is **0.4** on the metal, 1.8 and 1.2 having gone brighter than
+the sunlit terrain around it. The export's gold is `#e8cf01`, an acid lemon that
+fights the page accent, so the loader retints it to `GOLD_HEX` — the same
+`#d9a521` as `--warm` in tokens.css and the perimeter post caps.
+
+Real-time ray tracing is not available in three.js/WebGL. An env map is the
+lever; do not go looking for a path tracer.
+
+Also set on load: `side = FrontSide` (all three glTF materials declare
+`doubleSided`, which only doubles shadow-map cost and invites acne on the thin
+trim) and `castShadow`/`receiveShadow` on every mesh.
+
+The env map is disposed explicitly in `buildScene`'s `dispose()`. The scene
+traversal there reaches geometries and materials only — a standalone texture is
+held by neither.
 
 ### World rotation
 
@@ -322,6 +393,12 @@ Three things to know if you touch this:
   its pattern doesn't match. A stale pattern fails the build loudly instead of
   silently shipping the wrong locale's `<title>`.
 
+**No two adjacent text nodes in one element.** `renderToStaticMarkup` emits no
+`<!-- -->` separators, so `{value}{" "}<a>…</a>` renders as a single merged text
+node on the server and hydration fails the whole root over to client rendering
+(React #418/#425). Anything `document`-touching at module scope breaks this too.
+Put inter-node spacing in CSS.
+
 ## Internationalization
 
 Two locales: `en` (default, `/`) and `id` (`/id/`), both fully prerendered —
@@ -413,6 +490,12 @@ cache-invalidation failure mode for no benefit.
 `npm run serve` applies the `_headers` rules and gzips text so the policy is
 verifiable locally; `vite preview` does neither, which makes it useless for this.
 
+`.glb` is in that server's compressible set — see the rejected-approaches list
+below for why that is not optional. **Whether the real host compresses
+`model/gltf-binary` has not been verified**; if it does not, the Tugu costs
+153KB rather than 93KB. Check it on the host before trusting the cold-weight
+figure.
+
 Measured over the wire, gzipped: **310KB cold**, of which the critical path
 (excluding the deferred three.js chunk and below-the-fold imagery) is **112KB
 across 6 requests**. A repeat visit transfers essentially nothing.
@@ -463,9 +546,28 @@ Two notes on writing checks here, learned the hard way:
 
 ### Current measured state
 
-**54/54 verification checks pass.** Loop confirmed running in view (~1263 draw
-calls/s), **0 draw calls off-screen**, and resuming on return. Transfer weight
-310KB gzipped cold / 112KB critical path; repeat visits transfer ~nothing.
+**65–66 of 66 verification checks pass**, the variance being one flaky check —
+see below. Loop confirmed running in view (~850–1275 draw calls/s), **0 draw
+calls off-screen**, and resuming on return.
+
+`connector drawn on scroll` is **flaky, and was already flaky before the Tugu
+model landed** — three runs against a build of the previous commit gave scaleX
+0.00, 0.25 and 1.00 at an identical scroll position. It scrolls `#cara-kerja`
+to centre, waits 2s and asserts the scrubbed connector is >0.9 drawn, which
+races ScrollTrigger's scrub interpolation and its cached start/end. Treat a lone
+failure here as noise; treat any *other* failure as real. Fixing it properly
+means waiting on the tween rather than on a timeout.
+
+Transfer weight, re-measured after the Tugu model landed: **371KB gzipped cold /
+72KB critical path** across 13 requests; repeat visits transfer nothing. The
+model is 153KB raw and **93KB over the wire**, and it is not on the critical
+path — the diorama fetches it at idle, after the hero wordmark has painted.
+The three.js chunk went 125KB → 152KB gzip, which is GLTFLoader, MeshoptDecoder
+and RoomEnvironment; it is lazy, so that is deferred weight too.
+
+(The earlier "310KB / 112KB" figures here were measured with a shorter
+observation window and a critical-path filter that has since changed. Compare
+against 371/72, not against them.)
 
 Lighthouse desktop: **accessibility 100, best-practices 100, SEO 100**.
 Performance is **83–92 across identical runs** — it touches the ≥90 target but
@@ -490,6 +592,15 @@ Rejected approaches, do not retry:
   the correct lever.
 - **Emitting AVIF with the available ImageMagick.** It has no AVIF delegate and
   writes mislabelled PNGs, which costs a wasted download per image. See "Images".
+- **Leaving `.glb` out of `scripts/serve.mjs`'s `COMPRESSIBLE` set** on the
+  theory that a meshopt-compressed model is already compressed. It is not:
+  meshopt byte-filters its buffers *so that* a general-purpose compressor still
+  works on them. Serving the Tugu uncompressed cost 153KB instead of 93KB.
+- **A `{" "}` separator between a text node and an element in JSX.**
+  `entry-server.tsx` renders with `renderToStaticMarkup`, which emits no
+  `<!-- -->` markers, so two adjacent text nodes hydrate as one and the whole
+  root falls back to client rendering (React #418/#425). The footer credit hit
+  this. Put the gap in CSS. See "Prerendering".
 
 ## Still unresolved — surface these, don't invent them
 

@@ -54,6 +54,23 @@ export function Footer() {
             {footer.ctaLabel}: {contactEmail}
           </a>
         </div>
+
+        {/* Attribution is a licence condition on the diorama's Tugu model,
+            not decoration — see AGENTS.md. Do not remove it. */}
+        <p className={styles.modelCredit}>
+          {/* No {" "} separator: entry-server.tsx renders with
+              renderToStaticMarkup, which emits no <!-- --> markers, so two
+              adjacent text nodes cannot hydrate. The gap is CSS. */}
+          {footer.modelCredit}
+          <a
+            className={styles.modelCreditLink}
+            href="https://sketchfab.com/Djonk"
+            rel="noopener noreferrer nofollow"
+            target="_blank"
+          >
+            sketchfab.com/Djonk
+          </a>
+        </p>
       </div>
     </footer>
   );

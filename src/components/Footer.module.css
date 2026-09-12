@@ -58,6 +58,34 @@
   border-top: 1px solid var(--on-dark-line);
 }
 
+/* Quieter than everything above it: a licence notice, not a line anyone reads
+   twice. Its own class (not .credit) — this footer already uses .credit for
+   the "Tim PATHRIX | University" line below. */
+.modelCredit {
+  margin: 8px 0 0;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  line-height: 1.5;
+  letter-spacing: 0.04em;
+  color: rgba(231, 240, 247, 0.4);
+  /* Wide enough that "CC BY-NC-ND 4.0" and the link do not each land on a line
+     of their own; the licence reads as one sentence. */
+  max-width: 64ch;
+  text-wrap: pretty;
+}
+
+.modelCreditLink {
+  /* Stands in for the JSX space the static prerender cannot carry. */
+  margin-left: 0.4em;
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.modelCreditLink:hover {
+  color: rgba(231, 240, 247, 0.6);
+}
+
 .links {
   display: flex;
   flex-wrap: wrap;

@@ -12,7 +12,13 @@ export default defineConfig({
         // Split the heavy libraries out of the entry chunk so the hero wordmark
         // (the LCP element) is not waiting on three.js to parse.
         manualChunks: {
-          three: ["three", "three/examples/jsm/utils/BufferGeometryUtils.js"],
+          three: [
+            "three",
+            "three/examples/jsm/utils/BufferGeometryUtils.js",
+            "three/examples/jsm/loaders/GLTFLoader.js",
+            "three/examples/jsm/libs/meshopt_decoder.module.js",
+            "three/examples/jsm/environments/RoomEnvironment.js",
+          ],
           gsap: ["gsap", "gsap/ScrollTrigger"],
         },
       },

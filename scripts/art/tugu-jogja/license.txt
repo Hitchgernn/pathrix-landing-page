@@ -1,0 +1,11 @@
+Model Information:
+* title:	Tugu Jogja
+* source:	https://sketchfab.com/3d-models/tugu-jogja-c3ab136a6fb643c09c1a4fc30402dafd
+* author:	Djonk (https://sketchfab.com/Djonk)
+
+Model License:
+* license type:	CC-BY-NC-ND-4.0 (http://creativecommons.org/licenses/by-nc-nd/4.0/)
+* requirements:	Author must be credited. No commercial use. Modified versions can not be distributed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Tugu Jogja" (https://sketchfab.com/3d-models/tugu-jogja-c3ab136a6fb643c09c1a4fc30402dafd) by Djonk (https://sketchfab.com/Djonk) licensed under CC-BY-NC-ND-4.0 (http://creativecommons.org/licenses/by-nc-nd/4.0/)

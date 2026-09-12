@@ -133,6 +133,8 @@ export type Copy = {
     university: string;
     /** "Hubungi Kami" (id) / "Contact Us" (en); component appends ": halo@pathrix.id" itself. */
     ctaLabel: string;
+    /** Attribution required by the Tugu model's CC BY-NC-ND licence. */
+    modelCredit: string;
   };
   ui: {
     skipLink: string;

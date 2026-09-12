@@ -210,6 +210,10 @@ export const en: Copy = {
     creditName: "Muhammad Zakiyyuddin Abdul Adhiim",
     university: "Universitas Gadjah Mada",
     ctaLabel: "Contact Us",
+    modelCredit:
+      // Non-breaking hyphens and space keep "CC BY-NC-ND 4.0" whole: the
+      // licence identifier is not a phrase to wrap mid-way.
+      '3D model "Tugu Jogja" by Djonk, licensed CC BY\u2011NC\u2011ND\u00a04.0',
   },
 
   ui: {
