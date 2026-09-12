@@ -4,7 +4,9 @@ import { Hero } from "./components/Hero";
 import { Masalah } from "./components/Masalah";
 import { CaraKerja } from "./components/CaraKerja";
 import { Fitur } from "./components/Fitur";
+import { Audiens } from "./components/Audiens";
 import { Kontak } from "./components/Kontak";
+import { Penutup } from "./components/Penutup";
 import { Footer } from "./components/Footer";
 import { initReveals, type RevealHandle } from "./lib/reveals";
 import { LocaleProvider, useCopy } from "./lib/locale";
@@ -28,18 +30,12 @@ function Page() {
       window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduced) return;
 
-    // Only draw the connector where the three steps actually share a row.
-    const drawConnector =
-      typeof window.matchMedia === "function"
-        ? window.matchMedia("(min-width: 1040px)").matches
-        : false;
-
     let handle: RevealHandle | undefined;
     let cancelled = false;
 
     // Short delay so layout and webfonts have settled before positions are read.
     const timer = window.setTimeout(() => {
-      initReveals(document.body, { drawConnector })
+      initReveals(document.body)
         .then((h) => {
           if (cancelled) h.destroy();
           else handle = h;
@@ -67,8 +63,10 @@ function Page() {
         <Masalah />
         <CaraKerja />
         <Fitur />
+        <Audiens />
         <Kontak />
       </main>
+      <Penutup />
       <Footer />
     </>
   );
