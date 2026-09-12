@@ -72,7 +72,7 @@ export const en: Copy = {
       {
         index: "03",
         title: "Route ready to go",
-        body: "A staged itinerary appears, from walking to andong/becak to TransJogja/KRL, complete with easiest, fastest, or cheapest options and the carbon you saved.",
+        body: "A staged itinerary appears, from walking to andong/becak to TransJogja/KRL, complete with easiest, fastest, or cheapest options and the carbon you saved. Along the way, the Agent stays with you in real time, pointing out what you pass, from culinary spots and government buildings to andong and becak stops.",
         accent: "warm",
       },
     ],

@@ -66,7 +66,7 @@ export const id: Copy = {
       {
         index: "03",
         title: "Rute siap dijalani",
-        body: "Itinerary bertahap muncul, mulai jalan kaki, andong/becak, sampai TransJogja/KRL, lengkap opsi termudah, tercepat, atau termurah, dan estimasi karbon yang kamu hemat.",
+        body: "Itinerary bertahap muncul, mulai jalan kaki, andong/becak, sampai TransJogja/KRL, lengkap opsi termudah, tercepat, atau termurah, dan estimasi karbon yang kamu hemat. Sepanjang perjalanan, Agent tetap menemani secara real-time, menunjukkan titik menarik yang kamu lewati, dari sentra kuliner dan bangunan pemerintah sampai pangkalan andong dan becak.",
         accent: "warm",
       },
     ],
