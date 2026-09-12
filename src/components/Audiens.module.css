@@ -1,0 +1,177 @@
+.section {
+  position: relative;
+  background: var(--ink);
+  color: var(--paper);
+  padding: 0 var(--gutter) clamp(88px, 11vw, 168px);
+}
+
+.shell {
+  max-width: var(--shell);
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(40px, 5vw, 72px);
+}
+
+.headingCol {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  max-width: 640px;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-self: flex-start;
+  align-items: center;
+  height: 26px;
+  padding: 0 12px;
+  border-radius: 999px;
+  background: rgba(108, 163, 212, 0.14);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--blue-lift);
+}
+
+.heading {
+  font-size: clamp(30px, 4.4vw, 54px);
+  line-height: 1.08;
+  letter-spacing: -0.035em;
+  color: var(--on-dark-head);
+  text-wrap: pretty;
+}
+
+/*
+ * 2+2+1 bento: the four standard groups as elevated light-surface cards,
+ * the UMKM & Pariwisata payoff group as a full-width banner below (see
+ * .banner's grid-column: 1 / -1). The 400px floor is deliberately above the
+ * "one card per ~320-360px" rule of thumb used elsewhere in this codebase
+ * (Kontak, Fitur, CaraKerja): this grid's container caps at --shell
+ * (1180px), and a smaller floor lets a third card squeeze onto the row at
+ * that width. 400px keeps exactly two cards per row across the whole
+ * desktop range up to the shell cap, and still degrades to one column on
+ * narrow viewports like every other auto-fit grid in this codebase.
+ */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(400px, 100%), 1fr));
+  gap: clamp(16px, 2vw, 24px);
+}
+
+.cell {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: var(--radius-card);
+  background: var(--card-surface);
+  box-shadow: var(--shadow-card-sm);
+}
+
+/*
+ * Image bleeds to the card edges (overflow: hidden lives on .cell above).
+ * 3:2 is the audiensShots source's native ratio (800x537 = ~1.49:1) — the
+ * curated persona illustrations run essentially uncropped, unlike Fitur's
+ * 4:3/16:9 crops of a differently-proportioned source.
+ */
+.media {
+  position: relative;
+  aspect-ratio: 3 / 2;
+  background: var(--ink-soft);
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: clamp(22px, 2.6vw, 30px);
+}
+
+.cellTitle {
+  font-size: 17px;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+
+.cellBody {
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--on-light-body);
+  text-wrap: pretty;
+}
+
+/*
+ * The payoff cell: same "one warm solid-fill tile per section" move as
+ * CaraKerja's highlighted step and Fitur's bento cell, but here it is the
+ * section's whole closing row rather than one grid cell among equals —
+ * grid-column: 1 / -1 claims the full row regardless of how many tracks
+ * auto-fit resolved (2 at desktop widths, 1 once the grid has already
+ * collapsed to a single column on narrow viewports).
+ *
+ * Image treatment is deliberately its own shape rather than a copy of the
+ * four standard cards' image-on-top stack: at >=720px the illustration and
+ * the warm-fill text run as a left/right split (see the media query below),
+ * stacking image-over-text below that. Either way this stays the section's
+ * boldest, most distinct cell, not a fifth lookalike card.
+ */
+.banner {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: var(--radius-card);
+  background: var(--warm);
+  box-shadow: var(--shadow-card);
+}
+
+.bannerMedia {
+  position: relative;
+  aspect-ratio: 3 / 2;
+}
+
+.bannerText {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+  padding: clamp(28px, 3.4vw, 44px);
+}
+
+.bannerTitle {
+  font-size: clamp(19px, 2vw, 23px);
+  letter-spacing: -0.015em;
+  color: var(--ink);
+}
+
+.bannerBody {
+  font-size: 15px;
+  line-height: 1.58;
+  /* .72 alpha clears AA on --warm (5.24:1) — see Fitur's bento cell for the math. */
+  color: rgba(16, 30, 42, 0.72);
+  text-wrap: pretty;
+}
+
+/*
+ * Left/right split once there's room for both halves to breathe (matches the
+ * ~620px threshold Fitur's .cellWide uses for its own two-column claim,
+ * bumped slightly since this row also carries a fixed-width image column).
+ * .bannerMedia drops its own aspect-ratio here and instead stretches to the
+ * row's height (default flex align-items: stretch), so the image always
+ * matches the text panel's height exactly instead of the two guessing at
+ * each other's size.
+ */
+@media (min-width: 720px) {
+  .banner {
+    flex-direction: row;
+  }
+
+  .bannerMedia {
+    flex: 0 0 42%;
+    aspect-ratio: auto;
+  }
+
+  .bannerText {
+    flex: 1 1 auto;
+  }
+}
