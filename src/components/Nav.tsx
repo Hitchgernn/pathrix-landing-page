@@ -3,7 +3,7 @@ import styles from "./Nav.module.css";
 import { PathrixMark } from "./PathrixMark";
 import { ctaUrl, navLinks, type SectionId } from "../content/site";
 import { currentScrollY, viewportHeight } from "../lib/scroll";
-import { useCopy } from "../lib/locale";
+import { useCopy, useLocale, rememberLocale } from "../lib/locale";
 
 /**
  * How much ground the bar gives itself, matched to the register of whatever is
@@ -30,6 +30,7 @@ const GROUND_AT = 12;
  */
 export function Nav() {
   const { navLabels, ui } = useCopy();
+  const locale = useLocale();
   const [ground, setGround] = useState<Ground>("none");
   const [active, setActive] = useState<SectionId | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -161,6 +162,24 @@ export function Nav() {
         </div>
 
         <div className={styles.actions}>
+          <span className={styles.langGroup} aria-label={ui.langSwitchAriaLabel}>
+            <a
+              href="/id/"
+              className={styles.langLink}
+              data-active={locale === "id"}
+              onClick={() => rememberLocale("id")}
+            >
+              ID
+            </a>
+            <a
+              href="/"
+              className={styles.langLink}
+              data-active={locale === "en"}
+              onClick={() => rememberLocale("en")}
+            >
+              EN
+            </a>
+          </span>
           <a href={ctaUrl} className={styles.cta}>
             {ui.exploreMap}
             <span className={styles.arrow} aria-hidden="true">
@@ -204,6 +223,31 @@ export function Nav() {
               {navLabels[id]}
             </a>
           ))}
+          <span className={styles.menuLangGroup} aria-label={ui.langSwitchAriaLabel}>
+            <a
+              href="/id/"
+              className={styles.menuLangLink}
+              data-active={locale === "id"}
+              onClick={() => {
+                followedLink.current = true;
+                rememberLocale("id");
+              }}
+            >
+              ID
+            </a>
+            <a
+              href="/"
+              className={styles.menuLangLink}
+              data-active={locale === "en"}
+              onClick={() => {
+                followedLink.current = true;
+                rememberLocale("en");
+              }}
+            >
+              EN
+            </a>
+          </span>
+
           {/* A real button, not a styled span: the close affordance has to be
               reachable by keyboard and announced as an action. */}
           <button type="button" className={styles.menuClose} onClick={() => setMenuOpen(false)}>

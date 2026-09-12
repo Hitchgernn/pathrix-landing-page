@@ -120,14 +120,64 @@
   left: 0;
   right: 0;
   bottom: -7px;
-  height: 1px;
-  background: var(--warm-text);
+  height: 2px;
+  background: var(--gradient-accent);
 }
 
 .actions {
   display: flex;
   align-items: center;
   gap: 12px;
+}
+
+/*
+ * Hidden below 900px, same breakpoint as .links — the compact mobile bar
+ * (logo + CTA + burger) has no room for it, so mobile gets the switch inside
+ * the full-screen menu instead (.menuLangGroup below). Colors mirror .link's
+ * exact ground-aware pairing so the same contrast guarantees apply.
+ */
+.langGroup {
+  display: none;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+}
+
+@media (min-width: 900px) {
+  .langGroup {
+    display: inline-flex;
+  }
+}
+
+.langLink {
+  color: rgba(23, 41, 58, 0.7);
+  transition: color 0.3s ease;
+}
+
+.langLink + .langLink::before {
+  content: "/";
+  margin-right: 6px;
+  color: rgba(23, 41, 58, 0.4);
+}
+
+.langLink[data-active="true"],
+.langLink:hover {
+  color: var(--ink-soft);
+}
+
+.nav[data-ground="dark"] .langLink {
+  color: rgba(231, 240, 247, 0.55);
+}
+
+.nav[data-ground="dark"] .langLink + .langLink::before {
+  color: rgba(231, 240, 247, 0.35);
+}
+
+.nav[data-ground="dark"] .langLink[data-active="true"],
+.nav[data-ground="dark"] .langLink:hover {
+  color: var(--paper);
 }
 
 .cta {
@@ -235,6 +285,32 @@
 
 .menuLink:hover {
   color: var(--blue-lift);
+}
+
+.menuLangGroup {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 22px;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  letter-spacing: 0.14em;
+}
+
+.menuLangLink {
+  color: var(--on-dark-meta);
+  transition: color 0.3s ease;
+}
+
+.menuLangLink + .menuLangLink::before {
+  content: "/";
+  margin-right: 10px;
+  color: var(--on-dark-line);
+}
+
+.menuLangLink[data-active="true"],
+.menuLangLink:hover {
+  color: var(--paper);
 }
 
 /* A <button>, so the element defaults have to be undone to keep the original
