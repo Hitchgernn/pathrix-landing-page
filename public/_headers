@@ -20,13 +20,18 @@
 /assets/*
   Cache-Control: public, max-age=31536000, immutable
 
-# Fonts and generated imagery are not hashed, so use a long TTL with revalidation
-# rather than immutable. A week keeps repeat visits free while still letting a
-# replaced asset propagate.
-/fonts/*
-  Cache-Control: public, max-age=604800, stale-while-revalidate=86400
-
+# scripts/encode-images.sh content-hashes every /img/* filename (base.<hash>.ext,
+# tracked in src/content/image-manifest.json), so it's safe to cache the same
+# way as /assets/*: a replaced photo gets a new URL instead of overwriting bytes
+# under an old one a returning visitor (phones especially hold HTTP cache far
+# longer than a desktop dev session) may still be serving from cache.
 /img/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Fonts and the Tugu model/fallback are not hashed, so use a long TTL with
+# revalidation rather than immutable. A week keeps repeat visits free while
+# still letting a replaced asset propagate.
+/fonts/*
   Cache-Control: public, max-age=604800, stale-while-revalidate=86400
 
 /hero/*
