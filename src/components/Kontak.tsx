@@ -141,7 +141,9 @@ export function Kontak() {
 
           <p
             className={styles.note}
-            data-tone={status === "error" ? "error" : undefined}
+            data-tone={
+              status === "error" ? "error" : status === "sent" ? "sent" : undefined
+            }
             role="status"
             aria-live="polite"
           >
